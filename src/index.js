@@ -4,10 +4,11 @@ const morgan = require("morgan");
 const bodyParse = require("body-parser");
 const dotenv = require("dotenv");
 
-dotenv.config();
-const PORT = process.env.PORT || 4000;
 const routing = require("./routers");
+const database = require("./configs/connect-database");
+const PORT = process.env.PORT || 4000;
 
+dotenv.config();
 app.use(morgan("dev"));
 app.use(bodyParse.json());
 

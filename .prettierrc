@@ -2,7 +2,8 @@
     "arrowParens": "always",
     "trailingComma": "all",
     "tabWidth": 4,
-    "printWidth": 80,
+    "printWidth": 120,
+    "semi": true,
     "doubleQuote": true,
     "bracketSpacing": true
 }
