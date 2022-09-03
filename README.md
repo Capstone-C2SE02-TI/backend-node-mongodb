@@ -1,4 +1,4 @@
-## "Collect, analyze and visualize data of decentralized wallets website"
+## Collect, analyze and visualize data of decentralized wallets website
 
 ## Capstone Project 1 - Source Backend (Node)
 
