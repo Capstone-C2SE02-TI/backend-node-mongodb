@@ -1,0 +1,33 @@
+{
+    "name": "backend-node",
+    "version": "1.0.0",
+    "description": "Capstone Project 1 - Source Backend (Node)",
+    "main": "src/index.js",
+    "scripts": {
+        "start": "nodemon src/index.js",
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "keywords": [
+        "backend",
+        "backend-node",
+        "capstone-project"
+    ],
+    "author": "hdttuan",
+    "license": "MIT",
+    "homepage": "https://github.com/Capstone-C1SE04-TI/backend-node#readme",
+    "dependencies": {
+        "body-parser": "^1.20.0",
+        "dotenv": "^16.0.2",
+        "express": "^4.18.1",
+        "express-jwt": "^7.7.5",
+        "express-validator": "^6.14.2",
+        "jsonwebtoken": "^8.5.1",
+        "morgan": "^1.10.0",
+        "nodemon": "^2.0.19",
+        "path-browserify": "^1.0.1",
+        "uuid": "^8.3.2"
+    },
+    "engines": {
+        "node": "v16.17.0"
+    }
+}
