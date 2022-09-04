@@ -1,19 +1,43 @@
 const express = require("express");
-const app = express();
+const cors = require("cors");
 const morgan = require("morgan");
-const bodyParse = require("body-parser");
 const dotenv = require("dotenv");
-
-const routing = require("./routers");
+const bodyParse = require("body-parser");
+const swaggerUI = require("swagger-ui-express");
+const swaggerJsDoc = require("swagger-jsdoc");
+const routing = require("./routes");
 const database = require("./configs/connect-database");
 const PORT = process.env.PORT || 4000;
 
+const app = express();
 dotenv.config();
+routing(app);
+
+const swaggerOptions = {
+    definition: {
+        openapi: "3.0.3",
+        info: {
+            title: "SwaggerUI",
+            version: "1.0.0",
+            description: "A simple Express Library API",
+        },
+        servers: [
+            {
+                url: "http://localhost:4000",
+            },
+        ],
+    },
+    apis: ["src/routes/auth.js", "src/routes/sites.js"],
+};
+
+const swaggerSpecs = swaggerJsDoc(swaggerOptions);
+app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(swaggerSpecs));
+
+app.use(cors());
 app.use(morgan("dev"));
 app.use(bodyParse.json());
 
-routing(app);
-
 app.listen(PORT, () => {
-    console.log(`Server listening at http://localhost:${PORT}/`);
+    console.log(`Server is listening at http://localhost:${PORT}/`);
+    console.log(`API Documentation: http://localhost:${PORT}/api-docs/`);
 });
