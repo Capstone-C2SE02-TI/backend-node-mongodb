@@ -14,4 +14,4 @@
 
 #### 5. Enter "npm start"
 
-#### 6. Ctrl + click into path "http://localhost:4000/api-docs" in Terminal
+### API Documentation: http://localhost:4000/api-docs
