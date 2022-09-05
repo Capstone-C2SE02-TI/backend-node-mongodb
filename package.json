@@ -19,7 +19,6 @@
         "@firebase/app": "^0.7.32",
         "@firebase/firestore": "^3.4.15",
         "bcrypt": "^5.0.1",
-        "body-parser": "^1.20.0",
         "cors": "^2.8.5",
         "dotenv": "^16.0.2",
         "express": "^4.18.1",
@@ -31,7 +30,6 @@
         "lodash": "^4.17.21",
         "morgan": "^1.10.0",
         "nodemon": "^2.0.19",
-        "path-browserify": "^1.0.1",
         "swagger-jsdoc": "^6.2.5",
         "swagger-ui-express": "^4.5.0",
         "uuid": "^8.3.2"
