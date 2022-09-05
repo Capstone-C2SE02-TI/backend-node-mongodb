@@ -32,4 +32,24 @@ async function checkExistedEmail(email) {
     return isExistedEmail;
 }
 
-module.exports = { createNewUser, checkExistedUsername, checkExistedEmail };
+async function getPasswordByUsername(username) {
+    let hashPassword;
+
+    const users = await database
+        .collection("users")
+        .where("username", "==", username)
+        .get();
+
+    users.forEach((doc) => {
+        hashPassword = doc.get("password");
+    });
+
+    return hashPassword;
+}
+
+module.exports = {
+    createNewUser,
+    checkExistedUsername,
+    checkExistedEmail,
+    getPasswordByUsername,
+};

@@ -1,7 +1,10 @@
 const { body, validationResult } = require("express-validator");
 
 async function validateUserSignUpBody(req, res, next) {
-    await body("username").notEmpty().withMessage("Username is required").run(req);
+    await body("username")
+        .notEmpty()
+        .withMessage("Username is required")
+        .run(req);
 
     await body("email")
         .notEmpty()
@@ -36,4 +39,25 @@ async function validateUserSignUpBody(req, res, next) {
     };
 }
 
-module.exports = { validateUserSignUpBody };
+async function validateUserSignInBody(req, res, next) {
+    await body("username")
+        .notEmpty()
+        .withMessage("Username is required")
+        .run(req);
+
+    await body("password")
+        .notEmpty()
+        .withMessage("Password is required")
+        .isLength({ min: 8, max: 16 })
+        .withMessage("Password must contain from 8 to 16 characters")
+        .run(req);
+
+    const errors = validationResult(req);
+
+    return {
+        status: errors.isEmpty() ? "success" : "failed",
+        error: errors.array()[0]?.msg,
+    };
+}
+
+module.exports = { validateUserSignUpBody, validateUserSignInBody };

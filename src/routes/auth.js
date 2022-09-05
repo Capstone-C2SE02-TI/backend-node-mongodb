@@ -44,7 +44,7 @@ const authController = require("../app/controllers/AuthController");
  *       401:
  *         description: Sign up failed
  *       400:
- *         description: Bad Request
+ *         description: Bad request
  */
 router.post("/signup", authController.signup);
 
@@ -54,20 +54,29 @@ router.post("/signup", authController.signup);
  *   post:
  *     description: Sign In
  *     tags: [Authentication]
- *     parameters:
- *      - name: username
- *        in: body
- *        required: true
- *        type: string
- *      - name: password
- *        in: body
- *        required: true
- *        type: string
+ *     requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - username
+ *               - password
+ *             properties:
+ *               username:
+ *                  type: string
+ *               password:
+ *                  type: string
+ *             example:
+ *               username: "hieuhn"
+ *               password: "12345678"
  *     responses:
  *       200:
  *         description: Sign in successfully
- *       400:
+ *       401:
  *         description: Sign in failed
+ *       400:
+ *         description: Bad request
  */
 router.post("/signin", authController.signin);
 

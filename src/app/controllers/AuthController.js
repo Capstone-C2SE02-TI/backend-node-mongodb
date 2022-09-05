@@ -1,10 +1,14 @@
 const firebase = require("firebase-admin");
-const { validateUserSignUpBody } = require("../../validators");
 const { cryptPassword, comparePassword } = require("../../helpers");
+const {
+    validateUserSignUpBody,
+    validateUserSignInBody,
+} = require("../../validators");
 const {
     createNewUser,
     checkExistedUsername,
     checkExistedEmail,
+    getPasswordByUsername,
 } = require("../../services/user-crud-database");
 
 function AuthController() {
@@ -15,7 +19,7 @@ function AuthController() {
         // Validate request body
         const { status, error } = await validateUserSignUpBody(req, res, next);
         if (status === "failed") {
-            return res.status(400).json({ error: error });
+            return res.status(400).json({ message: error });
         }
 
         // Check if username or email is existed
@@ -28,7 +32,7 @@ function AuthController() {
 
         // Encode password and create new user in DB
         const currentTimestamp = firebase.firestore.Timestamp.now();
-        cryptPassword(password, async function (err, hashPassword) {
+        cryptPassword(password, async function (error, hashPassword) {
             const newUser = {
                 username: username,
                 email: email,
@@ -53,8 +57,40 @@ function AuthController() {
     };
 
     // [POST] /signin
-    this.signin = (req, res, next) => {
-        res.send({ message: "Sign in successfully" });
+    this.signin = async (req, res, next) => {
+        const { username, password } = req.body;
+
+        // Validate request body
+        const { status, error } = await validateUserSignInBody(req, res, next);
+        if (status === "failed") {
+            return res.status(400).json({ message: error });
+        }
+
+        // Check if not found username
+        if (!(await checkExistedUsername(username))) {
+            return res.status(400).json({ message: "Username is not found" });
+        } else {
+            const hashPassword = await getPasswordByUsername(username);
+
+            // Compard password and hash password in DB
+            comparePassword(
+                password,
+                hashPassword,
+                function (error, isPasswordMatch) {
+                    if (isPasswordMatch) {
+                        // window.localStorage.setItem("isSignin", true);
+
+                        return res
+                            .status(200)
+                            .json({ message: "Sign in successfully" });
+                    } else {
+                        return res.status(400).json({
+                            message: "Incorrect password",
+                        });
+                    }
+                },
+            );
+        }
     };
 }
 
