@@ -30,10 +30,10 @@ function AuthController() {
         const currentTimestamp = firebase.firestore.Timestamp.now();
         cryptPassword(password, async function (err, hashPassword) {
             const newUser = {
-                username,
-                email,
-                phoneNumber,
-                hashPassword,
+                username: username,
+                email: email,
+                phoneNumber: phoneNumber,
+                password: hashPassword,
                 createdDate: currentTimestamp,
                 updatedDate: currentTimestamp,
             };
