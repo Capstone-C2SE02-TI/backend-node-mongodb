@@ -2,7 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const morgan = require("morgan");
 const dotenv = require("dotenv");
-const bodyParse = require("body-parser");
+// const bodyParser = require("body-parser");
 const swaggerUI = require("swagger-ui-express");
 const swaggerJsDoc = require("swagger-jsdoc");
 const routing = require("./routes");
@@ -11,7 +11,6 @@ const PORT = process.env.PORT || 4000;
 
 const app = express();
 dotenv.config();
-routing(app);
 
 const swaggerOptions = {
     definition: {
@@ -35,7 +34,10 @@ app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(swaggerSpecs));
 
 app.use(cors());
 app.use(morgan("dev"));
-app.use(bodyParse.json());
+app.use(express.urlencoded({ extended: false }));
+app.use(express.json());
+
+routing(app);
 
 app.listen(PORT, () => {
     console.log(`Server is listening at http://localhost:${PORT}/`);
