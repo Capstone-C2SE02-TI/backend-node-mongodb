@@ -10,7 +10,7 @@ const {
     checkExistedUsername,
     checkExistedEmail,
     getPasswordByUsername,
-} = require("../../services/user-crud-database");
+} = require("../../services/crud-database/user");
 
 function AuthController() {
     // [POST] /signup
@@ -79,14 +79,21 @@ function AuthController() {
                 hashPassword,
                 function (error, isPasswordMatch) {
                     if (isPasswordMatch) {
-                        // Set token
-
-                        // Set cookie
-
-                        return res.status(200).json({
-                            message: "Sign in successfully",
-                            token: token,
+                        const accessToken = generateAccessToken({
+                            username,
                         });
+
+                        if (!accessToken) {
+                            return res.status(400).json({
+                                message: "Sign in failed",
+                            });
+                        } else {
+                            return res.status(200).json({
+                                message: "Sign in successfully",
+                                accessToken: accessToken,
+                                refreshToken: refreshToken,
+                            });
+                        }
                     } else {
                         return res.status(400).json({
                             message: "Incorrect password",
