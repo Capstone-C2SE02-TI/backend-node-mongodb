@@ -1,17 +1,29 @@
-## Collect, analyze and visualize data of decentralized wallets website
+# Collect, analyze and visualize data of decentralized wallets website
 
 ## Capstone Project 1 - Source Backend (Node)
 
-### How to run this project?
+## Clone project
 
-#### 1. At folder you want save this project, open CMD
+```bash
+$ git clone https://github.com/Capstone-C1SE04-TI/backend-node.git
+```
 
-#### 2. Enter "git clone https://github.com/Capstone-C1SE04-TI/backend-node.git"
+## Change directory to folder backend-node
 
-#### 3. Enter "cd backend-node"
+```bash
+$ cd backend-node
+```
 
-#### 4. Enter "npm install"
+## Install dependencies
 
-#### 5. Enter "npm start"
+```bash
+$ npm install
+```
 
-### API Documentation: http://localhost:4000/api-docs
+## Run in developement mode
+
+```bash
+$ npm start
+```
+
+## API Documentation: http://localhost:4000/api-docs

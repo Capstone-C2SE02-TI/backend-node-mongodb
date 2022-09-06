@@ -1,3 +1,4 @@
+const jwt = require("jsonwebtoken");
 const firebase = require("firebase-admin");
 const { cryptPassword, comparePassword } = require("../../helpers");
 const {
@@ -78,11 +79,14 @@ function AuthController() {
                 hashPassword,
                 function (error, isPasswordMatch) {
                     if (isPasswordMatch) {
-                        // window.localStorage.setItem("isSignin", true);
+                        // Set token
 
-                        return res
-                            .status(200)
-                            .json({ message: "Sign in successfully" });
+                        // Set cookie
+
+                        return res.status(200).json({
+                            message: "Sign in successfully",
+                            token: token,
+                        });
                     } else {
                         return res.status(400).json({
                             message: "Incorrect password",
