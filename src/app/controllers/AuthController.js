@@ -8,17 +8,15 @@ const {
 } = require("../../services/user-crud-database");
 
 function AuthController() {
-    // [POST] /signup
     this.signup = async (req, res, next) => {
         const { username, email, phoneNumber, password } = req.body;
 
         // Validate request body
         const { status, error } = await validateUserSignUpBody(req, res, next);
         if (status === "failed") {
-            return res.status(400).json({ error: error });
+            return res.status(400).json({ message: error });
         }
 
-        // Check if username or email is existed
         if (await checkExistedUsername(username)) {
             return res.status(400).json({ message: "Username is existed" });
         }
@@ -45,7 +43,7 @@ function AuthController() {
                         .json({ message: "Sign up successfully" });
                 })
                 .catch(function (error) {
-                    return res.status(401).json({
+                    return res.status(400).json({
                         message: "Sign up failed with error: " + error,
                     });
                 });
