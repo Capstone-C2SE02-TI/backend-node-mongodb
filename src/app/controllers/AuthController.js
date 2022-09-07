@@ -2,10 +2,14 @@ const jwt = require("jsonwebtoken");
 const firebase = require("firebase-admin");
 const { cryptPassword, comparePassword } = require("../../helpers");
 const {
+    generateAccessToken,
+} = require("../../services/authentication/controllers");
+const {
     validateUserSignUpBody,
     validateUserSignInBody,
 } = require("../../validators");
 const {
+    getUserByUsername,
     createNewUser,
     checkExistedUsername,
     checkExistedEmail,
@@ -13,7 +17,6 @@ const {
 } = require("../../services/crud-database/user");
 
 function AuthController() {
-    // [POST] /signup
     this.signup = async (req, res, next) => {
         const { username, email, phoneNumber, password } = req.body;
 
@@ -23,7 +26,6 @@ function AuthController() {
             return res.status(400).json({ message: error });
         }
 
-        // Check if username or email is existed
         if (await checkExistedUsername(username)) {
             return res.status(400).json({ message: "Username is existed" });
         }
@@ -57,9 +59,10 @@ function AuthController() {
         });
     };
 
-    // [POST] /signin
     this.signin = async (req, res, next) => {
         const { username, password } = req.body;
+
+        // console.log(await getUserByUsername(username));
 
         // Validate request body
         const { status, error } = await validateUserSignInBody(req, res, next);
@@ -67,19 +70,17 @@ function AuthController() {
             return res.status(400).json({ message: error });
         }
 
-        // Check if not found username
         if (!(await checkExistedUsername(username))) {
             return res.status(400).json({ message: "Username is not found" });
         } else {
             const hashPassword = await getPasswordByUsername(username);
 
-            // Compard password and hash password in DB
             comparePassword(
                 password,
                 hashPassword,
-                function (error, isPasswordMatch) {
+                async (error, isPasswordMatch) => {
                     if (isPasswordMatch) {
-                        const accessToken = generateAccessToken({
+                        const accessToken = await generateAccessToken({
                             username,
                         });
 
@@ -91,7 +92,6 @@ function AuthController() {
                             return res.status(200).json({
                                 message: "Sign in successfully",
                                 accessToken: accessToken,
-                                refreshToken: refreshToken,
                             });
                         }
                     } else {

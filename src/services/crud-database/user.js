@@ -1,5 +1,21 @@
-const database = require("../configs/connect-database");
-const { randomFirestoreDocumentId } = require("../helpers");
+const database = require("../../configs/connect-database");
+const { randomFirestoreDocumentId } = require("../../helpers");
+
+async function getUserByUsername(username) {
+    let user;
+
+    const users = await database
+        .collection("users")
+        .where("username", "==", username)
+        .get();
+
+    users.forEach((doc) => {
+        console.log(doc);
+        user = doc.get();
+    });
+
+    return user;
+}
 
 async function createNewUser(newUser) {
     const docId = randomFirestoreDocumentId();
@@ -48,6 +64,7 @@ async function getPasswordByUsername(username) {
 }
 
 module.exports = {
+    getUserByUsername,
     createNewUser,
     checkExistedUsername,
     checkExistedEmail,

@@ -1,7 +1,7 @@
 const jwt = require("jsonwebtoken");
 const promisify = require("util").promisify;
 
-// Turn sign() and verify() from Callback to Promise.
+// Turn Callback to Promise.
 const sign = promisify(jwt.sign).bind(jwt);
 const verify = promisify(jwt.verify).bind(jwt);
 
