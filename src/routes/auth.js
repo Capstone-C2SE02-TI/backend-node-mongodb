@@ -24,6 +24,7 @@ const authController = require("../app/controllers/AuthController");
  *               - email
  *               - phoneNumber
  *               - password
+ *               - confirmPassword
  *             properties:
  *               username:
  *                  type: string
@@ -33,11 +34,14 @@ const authController = require("../app/controllers/AuthController");
  *                  type: string
  *               password:
  *                  type: string
+ *               confirmPassword:
+ *                  type: string
  *             example:
  *               username: "hieuhn"
  *               email: "hieuhn@gmail.com"
  *               phoneNumber: "0366871673"
  *               password: "12345678"
+ *               confirmPassword: "12345678"
  *     responses:
  *       200:
  *         description: Sign up successfully

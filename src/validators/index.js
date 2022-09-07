@@ -31,6 +31,20 @@ async function validateUserSignUpBody(req, res, next) {
         .withMessage("Password must contain from 8 to 16 characters")
         .run(req);
 
+    await body("confirmPassword")
+        .notEmpty()
+        .withMessage("Password confirm is required")
+        .isLength({ min: 8, max: 16 })
+        .withMessage("Password confirm must contain from 8 to 16 characters")
+        .custom((value, { req }) => {
+            if (value !== req.body.password) {
+                return false;
+            }
+            return true;
+        })
+        .withMessage("Password confirm does not match with password")
+        .run(req);
+
     const errors = validationResult(req);
 
     return {

@@ -52,7 +52,7 @@ function AuthController() {
                         .json({ message: "Sign up successfully" });
                 })
                 .catch(function (error) {
-                    return res.status(401).json({
+                    return res.status(400).json({
                         message: "Sign up failed with error: " + error,
                     });
                 });
