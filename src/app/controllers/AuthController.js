@@ -2,9 +2,9 @@ const firebase = require("firebase-admin");
 const { cryptPassword, comparePassword } = require("../../helpers");
 const { generateAccessToken } = require("../../services/authentication");
 const {
-    validateUserSignUpBody,
-    validateUserSignInBody,
-} = require("../../validators");
+    validateSignUpBody,
+    validateSignInBody,
+} = require("../../validators/user");
 const {
     getUserByUsername,
     createNewUser,
@@ -18,7 +18,7 @@ function AuthController() {
         const { username, email, phoneNumber, password } = req.body;
 
         // Validate request body
-        const { status, error } = await validateUserSignUpBody(req, res, next);
+        const { status, error } = await validateSignUpBody(req, res, next);
         if (status === "failed") {
             return res.status(400).json({ message: error });
         }
@@ -60,7 +60,7 @@ function AuthController() {
         const { username, password } = req.body;
 
         // Validate request body
-        const { status, error } = await validateUserSignInBody(req, res, next);
+        const { status, error } = await validateSignInBody(req, res, next);
         if (status === "failed") {
             return res.status(400).json({ message: error });
         }

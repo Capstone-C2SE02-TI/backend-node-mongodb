@@ -25,7 +25,11 @@ const swaggerOptions = {
             },
         ],
     },
-    apis: ["src/routes/auth.js", "src/routes/sites.js"],
+    apis: [
+        "src/routes/auth.js",
+        "src/routes/forgotPassword.js",
+        "src/routes/sites.js",
+    ],
 };
 
 const swaggerSpecs = swaggerJsDoc(swaggerOptions);

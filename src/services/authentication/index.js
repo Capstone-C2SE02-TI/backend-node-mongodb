@@ -4,15 +4,15 @@ const promisify = require("util").promisify;
 const sign = promisify(jwt.sign).bind(jwt);
 const verify = promisify(jwt.verify).bind(jwt);
 
-async function verifyToken(token, secretKey) {
+const verifyToken = async (token, secretKey) => {
     try {
         return await verify(token, secretKey);
     } catch (error) {
         return { error: "Error in verify access token" };
     }
-}
+};
 
-async function decodeToken(token, secretKey) {
+const decodeToken = async (token, secretKey) => {
     try {
         return await verify(token, secretKey, {
             ignoreExpiration: true,
@@ -20,9 +20,9 @@ async function decodeToken(token, secretKey) {
     } catch (error) {
         return { error: "Error in decode access token" };
     }
-}
+};
 
-async function generateAccessToken(accessTokenData) {
+const generateAccessToken = async (accessTokenData) => {
     try {
         const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET;
         const accessTokenLife = process.env.ACCESS_TOKEN_LIFE;
@@ -42,9 +42,9 @@ async function generateAccessToken(accessTokenData) {
     } catch (error) {
         return null;
     }
-}
+};
 
-async function isAuthed(req, res, next) {
+const isAuthed = async (req, res, next) => {
     const accessTokenFromHeader = req.headers.x_authorization;
 
     if (!accessTokenFromHeader) {
@@ -62,7 +62,7 @@ async function isAuthed(req, res, next) {
     }
 
     return true;
-}
+};
 
 module.exports = {
     generateAccessToken,
