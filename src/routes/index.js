@@ -1,9 +1,9 @@
-const authRoute = require("./auth");
-const sitesRoute = require("./sites");
+const authRouter = require("./auth");
+const sitesRouter = require("./sites");
 
 function routing(app) {
-    app.use("/auth", authRoute);
-    app.use("/", sitesRoute);
+    app.use("/auth", authRouter);
+    app.use("/", sitesRouter);
 }
 
 module.exports = routing;
