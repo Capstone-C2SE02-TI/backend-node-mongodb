@@ -1,9 +1,6 @@
-const jwt = require("jsonwebtoken");
 const firebase = require("firebase-admin");
 const { cryptPassword, comparePassword } = require("../../helpers");
-const {
-    generateAccessToken,
-} = require("../../services/authentication/controllers");
+const { generateAccessToken } = require("../../services/authentication");
 const {
     validateUserSignUpBody,
     validateUserSignInBody,
@@ -62,8 +59,6 @@ function AuthController() {
     this.signin = async (req, res, next) => {
         const { username, password } = req.body;
 
-        // console.log(await getUserByUsername(username));
-
         // Validate request body
         const { status, error } = await validateUserSignInBody(req, res, next);
         if (status === "failed") {
@@ -71,7 +66,7 @@ function AuthController() {
         }
 
         if (!(await checkExistedUsername(username))) {
-            return res.status(400).json({ message: "Username is not found" });
+            return res.status(404).json({ message: "Username is not found" });
         } else {
             const hashPassword = await getPasswordByUsername(username);
 
@@ -86,12 +81,17 @@ function AuthController() {
 
                         if (!accessToken) {
                             return res.status(400).json({
-                                message: "Sign in failed",
+                                message:
+                                    "Sign in failed. Error in generate access token",
+                                accessToken: null,
                             });
                         } else {
                             return res.status(200).json({
                                 message: "Sign in successfully",
                                 accessToken: accessToken,
+                                user: {
+                                    username: username,
+                                },
                             });
                         }
                     } else {

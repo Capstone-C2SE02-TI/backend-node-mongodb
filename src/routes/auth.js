@@ -77,10 +77,12 @@ router.post("/signup", authController.signup);
  *     responses:
  *       200:
  *         description: Sign in successfully
- *       401:
- *         description: Sign in failed
  *       400:
  *         description: Bad request
+ *       401:
+ *         description: Sign in failed
+ *       404:
+ *         description: Not found
  */
 router.post("/signin", authController.signin);
 
