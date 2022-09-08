@@ -12,6 +12,7 @@ function ForgotPasswordController() {
         const user = await getUserByEmail(req.body.email);
 
         const transporter = nodemailer.createTransport({
+            service: "gmail",
             host: "smtp.gmail.com",
             port: 465,
             secure: true,
@@ -34,17 +35,17 @@ function ForgotPasswordController() {
             </div>
         `;
 
-        const mainOptions = {
+        const mailOptions = {
             from: {
                 name: "Tracking Investor's Support Team",
-                address: "baop38391@gmail.com",
+                address: process.env._0x072126sajkxja3181sc33242315_,
             },
             to: req.body.email,
             subject: "Verify code to create new password - TI Team",
             html: html,
         };
 
-        transporter.sendMail(mainOptions, async (error, info) => {
+        transporter.sendMail(mailOptions, async (error, info) => {
             if (!error) {
                 if (user) {
                     const updatedUser = await updateUserConfirmationCode(
@@ -66,7 +67,9 @@ function ForgotPasswordController() {
                     return res.json({ message: "Email not found" });
                 }
             } else {
-                return res.status(400).json({ message: "Submit email failed" });
+                return res
+                    .status(400)
+                    .json({ message: "Submit email failedd" });
             }
         });
     };
