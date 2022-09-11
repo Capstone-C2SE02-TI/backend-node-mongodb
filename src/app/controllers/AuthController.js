@@ -1,10 +1,12 @@
 const firebase = require("firebase-admin");
 const { cryptPassword, comparePassword } = require("../../helpers");
-const { generateAccessToken } = require("../../services/authentication");
 const {
-    validateUserSignUpBody,
-    validateUserSignInBody,
-} = require("../../validators");
+    isAuthed,
+    verifyToken,
+    decodeToken,
+    generateAccessToken,
+} = require("../../services/authentication");
+const { validateUserSignUpBody, validateUserSignInBody } = require("../../validators");
 const {
     getUserByUsername,
     createNewUser,
@@ -44,9 +46,7 @@ function AuthController() {
 
             await createNewUser(newUser)
                 .then(function () {
-                    return res
-                        .status(200)
-                        .json({ message: "Sign up successfully" });
+                    return res.status(200).json({ message: "Sign up successfully" });
                 })
                 .catch(function (error) {
                     return res.status(400).json({
@@ -70,37 +70,50 @@ function AuthController() {
         } else {
             const hashPassword = await getPasswordByUsername(username);
 
-            comparePassword(
-                password,
-                hashPassword,
-                async (error, isPasswordMatch) => {
-                    if (isPasswordMatch) {
+            comparePassword(password, hashPassword, async (error, isPasswordMatch) => {
+                if (isPasswordMatch) {
+                    const cookie = req.cookies.TI_AUTH_COOKIE;
+
+                    if (!cookie) {
                         const accessToken = await generateAccessToken({
                             username,
                         });
 
-                        if (!accessToken) {
-                            return res.status(400).json({
-                                message:
-                                    "Sign in failed. Error in generate access token",
-                                accessToken: null,
-                            });
-                        } else {
+                        res.cookie("TI_AUTH_COOKIE", accessToken, {
+                            // Expire in 1 week
+                            maxAge: 604800000,
+                            httpOnly: true,
+                        });
+
+                        return res.status(200).json({
+                            message: "Sign in successfully",
+                            accessToken: accessToken,
+                            user: {
+                                username: username,
+                            },
+                        });
+                    } else {
+                        if (isAuthed(req)) {
                             return res.status(200).json({
                                 message: "Sign in successfully",
-                                accessToken: accessToken,
+                                accessToken: cookie,
                                 user: {
                                     username: username,
                                 },
                             });
+                        } else {
+                            return res.status(401).json({
+                                message: "Sign in failed",
+                                accessToken: null,
+                            });
                         }
-                    } else {
-                        return res.status(400).json({
-                            message: "Incorrect password",
-                        });
                     }
-                },
-            );
+                } else {
+                    return res.status(400).json({
+                        message: "Incorrect password",
+                    });
+                }
+            });
         }
     };
 }
