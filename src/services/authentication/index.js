@@ -38,8 +38,7 @@ async function generateAccessToken(accessTokenData) {
 }
 
 async function isAuthed(req, res, next) {
-    const accessTokenHeader = req.headers.x_authorization || accessTokenHeaderExample;
-    console.log("accessTokenHeader:", accessTokenHeader);
+    const accessTokenHeader = req.headers.authorization || accessTokenHeaderExample;
 
     if (!accessTokenHeader) {
         return false;

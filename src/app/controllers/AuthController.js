@@ -91,6 +91,7 @@ function AuthController() {
                             user: {
                                 username: username,
                             },
+                            firstAccess: true,
                         });
                     } else {
                         if (isAuthed(req)) {
@@ -100,11 +101,13 @@ function AuthController() {
                                 user: {
                                     username: username,
                                 },
+                                firstAccess: false,
                             });
                         } else {
                             return res.status(401).json({
                                 message: "Sign in failed",
                                 accessToken: null,
+                                firstAccess: false,
                             });
                         }
                     }
