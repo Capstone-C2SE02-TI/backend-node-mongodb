@@ -4,11 +4,14 @@ const promisify = require("util").promisify;
 const sign = promisify(jwt.sign).bind(jwt);
 const verify = promisify(jwt.verify).bind(jwt);
 
+const { getUserByUsername } = require("../../services/crud-database/user");
+const { accessTokenSecret, encodeAlgorithm, accessTokenHeaderExample } = require("./variables");
+
 async function verifyToken(token, secretKey) {
     try {
         return await verify(token, secretKey);
     } catch (error) {
-        return { error: "Error in verify access token" };
+        return undefined;
     }
 }
 
@@ -18,25 +21,15 @@ async function decodeToken(token, secretKey) {
             ignoreExpiration: true,
         });
     } catch (error) {
-        return { error: "Error in decode access token" };
+        return undefined;
     }
 }
 
 async function generateAccessToken(accessTokenData) {
     try {
-        const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET;
-        const accessTokenLife = process.env.ACCESS_TOKEN_LIFE;
-
-        const accessToken = await sign(
-            {
-                payload: accessTokenData,
-            },
-            accessTokenSecret,
-            {
-                algorithm: "HS256",
-                expiresIn: accessTokenLife,
-            },
-        );
+        const accessToken = await sign(accessTokenData, accessTokenSecret, {
+            algorithm: encodeAlgorithm,
+        });
 
         return accessToken;
     } catch (error) {
@@ -45,21 +38,20 @@ async function generateAccessToken(accessTokenData) {
 }
 
 async function isAuthed(req, res, next) {
-    const accessTokenFromHeader = req.headers.x_authorization;
+    const accessTokenHeader = req.headers.authorization || accessTokenHeaderExample;
 
-    if (!accessTokenFromHeader) {
+    if (!accessTokenHeader) {
         return false;
     }
 
-    const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET;
-    const verified = await verifyToken(
-        accessTokenFromHeader,
-        accessTokenSecret,
-    );
+    const verified = await decodeToken(accessTokenHeader, accessTokenSecret);
 
     if (!verified) {
         return false;
     }
+
+    // const user = await getUserByUsername(verified.username);
+    // req.user = user;
 
     return true;
 }

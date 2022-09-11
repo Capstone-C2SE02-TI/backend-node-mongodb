@@ -3,15 +3,10 @@ const { randomFirestoreDocumentId } = require("../../helpers");
 
 async function getUserByUsername(username) {
     let user;
-
-    const users = await database
-        .collection("users")
-        .where("username", "==", username)
-        .get();
+    const users = await database.collection("users").where("username", "==", username).get();
 
     users.forEach((doc) => {
-        console.log(doc);
-        user = doc.get();
+        user = doc.data();
     });
 
     return user;
@@ -51,10 +46,7 @@ async function checkExistedEmail(email) {
 async function getPasswordByUsername(username) {
     let hashPassword;
 
-    const users = await database
-        .collection("users")
-        .where("username", "==", username)
-        .get();
+    const users = await database.collection("users").where("username", "==", username).get();
 
     users.forEach((doc) => {
         hashPassword = doc.get("password");

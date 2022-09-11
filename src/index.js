@@ -1,15 +1,15 @@
 const express = require("express");
 const cors = require("cors");
 const morgan = require("morgan");
-const dotenv = require("dotenv");
 const swaggerUI = require("swagger-ui-express");
 const swaggerJsDoc = require("swagger-jsdoc");
+const cookieParse = require("cookie-parser");
 const routing = require("./routes");
 const database = require("./configs/connect-database");
 const PORT = process.env.PORT || 4000;
 
 const app = express();
-dotenv.config();
+require("dotenv").config();
 
 const swaggerOptions = {
     definition: {
@@ -35,6 +35,7 @@ app.use(cors());
 app.use(morgan("dev"));
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
+app.use(cookieParse());
 
 routing(app);
 
