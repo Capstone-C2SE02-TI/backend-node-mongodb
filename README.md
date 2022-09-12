@@ -1,4 +1,4 @@
-# Collect, analyze and visualize data of decentralized wallets website
+# Cryptocurrency Tracking And Analysis System
 
 ## Capstone Project 1 - Source Backend (Node)
 
