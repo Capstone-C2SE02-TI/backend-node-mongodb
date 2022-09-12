@@ -17,6 +17,17 @@ async function createNewUser(newUser) {
     await database.collection("users").doc(docId).set(newUser);
 }
 
+async function getListOfUsers() {
+    let usersList = [];
+    let users = await database.collection("users").get();
+
+    users.forEach((doc) => {
+        usersList.push(doc.data());
+    });
+
+    return usersList;
+}
+
 async function checkExistedUsername(username) {
     isExistedUsername = false;
 
@@ -58,6 +69,7 @@ async function getPasswordByUsername(username) {
 module.exports = {
     getUserByUsername,
     createNewUser,
+    getListOfUsers,
     checkExistedUsername,
     checkExistedEmail,
     getPasswordByUsername,

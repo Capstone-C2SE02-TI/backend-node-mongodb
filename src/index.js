@@ -1,6 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const morgan = require("morgan");
+const dotenv = require("dotenv");
 const swaggerUI = require("swagger-ui-express");
 const swaggerJsDoc = require("swagger-jsdoc");
 const cookieParse = require("cookie-parser");
@@ -9,8 +10,9 @@ const database = require("./configs/connect-database");
 const PORT = process.env.PORT || 4000;
 
 const app = express();
-require("dotenv").config();
+dotenv.config();
 
+// Config Swagger
 const swaggerOptions = {
     definition: {
         openapi: "3.0.3",
@@ -25,12 +27,12 @@ const swaggerOptions = {
             },
         ],
     },
-    apis: ["src/routes/auth.js", "src/routes/sites.js"],
+    apis: ["src/routes/auth.js", "src/routes/user.js", "src/routes/sites.js"],
 };
-
 const swaggerSpecs = swaggerJsDoc(swaggerOptions);
 app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(swaggerSpecs));
 
+// Middlewares
 app.use(cors());
 app.use(morgan("dev"));
 app.use(express.urlencoded({ extended: false }));
