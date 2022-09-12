@@ -1,8 +1,3 @@
-function SitesController() {
-    // [POST] /forgot-password
-    this.forgotPassword = (req, res, next) => {
-        res.send({ message: "Forgot password successfully" });
-    };
-}
+function SitesController() {}
 
 module.exports = new SitesController();

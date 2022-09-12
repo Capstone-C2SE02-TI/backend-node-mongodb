@@ -13,9 +13,9 @@ async function verifyToken(token, secretKey) {
     } catch (error) {
         return undefined;
     }
-}
+};
 
-async function decodeToken(token, secretKey) {
+const decodeToken = async (token, secretKey) => {
     try {
         return await verify(token, secretKey, {
             ignoreExpiration: true,
@@ -23,9 +23,9 @@ async function decodeToken(token, secretKey) {
     } catch (error) {
         return undefined;
     }
-}
+};
 
-async function generateAccessToken(accessTokenData) {
+const generateAccessToken = async (accessTokenData) => {
     try {
         const accessToken = await sign(accessTokenData, accessTokenSecret, {
             algorithm: encodeAlgorithm,
@@ -35,7 +35,7 @@ async function generateAccessToken(accessTokenData) {
     } catch (error) {
         return null;
     }
-}
+};
 
 async function isAuthed(req, res, next) {
     const accessTokenHeader = req.headers.authorization || accessTokenHeaderExample;
@@ -54,7 +54,7 @@ async function isAuthed(req, res, next) {
     // req.user = user;
 
     return true;
-}
+};
 
 module.exports = {
     generateAccessToken,

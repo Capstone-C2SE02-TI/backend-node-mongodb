@@ -27,7 +27,12 @@ const swaggerOptions = {
             },
         ],
     },
-    apis: ["src/routes/auth.js", "src/routes/user.js", "src/routes/sites.js"],
+    apis: [
+        "src/routes/auth.js",
+        "src/routes/forgotPassword.js",
+        "src/routes/user.js",
+        "src/routes/sites.js",
+    ],
 };
 const swaggerSpecs = swaggerJsDoc(swaggerOptions);
 app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(swaggerSpecs));

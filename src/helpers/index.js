@@ -1,6 +1,11 @@
 const _ = require("lodash");
 const bcrypt = require("bcrypt");
 
+const randomConfirmationCode = () => {
+    const code = Math.floor(100000 + Math.random() * 900000);
+    return code.toString();
+};
+
 function randomFirestoreDocumentId() {
     const validCharacters =
         "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789".split(
@@ -32,4 +37,9 @@ function comparePassword(plainPassword, hashPassword, callback) {
     );
 }
 
-module.exports = { randomFirestoreDocumentId, cryptPassword, comparePassword };
+module.exports = {
+    randomConfirmationCode,
+    randomFirestoreDocumentId,
+    cryptPassword,
+    comparePassword,
+};
