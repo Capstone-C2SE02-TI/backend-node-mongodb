@@ -33,17 +33,6 @@ const createNewUser = async (newUser) => {
     await database.collection("users").doc(docId).set(newUser);
 };
 
-const getListOfUsers = async () => {
-    let usersList = [];
-    let users = await database.collection("users").get();
-
-    users.forEach((doc) => {
-        usersList.push(doc.data());
-    });
-
-    return usersList;
-}
-
 const updateUserConfirmationCode = async (docId, code) => {
     const user = database.collection("users").doc(docId);
 
@@ -90,13 +79,38 @@ const getPasswordByUsername = async (username) => {
     return hashPassword;
 };
 
+
+const getListOfUsers = async () => {
+    let usersList = [];
+    let users = await database.collection("users").get();
+
+    users.forEach((doc) => {
+        usersList.push(doc.data());
+    });
+
+    return usersList;
+}
+
+
+const getListOfCoins = async () => {
+    let coinsList = [];
+    let coins = await database.collection("tokens").get();
+
+    coins.forEach((doc) => {
+        coinsList.push(doc.data());
+    });
+
+    return coinsList;
+}
+
 module.exports = {
     getUserByUsername,
     getUserByEmail,
     createNewUser,
-    getListOfUsers,
     updateUserConfirmationCode,
     checkExistedUsername,
     checkExistedEmail,
     getPasswordByUsername,
+    getListOfUsers,
+    getListOfCoins
 };

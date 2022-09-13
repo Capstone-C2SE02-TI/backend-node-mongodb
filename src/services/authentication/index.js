@@ -4,7 +4,6 @@ const promisify = require("util").promisify;
 const sign = promisify(jwt.sign).bind(jwt);
 const verify = promisify(jwt.verify).bind(jwt);
 
-const { getUserByUsername } = require("../../services/crud-database/user");
 const { accessTokenSecret, encodeAlgorithm, accessTokenHeaderExample } = require("./variables");
 
 async function verifyToken(token, secretKey) {
@@ -39,19 +38,24 @@ const generateAccessToken = async (accessTokenData) => {
 
 async function isAuthed(req, res, next) {
     const accessTokenHeader = req.headers.authorization || accessTokenHeaderExample;
-
     if (!accessTokenHeader) {
         return false;
     }
 
-    const verified = await decodeToken(accessTokenHeader, accessTokenSecret);
+    const cookie = req.cookies.TI_AUTH_COOKIE;
+    const verified1 = await decodeToken(accessTokenHeader, accessTokenSecret);
+    const verified2 = await decodeToken(cookie, accessTokenSecret);
 
-    if (!verified) {
+    if (!verified1 || !verified2) {
         return false;
     }
 
-    // const user = await getUserByUsername(verified.username);
-    // req.user = user;
+    console.log("verified1:", verified1);
+    console.log("verified2:", verified2);
+
+    if (verified1.username !== verified2.username) {
+        return false
+    }
 
     return true;
 };
