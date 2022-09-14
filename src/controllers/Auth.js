@@ -1,19 +1,19 @@
 const firebase = require("firebase-admin");
-const { cryptPassword, comparePassword } = require("../../helpers");
+const { cryptPassword, comparePassword } = require("../helpers");
 const {
     isAuthed,
     verifyToken,
     decodeToken,
     generateAccessToken,
-} = require("../../services/authentication");
-const { validateSignUpBody, validateSignInBody } = require("../../validators/user");
+} = require("../services/authentication");
+const { validateSignUpBody, validateSignInBody } = require("../validators/user");
 const {
     getUserByUsername,
     createNewUser,
     checkExistedUsername,
     checkExistedEmail,
     getPasswordByUsername,
-} = require("../../services/crud-database/user");
+} = require("../services/crud-database/user");
 
 function AuthController() {
     this.signup = async (req, res, next) => {
@@ -94,7 +94,7 @@ function AuthController() {
                             firstAccess: true,
                         });
                     } else {
-                        if (isAuthed(req)) {
+                        if (await isAuthed(req)) {
                             return res.status(200).json({
                                 message: "Sign in successfully",
                                 accessToken: cookie,
@@ -105,7 +105,7 @@ function AuthController() {
                             });
                         } else {
                             return res.status(401).json({
-                                message: "Sign in failed",
+                                message: "Sign in failed. Unauthorized",
                                 accessToken: null,
                                 firstAccess: false,
                             });

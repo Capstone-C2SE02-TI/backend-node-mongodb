@@ -1,10 +1,10 @@
 const nodemailer = require("nodemailer");
-const { randomConfirmationCode } = require("../../helpers");
+const { randomConfirmationCode } = require("../helpers");
 const {
     getUserByEmail,
     updateUserConfirmationCode,
-} = require("../../services/crud-database/user");
-const { validateSubmitCodeBody } = require("../../validators/user");
+} = require("../services/crud-database/user");
+const { validateSubmitCodeBody } = require("../validators/user");
 
 function ForgotPasswordController() {
     // ==> ERROR

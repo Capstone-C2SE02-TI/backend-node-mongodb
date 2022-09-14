@@ -1,5 +1,5 @@
 const firebase = require("firebase-admin");
-const { getListOfUsers } = require("../../services/crud-database/user");
+const { getListOfUsers } = require("../services/crud-database/user");
 
 function UserController() {
     this.getlist = async (req, res, next) => {

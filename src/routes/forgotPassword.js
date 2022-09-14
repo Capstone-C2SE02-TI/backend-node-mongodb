@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const forgotPasswordController = require("../app/controllers/ForgotPassword");
+const forgotPasswordController = require("../controllers/ForgotPassword");
 
 /**
  * @swagger

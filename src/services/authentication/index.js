@@ -37,23 +37,20 @@ const generateAccessToken = async (accessTokenData) => {
 };
 
 async function isAuthed(req, res, next) {
-    const accessTokenHeader = req.headers.authorization || accessTokenHeaderExample;
+    const accessTokenHeader = req.headers.authorization;
     if (!accessTokenHeader) {
         return false;
     }
 
     const cookie = req.cookies.TI_AUTH_COOKIE;
-    const verified1 = await decodeToken(accessTokenHeader, accessTokenSecret);
-    const verified2 = await decodeToken(cookie, accessTokenSecret);
+    const decodeValue1 = await decodeToken(accessTokenHeader, accessTokenSecret);
+    const decodeValue2 = await decodeToken(cookie, accessTokenSecret);
 
-    if (!verified1 || !verified2) {
+    if (!decodeValue1 || !decodeValue2) {
         return false;
     }
 
-    console.log("verified1:", verified1);
-    console.log("verified2:", verified2);
-
-    if (verified1.username !== verified2.username) {
+    if (decodeValue1.username !== decodeValue2.username) {
         return false
     }
 

@@ -1,4 +1,4 @@
-const { getListOfCoins } = require("../../services/crud-database/user")
+const { getListOfCoins } = require("../services/crud-database/user")
 
 function DisplayController() {
     this.getCoins = async (req, res, next) => {

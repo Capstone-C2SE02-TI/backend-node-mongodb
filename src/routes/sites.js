@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const sitesController = require("../app/controllers/Sites");
+const sitesController = require("../controllers/Sites");
 
 /**
  * @swagger

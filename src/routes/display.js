@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const displayController = require("../app/controllers/Display");
+const displayController = require("../controllers/Display");
 
 /**
  * @swagger
