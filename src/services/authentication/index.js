@@ -1,18 +1,13 @@
+const dotenv = require("dotenv");
+dotenv.config();
+
 const jwt = require("jsonwebtoken");
 const promisify = require("util").promisify;
-
 const sign = promisify(jwt.sign).bind(jwt);
 const verify = promisify(jwt.verify).bind(jwt);
 
-const { accessTokenSecret, encodeAlgorithm, accessTokenHeaderExample } = require("./variables");
-
-async function verifyToken(token, secretKey) {
-    try {
-        return await verify(token, secretKey);
-    } catch (error) {
-        return undefined;
-    }
-};
+const ACCESS_TOKEN_SECRET = process.env.ACCESS_TOKEN_SECRET
+const ENCODE_ALGORITHM = process.env.ENCODE_ALGORITHM;
 
 const decodeToken = async (token, secretKey) => {
     try {
@@ -26,8 +21,8 @@ const decodeToken = async (token, secretKey) => {
 
 const generateAccessToken = async (accessTokenData) => {
     try {
-        const accessToken = await sign(accessTokenData, accessTokenSecret, {
-            algorithm: encodeAlgorithm,
+        const accessToken = await sign(accessTokenData, ACCESS_TOKEN_SECRET, {
+            algorithm: ENCODE_ALGORITHM,
         });
 
         return accessToken;
@@ -36,15 +31,15 @@ const generateAccessToken = async (accessTokenData) => {
     }
 };
 
-async function isAuthed(req, res, next) {
+const isAuthed = async (req, res, next) => {
     const accessTokenHeader = req.headers.authorization;
     if (!accessTokenHeader) {
         return false;
     }
 
     const cookie = req.cookies.TI_AUTH_COOKIE;
-    const decodeValue1 = await decodeToken(accessTokenHeader, accessTokenSecret);
-    const decodeValue2 = await decodeToken(cookie, accessTokenSecret);
+    const decodeValue1 = await decodeToken(accessTokenHeader, ACCESS_TOKEN_SECRET);
+    const decodeValue2 = await decodeToken(cookie, ACCESS_TOKEN_SECRET);
 
     if (!decodeValue1 || !decodeValue2) {
         return false;
@@ -60,6 +55,5 @@ async function isAuthed(req, res, next) {
 module.exports = {
     generateAccessToken,
     isAuthed,
-    verifyToken,
     decodeToken,
 };

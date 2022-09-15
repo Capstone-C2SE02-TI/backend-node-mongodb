@@ -1,19 +1,21 @@
+const dotenv = require("dotenv");
+dotenv.config();
 const firebase = require("firebase-admin");
+
 const { cryptPassword, comparePassword } = require("../helpers");
-const {
-    isAuthed,
-    verifyToken,
-    decodeToken,
-    generateAccessToken,
-} = require("../services/authentication");
 const { validateSignUpBody, validateSignInBody } = require("../validators/user");
 const {
-    getUserByUsername,
+    isAuthed,
+    generateAccessToken,
+} = require("../services/authentication");
+const {
     createNewUser,
     checkExistedUsername,
     checkExistedEmail,
     getPasswordByUsername,
 } = require("../services/crud-database/user");
+
+const TI_AUTH_COOKIE = process.env.TI_AUTH_COOKIE;
 
 function AuthController() {
     this.signup = async (req, res, next) => {
@@ -34,7 +36,7 @@ function AuthController() {
 
         // Encode password and create new user in DB
         const currentTimestamp = firebase.firestore.Timestamp.now();
-        cryptPassword(password, async function (error, hashPassword) {
+        cryptPassword(password, async (error, hashPassword) => {
             const newUser = {
                 username: username,
                 email: email,
@@ -72,14 +74,14 @@ function AuthController() {
 
             comparePassword(password, hashPassword, async (error, isPasswordMatch) => {
                 if (isPasswordMatch) {
-                    const cookie = req.cookies.TI_AUTH_COOKIE;
+                    const cookie = req.cookies[TI_AUTH_COOKIE];
 
                     if (!cookie) {
                         const accessToken = await generateAccessToken({
                             username,
                         });
 
-                        res.cookie("TI_AUTH_COOKIE", accessToken, {
+                        res.cookie(TI_AUTH_COOKIE, accessToken, {
                             // Expire in 1 week
                             maxAge: 604800000,
                             httpOnly: true,
@@ -123,7 +125,7 @@ function AuthController() {
     this.signout = (req, res, next) => {
         req.user = null;
         req.session = null;
-        res.clearCookie("TI_AUTH_COOKIE");
+        res.clearCookie(TI_AUTH_COOKIE);
 
         return res.status(200).json({ message: "Sign out successfully" });
     };
