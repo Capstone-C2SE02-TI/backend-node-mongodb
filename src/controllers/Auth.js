@@ -89,26 +89,17 @@ function AuthController() {
 
                         return res.status(200).json({
                             message: "Sign in successfully",
-                            accessToken: accessToken,
-                            user: {
-                                username: username,
-                            },
                             firstAccess: true,
                         });
                     } else {
                         if (await isAuthed(req)) {
                             return res.status(200).json({
                                 message: "Sign in successfully",
-                                accessToken: cookie,
-                                user: {
-                                    username: username,
-                                },
                                 firstAccess: false,
                             });
                         } else {
                             return res.status(401).json({
                                 message: "Sign in failed. Unauthorized",
-                                accessToken: null,
                                 firstAccess: false,
                             });
                         }
