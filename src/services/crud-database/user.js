@@ -92,9 +92,17 @@ const getListOfUsers = async () => {
 }
 
 
-const getListOfCoins = async () => {
+const getListOfCoins = async (page = 1) => {
     let coinsList = [];
-    let coins = await database.collection("tokens").get();
+
+    const LIMIT_ITEM = 100;
+    const startIndex = page === 1 ? 1 : (page * LIMIT_ITEM) + 1
+
+    const coins = await database.collection("tokens")
+        .orderBy("id", "asc")
+        .startAt(startIndex)
+        .limit(LIMIT_ITEM)
+        .get();
 
     coins.forEach((doc) => {
         coinsList.push(doc.data());

@@ -1,8 +1,12 @@
+const _ = require('lodash');
 const { getListOfCoins } = require("../services/crud-database/user")
 
 function DisplayController() {
     this.getCoins = async (req, res, next) => {
-        await getListOfCoins()
+        const pageQuery = Math.floor(_.toNumber(req.query.page));
+        const page = pageQuery >= 1 ? pageQuery : 1
+
+        await getListOfCoins(page)
             .then((coinsList) => {
                 return res
                     .status(200)
