@@ -1,9 +1,12 @@
 const database = require("../../configs/connect-database");
+const firebase = require("firebase-admin");
 const { randomFirestoreDocumentId } = require("../../helpers");
 
 const getUserByUsername = async (username) => {
     let user;
-    const users = await database.collection("users").where("username", "==", username).get();
+    const users = await database.collection("users")
+        .where("username", "==", username)
+        .get();
 
     users.forEach((doc) => {
         user = doc.data();
@@ -28,9 +31,24 @@ const getUserByEmail = async (email) => {
     return user;
 };
 
-const createNewUser = async (newUser) => {
+const createNewUser = async ({ username, email, phoneNumber, hashPassword }) => {
+    const usersLength = await getUsersLength();
+    const userId = usersLength ? usersLength + 1 : 1;
+
+    const currentTimestamp = firebase.firestore.Timestamp.now();
     const docId = randomFirestoreDocumentId();
-    await database.collection("users").doc(docId).set(newUser);
+
+    const newUserInfo = {
+        userId: userId,
+        username: username,
+        email: email,
+        phoneNumber: phoneNumber,
+        password: hashPassword,
+        createdDate: currentTimestamp,
+        updatedDate: currentTimestamp,
+    };
+
+    await database.collection("users").doc(docId).set(newUserInfo);
 };
 
 const updateUserConfirmationCode = async (docId, code) => {
@@ -70,7 +88,9 @@ const checkExistedEmail = async (email) => {
 const getPasswordByUsername = async (username) => {
     let hashPassword;
 
-    const users = await database.collection("users").where("username", "==", username).get();
+    const users = await database.collection("users")
+        .where("username", "==", username)
+        .get();
 
     users.forEach((doc) => {
         hashPassword = doc.get("password");
@@ -79,16 +99,32 @@ const getPasswordByUsername = async (username) => {
     return hashPassword;
 };
 
-
-const getListOfUsers = async () => {
+const getListOfUsers = async (page = 1) => {
     let usersList = [];
-    let users = await database.collection("users").get();
+
+    const LIMIT_ITEM = 100;
+    const startIndex = page === 1 ? 1 : (page * LIMIT_ITEM) + 1
+
+    const users = await database.collection("users")
+        .orderBy("userId", "asc")
+        .startAt(startIndex)
+        .limit(LIMIT_ITEM)
+        .get();
 
     users.forEach((doc) => {
         usersList.push(doc.data());
     });
 
     return usersList;
+}
+
+const getUsersLength = async () => {
+    let usersLength = 0;
+    const users = await database.collection("users").get();
+
+    users.forEach((doc) => usersLength++);
+
+    return usersLength;
 }
 
 
@@ -120,5 +156,6 @@ module.exports = {
     checkExistedEmail,
     getPasswordByUsername,
     getListOfUsers,
+    getUsersLength,
     getListOfCoins
 };

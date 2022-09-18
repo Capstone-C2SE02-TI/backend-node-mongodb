@@ -14,6 +14,11 @@ const userController = require("../controllers/User");
  *   get:
  *     description: Get list of users
  *     tags: [User]
+ *     parameters:
+ *      - in: query
+ *        name: page
+ *        schema:
+ *          type: integer
  *     responses:
  *       200:
  *         description: Get list of users successfully

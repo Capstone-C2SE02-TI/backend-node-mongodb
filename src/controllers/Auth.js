@@ -1,6 +1,5 @@
 const dotenv = require("dotenv");
 dotenv.config();
-const firebase = require("firebase-admin");
 
 const { cryptPassword, comparePassword } = require("../helpers");
 const { validateSignUpBody, validateSignInBody } = require("../validators/user");
@@ -35,22 +34,14 @@ function AuthController() {
         }
 
         // Encode password and create new user in DB
-        const currentTimestamp = firebase.firestore.Timestamp.now();
         cryptPassword(password, async (error, hashPassword) => {
-            const newUser = {
-                username: username,
-                email: email,
-                phoneNumber: phoneNumber,
-                password: hashPassword,
-                createdDate: currentTimestamp,
-                updatedDate: currentTimestamp,
-            };
-
-            await createNewUser(newUser)
-                .then(function () {
-                    return res.status(200).json({ message: "successfully" });
+            await createNewUser({ username, email, phoneNumber, hashPassword })
+                .then(() => {
+                    return res.status(200).json({
+                        message: "successfully"
+                    });
                 })
-                .catch(function (error) {
+                .catch((error) => {
                     return res.status(400).json({
                         message: "failed",
                         error: error

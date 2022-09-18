@@ -8,8 +8,7 @@ function DisplayController() {
 
         await getListOfCoins(page)
             .then((coinsList) => {
-                return res
-                    .status(200)
+                return res.status(200)
                     .json({
                         message: "successfully",
                         page: page,
@@ -18,11 +17,12 @@ function DisplayController() {
                     });
             })
             .catch((error) => {
-                return res.status(400).json({
-                    message: "failed",
-                    error: error,
-                    coins: null,
-                });
+                return res.status(400)
+                    .json({
+                        message: "failed",
+                        error: error,
+                        coins: null,
+                    });
             });
     };
 }
