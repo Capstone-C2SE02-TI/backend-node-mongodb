@@ -10,11 +10,17 @@ function DisplayController() {
             .then((coinsList) => {
                 return res
                     .status(200)
-                    .json({ message: "Get list of coins successfully", coins: coinsList });
+                    .json({
+                        message: "successfully",
+                        page: page,
+                        coinsLength: coinsList.length,
+                        coins: coinsList
+                    });
             })
             .catch((error) => {
                 return res.status(400).json({
-                    message: "Get list of coins failed with error: " + error,
+                    message: "failed",
+                    error: error,
                     coins: null,
                 });
             });

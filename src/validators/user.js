@@ -3,52 +3,52 @@ const { body, validationResult } = require("express-validator");
 const validateSignUpBody = async (req, res, next) => {
     await body("username")
         .notEmpty()
-        .withMessage("Username is required")
+        .withMessage("username-required")
         .run(req);
 
     await body("email")
         .notEmpty()
-        .withMessage("Email is required")
+        .withMessage("email-required")
         .matches(/.+@.+\..+/)
-        .withMessage("Invalid email")
+        .withMessage("email-invalid")
         .isLength({ min: 3, max: 32 })
-        .withMessage("Email must be between 3 to 32 characters")
+        .withMessage("email-must-3-32-characters")
         .run(req);
 
     await body("phoneNumber")
         .notEmpty()
-        .withMessage("Phone number is required")
+        .withMessage("phonenumber-required")
         .matches(/^\d{10}$/)
-        .withMessage("Invalid phone number")
+        .withMessage("phonenumber-invalid")
         .isLength({ min: 10, max: 10 })
-        .withMessage("Phone number must be 10 integer characters")
+        .withMessage("phonenumber-must-10-integer-characters")
         .run(req);
 
     await body("password")
         .notEmpty()
-        .withMessage("Password is required")
+        .withMessage("password-required")
         .isLength({ min: 8, max: 16 })
-        .withMessage("Password must contain from 8 to 16 characters")
+        .withMessage("password-must-8-16-characters")
         .run(req);
 
     await body("confirmPassword")
         .notEmpty()
-        .withMessage("Password confirm is required")
+        .withMessage("passwordconfirm-required")
         .isLength({ min: 8, max: 16 })
-        .withMessage("Password confirm must contain from 8 to 16 characters")
+        .withMessage("passwordconfirm-must-8-16-characters")
         .custom((value, { req }) => {
             if (value !== req.body.password) {
                 return false;
             }
             return true;
         })
-        .withMessage("Password confirm does not match with password")
+        .withMessage("passwords-not-match")
         .run(req);
 
     const errors = validationResult(req);
 
     return {
-        status: errors.isEmpty() ? "success" : "failed",
+        status: errors.isEmpty() ? "successfully" : "failed",
         error: errors.array()[0]?.msg,
     };
 };
@@ -56,20 +56,20 @@ const validateSignUpBody = async (req, res, next) => {
 const validateSignInBody = async (req, res, next) => {
     await body("username")
         .notEmpty()
-        .withMessage("Username is required")
+        .withMessage("username-required")
         .run(req);
 
     await body("password")
         .notEmpty()
-        .withMessage("Password is required")
+        .withMessage("password-required")
         .isLength({ min: 8, max: 16 })
-        .withMessage("Password must contain from 8 to 16 characters")
+        .withMessage("password-must-8-16-characters")
         .run(req);
 
     const errors = validationResult(req);
 
     return {
-        status: errors.isEmpty() ? "success" : "failed",
+        status: errors.isEmpty() ? "successfully" : "failed",
         error: errors.array()[0]?.msg,
     };
 };
@@ -77,17 +77,17 @@ const validateSignInBody = async (req, res, next) => {
 const validateSubmitEmailBody = async (req, res, next) => {
     await body("email")
         .notEmpty()
-        .withMessage("Email is required")
+        .withMessage("email-required")
         .matches(/.+@.+\..+/)
-        .withMessage("Invalid email")
+        .withMessage("email-invalid")
         .isLength({ min: 3, max: 32 })
-        .withMessage("Email must be between 3 to 32 characters")
+        .withMessage("email-must-3-32-characters")
         .run(req);
 
     const errors = validationResult(req);
 
     return {
-        status: errors.isEmpty() ? "success" : "failed",
+        status: errors.isEmpty() ? "successfully" : "failed",
         error: errors.array()[0]?.msg,
     };
 };
@@ -95,19 +95,19 @@ const validateSubmitEmailBody = async (req, res, next) => {
 const validateSubmitCodeBody = async (req, res, next) => {
     await body("code")
         .notEmpty()
-        .withMessage("Code is required")
+        .withMessage("code-required")
         .isNumeric()
         .isLength({ min: 6, max: 6 })
         // .matches(/.+@.+\..+/)
-        .withMessage("Invalid code")
+        .withMessage("code-invalid")
         // .isLength({ min: 3, max: 32 })
-        // .withMessage("Code must be between 3 to 32 characters")
+        // .withMessage("code-must-6-characters")
         .run(req);
 
     const errors = validationResult(req);
 
     return {
-        status: errors.isEmpty() ? "success" : "failed",
+        status: errors.isEmpty() ? "successfully" : "failed",
         error: errors.array()[0]?.msg,
     };
 };
@@ -115,29 +115,29 @@ const validateSubmitCodeBody = async (req, res, next) => {
 const validateCreateNewPasswordBody = async (req, res, next) => {
     await body("password")
         .notEmpty()
-        .withMessage("Password is required")
+        .withMessage("password-required")
         .isLength({ min: 8, max: 16 })
-        .withMessage("Password must contain from 8 to 16 characters")
+        .withMessage("password-must-8-16-characters")
         .run(req);
 
     await body("confirmPassword")
         .notEmpty()
-        .withMessage("Password confirm is required")
+        .withMessage("passwordconfirm-required")
         .isLength({ min: 8, max: 16 })
-        .withMessage("Password confirm must contain from 8 to 16 characters")
+        .withMessage("passwordconfirm-must-8-16-characters")
         .custom((value, { req }) => {
             if (value !== req.body.password) {
                 return false;
             }
             return true;
         })
-        .withMessage("Password confirm does not match with password")
+        .withMessage("passwords-not-match")
         .run(req);
 
     const errors = validationResult(req);
 
     return {
-        status: errors.isEmpty() ? "success" : "failed",
+        status: errors.isEmpty() ? "successfully" : "failed",
         error: errors.array()[0]?.msg,
     };
 };

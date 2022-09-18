@@ -28,10 +28,10 @@ function AuthController() {
         }
 
         if (await checkExistedUsername(username)) {
-            return res.status(400).json({ message: "Username is existed" });
+            return res.status(400).json({ message: "username-existed" });
         }
         if (await checkExistedEmail(email)) {
-            return res.status(400).json({ message: "Email is existed" });
+            return res.status(400).json({ message: "email-existed" });
         }
 
         // Encode password and create new user in DB
@@ -48,11 +48,12 @@ function AuthController() {
 
             await createNewUser(newUser)
                 .then(function () {
-                    return res.status(200).json({ message: "Sign up successfully" });
+                    return res.status(200).json({ message: "successfully" });
                 })
                 .catch(function (error) {
                     return res.status(400).json({
-                        message: "Sign up failed with error: " + error,
+                        message: "failed",
+                        error: error
                     });
                 });
         });
@@ -68,7 +69,7 @@ function AuthController() {
         }
 
         if (!(await checkExistedUsername(username))) {
-            return res.status(404).json({ message: "Username is not found" });
+            return res.status(404).json({ message: "username-notfound" });
         } else {
             const hashPassword = await getPasswordByUsername(username);
 
@@ -88,25 +89,25 @@ function AuthController() {
                         });
 
                         return res.status(200).json({
-                            message: "Sign in successfully",
+                            message: "successfully",
                             firstAccess: true,
                         });
                     } else {
                         if (await isAuthed(req)) {
                             return res.status(200).json({
-                                message: "Sign in successfully",
+                                message: "successfully",
                                 firstAccess: false,
                             });
                         } else {
                             return res.status(401).json({
-                                message: "Sign in failed. Unauthorized",
+                                message: "failed-unauthorized",
                                 firstAccess: false,
                             });
                         }
                     }
                 } else {
                     return res.status(400).json({
-                        message: "Incorrect password",
+                        message: "incorrect-password",
                     });
                 }
             });
@@ -118,7 +119,7 @@ function AuthController() {
         req.session = null;
         res.clearCookie(TI_AUTH_COOKIE);
 
-        return res.status(200).json({ message: "Sign out successfully" });
+        return res.status(200).json({ message: "successfully" });
     };
 }
 
