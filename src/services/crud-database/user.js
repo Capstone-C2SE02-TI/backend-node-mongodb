@@ -4,6 +4,7 @@ const { randomFirestoreDocumentId } = require("../../helpers");
 
 const getUserByUsername = async (username) => {
     let user;
+
     const users = await database.collection("users")
         .where("username", "==", username)
         .get();
@@ -63,6 +64,7 @@ const checkExistedUsername = async (username) => {
     isExistedUsername = false;
 
     const users = await database.collection("users").get();
+
     users.forEach((doc) => {
         if (doc.get("username") === username) {
             isExistedUsername = true;
@@ -76,6 +78,7 @@ const checkExistedEmail = async (email) => {
     isExistedEmail = false;
 
     const users = await database.collection("users").get();
+
     users.forEach((doc) => {
         if (doc.get("email") === email) {
             isExistedEmail = true;
@@ -99,45 +102,18 @@ const getPasswordByUsername = async (username) => {
     return hashPassword;
 };
 
-const getListOfUsers = async (page = 1) => {
-    let usersList = [];
-
-    const LIMIT_ITEM = 100;
-    const startIndex = page === 1 ? 1 : (page * LIMIT_ITEM) + 1
-
-    const users = await database.collection("users")
-        .orderBy("userId", "asc")
-        .startAt(startIndex)
-        .limit(LIMIT_ITEM)
-        .get();
-
-    users.forEach((doc) => {
-        usersList.push(doc.data());
-    });
-
-    return usersList;
-}
-
-const getUsersLength = async () => {
-    let usersLength = 0;
-    const users = await database.collection("users").get();
-
-    users.forEach((doc) => usersLength++);
-
-    return usersLength;
-}
-
 
 const getListOfCoins = async (page = 1) => {
     let coinsList = [];
 
-    const LIMIT_ITEM = 100;
-    const startIndex = page === 1 ? 1 : (page * LIMIT_ITEM) + 1
+    const QUERY_LIMIT_ITEM = 100;
+
+    const startIndex = page === 1 ? 1 : (page * QUERY_LIMIT_ITEM) + 1
 
     const coins = await database.collection("tokens")
         .orderBy("id", "asc")
         .startAt(startIndex)
-        .limit(LIMIT_ITEM)
+        .limit(QUERY_LIMIT_ITEM)
         .get();
 
     coins.forEach((doc) => {
@@ -145,6 +121,16 @@ const getListOfCoins = async (page = 1) => {
     });
 
     return coinsList;
+}
+
+const getCoinsLength = async () => {
+    let coinsLength = 0;
+
+    const coins = await database.collection("tokens").get();
+
+    coins.forEach((doc) => coinsLength++);
+
+    return coinsLength;
 }
 
 module.exports = {
@@ -155,7 +141,6 @@ module.exports = {
     checkExistedUsername,
     checkExistedEmail,
     getPasswordByUsername,
-    getListOfUsers,
-    getUsersLength,
-    getListOfCoins
+    getListOfCoins,
+    getCoinsLength
 };
