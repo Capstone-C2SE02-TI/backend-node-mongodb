@@ -1,6 +1,7 @@
 const database = require("../../configs/connect-database");
 const firebase = require("firebase-admin");
 const { randomFirestoreDocumentId } = require("../../helpers");
+const { getUsersLength } = require("./admin");
 
 const getUserByUsername = async (username) => {
     let user;
@@ -101,7 +102,6 @@ const getPasswordByUsername = async (username) => {
 
     return hashPassword;
 };
-
 
 const getListOfCoins = async (page = 1) => {
     let coinsList = [];

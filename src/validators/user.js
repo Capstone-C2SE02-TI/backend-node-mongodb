@@ -2,20 +2,27 @@ const { body, validationResult } = require("express-validator");
 
 const validateSignUpBody = async (req, res, next) => {
     await body("username")
+        .trim()
         .notEmpty()
         .withMessage("username-required")
+        .isLength({ min: 5, max: 16 })
+        .withMessage("username-must-5-16-characters")
+        .matches(/^[a-zA-Z]+$/)
+        .withMessage("username-invalid")
         .run(req);
 
     await body("email")
+        .trim()
         .notEmpty()
         .withMessage("email-required")
         .matches(/.+@.+\..+/)
         .withMessage("email-invalid")
-        .isLength({ min: 3, max: 32 })
-        .withMessage("email-must-3-32-characters")
+        .isLength({ min: 16, max: 40 })
+        .withMessage("email-name-must-6-30-characters")
         .run(req);
 
     await body("phoneNumber")
+        .trim()
         .notEmpty()
         .withMessage("phonenumber-required")
         .matches(/^\d{10}$/)
@@ -25,6 +32,7 @@ const validateSignUpBody = async (req, res, next) => {
         .run(req);
 
     await body("password")
+        .trim()
         .notEmpty()
         .withMessage("password-required")
         .isLength({ min: 8, max: 16 })
@@ -32,6 +40,7 @@ const validateSignUpBody = async (req, res, next) => {
         .run(req);
 
     await body("confirmPassword")
+        .trim()
         .notEmpty()
         .withMessage("passwordconfirm-required")
         .isLength({ min: 8, max: 16 })
@@ -55,11 +64,17 @@ const validateSignUpBody = async (req, res, next) => {
 
 const validateSignInBody = async (req, res, next) => {
     await body("username")
+        .trim()
         .notEmpty()
         .withMessage("username-required")
+        .isLength({ min: 5, max: 16 })
+        .withMessage("username-must-5-16-characters")
+        .matches(/^[a-zA-Z]+$/)
+        .withMessage("username-invalid")
         .run(req);
 
     await body("password")
+        .trim()
         .notEmpty()
         .withMessage("password-required")
         .isLength({ min: 8, max: 16 })
@@ -76,12 +91,13 @@ const validateSignInBody = async (req, res, next) => {
 
 const validateSubmitEmailBody = async (req, res, next) => {
     await body("email")
+        .trim()
         .notEmpty()
         .withMessage("email-required")
         .matches(/.+@.+\..+/)
         .withMessage("email-invalid")
-        .isLength({ min: 3, max: 32 })
-        .withMessage("email-must-3-32-characters")
+        .isLength({ min: 16, max: 40 })
+        .withMessage("email-name-must-6-30-characters")
         .run(req);
 
     const errors = validationResult(req);
@@ -94,6 +110,7 @@ const validateSubmitEmailBody = async (req, res, next) => {
 
 const validateSubmitCodeBody = async (req, res, next) => {
     await body("code")
+        .trim()
         .notEmpty()
         .withMessage("code-required")
         .isNumeric()
@@ -114,6 +131,7 @@ const validateSubmitCodeBody = async (req, res, next) => {
 
 const validateCreateNewPasswordBody = async (req, res, next) => {
     await body("password")
+        .trim()
         .notEmpty()
         .withMessage("password-required")
         .isLength({ min: 8, max: 16 })
@@ -121,6 +139,7 @@ const validateCreateNewPasswordBody = async (req, res, next) => {
         .run(req);
 
     await body("confirmPassword")
+        .trim()
         .notEmpty()
         .withMessage("passwordconfirm-required")
         .isLength({ min: 8, max: 16 })
