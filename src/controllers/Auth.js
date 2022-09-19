@@ -106,11 +106,16 @@ function AuthController() {
     };
 
     this.signout = (req, res, next) => {
-        req.user = null;
-        req.session = null;
-        res.clearCookie(TI_AUTH_COOKIE);
+        try {
+            req.user = null;
+            req.session = null;
+            res.clearCookie(TI_AUTH_COOKIE);
 
-        return res.status(200).json({ message: "successfully" });
+            return res.status(200).json({ message: "successfully" });
+        } catch (error) {
+            return res.status(400).json({ message: "failed" });
+        }
+
     };
 }
 

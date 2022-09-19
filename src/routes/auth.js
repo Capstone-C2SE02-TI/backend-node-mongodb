@@ -94,7 +94,9 @@ router.post("/signin", authController.signin);
  *     tags: [Authentication]
  *     responses:
  *       200:
- *         description: Sign out successfully
+ *         description: Sign out successfully 
+ *       400:
+ *         description: Sign out failed
  */
 router.post("/signout", authController.signout);
 
