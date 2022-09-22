@@ -1,9 +1,8 @@
 const database = require("../../configs/connect-database");
+const { QUERY_LIMIT_ITEM } = require("../../constants")
 
 const getListOfUsers = async (page = 1) => {
     let usersList = [];
-
-    const QUERY_LIMIT_ITEM = 100;
 
     const startIndex = page === 1 ? 1 : (page * QUERY_LIMIT_ITEM) + 1
 

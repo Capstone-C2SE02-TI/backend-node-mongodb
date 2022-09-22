@@ -1,5 +1,7 @@
 const database = require("../../configs/connect-database");
 const firebase = require("firebase-admin");
+
+const { QUERY_LIMIT_ITEM } = require("./../../constants")
 const { randomFirestoreDocumentId } = require("../../helpers");
 const { getUsersLength } = require("./admin");
 
@@ -105,8 +107,6 @@ const getPasswordByUsername = async (username) => {
 
 const getListOfCoins = async (page = 1) => {
     let coinsList = [];
-
-    const QUERY_LIMIT_ITEM = 100;
 
     const startIndex = page === 1 ? 1 : (page * QUERY_LIMIT_ITEM) + 1
 

@@ -1,10 +1,9 @@
 const _ = require('lodash');
+const { QUERY_LIMIT_ITEM } = require("../constants");
 const { getListOfUsers, getUsersLength } = require("../services/crud-database/admin");
 
 function UserController() {
     this.getlist = async (req, res, next) => {
-        const QUERY_LIMIT_ITEM = 100;
-
         const pageQuery = Math.floor(_.toNumber(req.query.page));
 
         const page = pageQuery >= 1 ? pageQuery : 1
@@ -18,8 +17,8 @@ function UserController() {
                         message: "successfully",
                         page: page,
                         totalPage: Math.ceil(usersLength / QUERY_LIMIT_ITEM),
-                        usersLength: usersList.length,
-                        users: usersList
+                        datasLength: usersList.length,
+                        datas: usersList
                     });
             })
             .catch((error) => {
