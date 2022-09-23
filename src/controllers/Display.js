@@ -26,7 +26,7 @@ function DisplayController() {
                     .json({
                         message: "failed",
                         error: error,
-                        coins: null,
+                        datas: null,
                     });
             });
     };

@@ -26,7 +26,7 @@ function UserController() {
                     .json({
                         message: "failed",
                         error: error,
-                        users: null,
+                        datas: null,
                     });
             });
     };
