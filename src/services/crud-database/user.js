@@ -85,6 +85,7 @@ const checkExistedEmail = async (email) => {
     users.forEach((doc) => {
         if (doc.get("email") === email) {
             isExistedEmail = true;
+            // return;
         }
     });
 
@@ -124,13 +125,13 @@ const getListOfCoins = async (page = 1) => {
 }
 
 const getCoinsLength = async () => {
-    let coinsLength = 0;
+    let length = 0;
 
-    const coins = await database.collection("tokens").get();
+    await database.collection("tokens").get().then(snap => {
+        length = snap.size
+    });
 
-    coins.forEach((doc) => coinsLength++);
-
-    return coinsLength;
+    return length || 0;
 }
 
 module.exports = {

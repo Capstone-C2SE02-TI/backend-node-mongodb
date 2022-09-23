@@ -20,13 +20,13 @@ const getListOfUsers = async (page = 1) => {
 }
 
 const getUsersLength = async () => {
-    let usersLength = 0;
+    let length = 0;
 
-    const users = await database.collection("users").get();
+    await database.collection("users").get().then(snap => {
+        length = snap.size
+    });
 
-    users.forEach((doc) => usersLength++);
-
-    return usersLength;
+    return length || 0;
 }
 
 module.exports = {
