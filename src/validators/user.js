@@ -7,7 +7,7 @@ const validateSignUpBody = async (req, res, next) => {
         .withMessage("username-required")
         .isLength({ min: 5, max: 16 })
         .withMessage("username-must-5-16-characters")
-        .matches(/^[a-zA-Z]+$/)
+        .matches(/^[a-z]([0-9a-z])*$/)
         .withMessage("username-invalid")
         .run(req);
 
@@ -69,7 +69,7 @@ const validateSignInBody = async (req, res, next) => {
         .withMessage("username-required")
         .isLength({ min: 5, max: 16 })
         .withMessage("username-must-5-16-characters")
-        .matches(/^[a-zA-Z]+$/)
+        .matches(/^[a-z]([0-9a-z])*$/)
         .withMessage("username-invalid")
         .run(req);
 
