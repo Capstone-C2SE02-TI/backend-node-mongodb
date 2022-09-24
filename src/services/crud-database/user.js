@@ -106,12 +106,40 @@ const getPasswordByUsername = async (username) => {
     return hashPassword;
 };
 
+const getListOfTokens = async (page = 1) => {
+    let tokensList = [];
+
+    const startIndex = page === 1 ? 1 : (page * QUERY_LIMIT_ITEM) + 1
+
+    const tokens = await database.collection("tokens")
+        .orderBy("id", "asc")
+        .startAt(startIndex)
+        .limit(QUERY_LIMIT_ITEM)
+        .get();
+
+    tokens.forEach((doc) => {
+        tokensList.push(doc.data());
+    });
+
+    return tokensList;
+}
+
+const getTokensLength = async () => {
+    let length = 0;
+
+    await database.collection("tokens").get().then(snap => {
+        length = snap.size
+    });
+
+    return length || 0;
+}
+
 const getListOfCoins = async (page = 1) => {
     let coinsList = [];
 
     const startIndex = page === 1 ? 1 : (page * QUERY_LIMIT_ITEM) + 1
 
-    const coins = await database.collection("tokens")
+    const coins = await database.collection("coins")
         .orderBy("id", "asc")
         .startAt(startIndex)
         .limit(QUERY_LIMIT_ITEM)
@@ -127,7 +155,7 @@ const getListOfCoins = async (page = 1) => {
 const getCoinsLength = async () => {
     let length = 0;
 
-    await database.collection("tokens").get().then(snap => {
+    await database.collection("coins").get().then(snap => {
         length = snap.size
     });
 
@@ -142,6 +170,8 @@ module.exports = {
     checkExistedUsername,
     checkExistedEmail,
     getPasswordByUsername,
+    getListOfTokens,
+    getTokensLength,
     getListOfCoins,
     getCoinsLength
 };

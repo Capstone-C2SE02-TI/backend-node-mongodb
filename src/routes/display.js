@@ -10,6 +10,28 @@ const displayController = require("../controllers/Display");
 
 /**
  * @swagger
+ * /display/tokens:
+ *   get:
+ *     description: Get list of tokens
+ *     tags: [Display]
+ *     parameters:
+ *      - in: query
+ *        name: page
+ *        schema:
+ *          type: integer
+ *     responses:
+ *       200:
+ *         description: Get list of tokens successfully
+ *       401:
+ *         description: Get list of tokens failed
+ *       400:
+ *         description: Bad request
+ */
+router.get("/tokens", displayController.getTokens);
+
+
+/**
+ * @swagger
  * /display/coins:
  *   get:
  *     description: Get list of coins
