@@ -4,6 +4,9 @@ const { getListOfUsers, getUsersLength } = require("../services/crud-database/ad
 
 function UserController() {
     this.getlist = async (req, res, next) => {
+        // if (!req.query.page) {
+        //     // page = 1
+        // }
         const pageQuery = Math.floor(_.toNumber(req.query.page));
 
         const page = pageQuery >= 1 ? pageQuery : 1
@@ -12,14 +15,25 @@ function UserController() {
 
         await getListOfUsers(page)
             .then((usersList) => {
-                return res.status(200)
-                    .json({
-                        message: "successfully",
-                        page: page,
-                        totalPage: Math.ceil(usersLength / QUERY_LIMIT_ITEM),
-                        datasLength: usersList.length,
-                        datas: usersList
-                    });
+                if (usersList.length == 0) {
+                    return res.status(400)
+                        .json({
+                            message: "failed-pageindex-invalid",
+                            page: page,
+                            totalPage: Math.ceil(usersLength / QUERY_LIMIT_ITEM),
+                            datasLength: 0,
+                            datas: []
+                        });
+                } else {
+                    return res.status(200)
+                        .json({
+                            message: "successfully",
+                            page: page,
+                            totalPage: Math.ceil(usersLength / QUERY_LIMIT_ITEM),
+                            datasLength: usersList.length,
+                            datas: usersList
+                        });
+                }
             })
             .catch((error) => {
                 return res.status(400)

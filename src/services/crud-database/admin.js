@@ -3,8 +3,7 @@ const { QUERY_LIMIT_ITEM } = require("../../constants")
 
 const getListOfUsers = async (page = 1) => {
     let usersList = [];
-
-    const startIndex = page === 1 ? 1 : (page * QUERY_LIMIT_ITEM) + 1
+    const startIndex = ((page - 1) * QUERY_LIMIT_ITEM) + 1;
 
     const users = await database.collection("users")
         .orderBy("userId", "asc")
