@@ -4,36 +4,35 @@ const bcrypt = require("bcrypt");
 const randomConfirmationCode = () => {
     const code = Math.floor(100000 + Math.random() * 900000);
     return code.toString();
-};
+}
 
-function randomFirestoreDocumentId() {
+const randomFirestoreDocumentId = () => {
     const validCharacters =
-        "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789".split(
-            "",
-        );
+        "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789".split("");
     const length = 20;
+
     return _.sampleSize(validCharacters, length).join("");
 }
 
-function cryptPassword(password, callback) {
-    bcrypt.genSalt(10, function (error, salt) {
+const cryptPassword = (password, callback) => {
+    bcrypt.genSalt(10, (error, salt) => {
         if (error) return callback(error);
 
-        bcrypt.hash(password, salt, function (error, hashPassword) {
+        bcrypt.hash(password, salt, (error, hashPassword) => {
             return callback(error, hashPassword);
         });
     });
 }
 
-function comparePassword(plainPassword, hashPassword, callback) {
+const comparePassword = (plainPassword, hashPassword, callback) => {
     bcrypt.compare(
         plainPassword,
         hashPassword,
-        function (error, isPasswordMatch) {
+        (error, isPasswordMatch) => {
             return error == null
                 ? callback(null, isPasswordMatch)
                 : callback(error);
-        },
+        }
     );
 }
 

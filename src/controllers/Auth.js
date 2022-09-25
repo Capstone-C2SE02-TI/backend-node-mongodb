@@ -80,18 +80,15 @@ function AuthController() {
 
                         return res.status(200).json({
                             message: "successfully",
-                            firstAccess: true,
                         });
                     } else {
                         if (await isAuthed(req)) {
                             return res.status(200).json({
                                 message: "successfully",
-                                firstAccess: false,
                             });
                         } else {
                             return res.status(401).json({
                                 message: "failed-unauthorized",
-                                firstAccess: false,
                             });
                         }
                     }
@@ -108,7 +105,6 @@ function AuthController() {
         try {
             req.user = null;
             req.session = null;
-            res.clearCookie(TI_AUTH_COOKIE);
 
             return res.status(200).json({ message: "successfully" });
         } catch (error) {
