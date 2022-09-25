@@ -75,8 +75,7 @@ function AuthController() {
 
                         res.cookie(TI_AUTH_COOKIE, accessToken, {
                             // Expire in 1 week
-                            maxAge: 604800000,
-                            httpOnly: true,
+                            maxAge: 604800000
                         });
 
                         return res.status(200).json({
