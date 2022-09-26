@@ -18,7 +18,7 @@ const userController = require("../controllers/User");
  *      - in: query
  *        name: page
  *        schema:
- *          type: integer
+ *          type: string
  *     responses:
  *       200:
  *         description: Get list of users successfully

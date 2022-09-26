@@ -18,7 +18,7 @@ const displayController = require("../controllers/Display");
  *      - in: query
  *        name: page
  *        schema:
- *          type: integer
+ *          type: string
  *     responses:
  *       200:
  *         description: Get list of coins successfully
