@@ -4,14 +4,21 @@ const { getListOfUsers, getUsersLength } = require("../services/crud-database/ad
 
 function UserController() {
     this.getlist = async (req, res, next) => {
-        // if (!req.query.page) {
-        //     // page = 1
-        // }
-        const pageQuery = Math.floor(_.toNumber(req.query.page));
-
-        const page = pageQuery >= 1 ? pageQuery : 1
-
         const usersLength = await getUsersLength();
+        const totalPage = Math.ceil(usersLength / QUERY_LIMIT_ITEM);
+
+        let page;
+        if (!req.query.page) {
+            page = 1;
+        }
+        else {
+            const pageInt = Math.floor(_.toNumber(req.query.page));
+            if (_.isNaN(pageInt) || pageInt <= 0 || pageInt > totalPage) {
+                page = undefined;
+            } else {
+                page = pageInt;
+            }
+        }
 
         await getListOfUsers(page)
             .then((usersList) => {
@@ -19,8 +26,9 @@ function UserController() {
                     return res.status(400)
                         .json({
                             message: "failed-pageindex-invalid",
-                            page: page,
-                            totalPage: Math.ceil(usersLength / QUERY_LIMIT_ITEM),
+                            error: "pageindex-invalid",
+                            page: req.query.page,
+                            totalPage: totalPage,
                             datasLength: 0,
                             datas: []
                         });
@@ -28,8 +36,9 @@ function UserController() {
                     return res.status(200)
                         .json({
                             message: "successfully",
+                            error: null,
                             page: page,
-                            totalPage: Math.ceil(usersLength / QUERY_LIMIT_ITEM),
+                            totalPage: totalPage,
                             datasLength: usersList.length,
                             datas: usersList
                         });
@@ -40,7 +49,10 @@ function UserController() {
                     .json({
                         message: "failed",
                         error: error,
-                        datas: null,
+                        page: req.query.page,
+                        totalPage: totalPage,
+                        datasLength: 0,
+                        datas: []
                     });
             });
     };

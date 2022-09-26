@@ -106,21 +106,26 @@ const getPasswordByUsername = async (username) => {
     return hashPassword;
 };
 
-const getListOfCoins = async (page = 1) => {
-    let coinsList = [];
-    const startIndex = ((page - 1) * QUERY_LIMIT_ITEM) + 1;
+const getListOfCoins = async (page) => {
+    if (page == undefined) {
+        return [];
+    }
+    else {
+        let coinsList = [];
+        const startIndex = ((page - 1) * QUERY_LIMIT_ITEM) + 1;
 
-    const coins = await database.collection("tokens")
-        .orderBy("id", "asc")
-        .startAt(startIndex)
-        .limit(QUERY_LIMIT_ITEM)
-        .get();
+        const coins = await database.collection("tokens")
+            .orderBy("id", "asc")
+            .startAt(startIndex)
+            .limit(QUERY_LIMIT_ITEM)
+            .get();
 
-    coins.forEach((doc) => {
-        coinsList.push(doc.data());
-    });
+        coins.forEach((doc) => {
+            coinsList.push(doc.data());
+        });
 
-    return coinsList;
+        return coinsList;
+    }
 }
 
 const getCoinsLength = async () => {
