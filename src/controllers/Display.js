@@ -9,7 +9,7 @@ function DisplayController() {
 
         let page;
         if (!req.query.page) {
-            page = 1;
+            page = null;
         }
         else {
             const pageInt = Math.floor(_.toNumber(req.query.page));

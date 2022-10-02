@@ -5,11 +5,13 @@ const { getListOfUsers, getUsersLength } = require("../services/crud-database/ad
 function UserController() {
     this.getlist = async (req, res, next) => {
         const usersLength = await getUsersLength();
+        console.log(usersLength);
         const totalPage = Math.ceil(usersLength / QUERY_LIMIT_ITEM);
+        console.log(totalPage);
 
         let page;
         if (!req.query.page) {
-            page = 1;
+            page = null;
         }
         else {
             const pageInt = Math.floor(_.toNumber(req.query.page));

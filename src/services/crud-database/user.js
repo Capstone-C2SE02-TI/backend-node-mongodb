@@ -107,25 +107,32 @@ const getPasswordByUsername = async (username) => {
 };
 
 const getListOfCoins = async (page) => {
-    if (page == undefined) {
+    if (page === undefined) {
         return [];
     }
-    else {
-        let coinsList = [];
-        const startIndex = ((page - 1) * QUERY_LIMIT_ITEM) + 1;
 
-        const coins = await database.collection("tokens")
+    let coins = [];
+    let coinsList = [];
+
+    if (page === null) {
+        coins = await database.collection("tokens")
+            .orderBy("id", "asc")
+            .get();
+    }
+    else {
+        const startIndex = ((page - 1) * QUERY_LIMIT_ITEM) + 1;
+        coins = await database.collection("tokens")
             .orderBy("id", "asc")
             .startAt(startIndex)
             .limit(QUERY_LIMIT_ITEM)
             .get();
-
-        coins.forEach((doc) => {
-            coinsList.push(doc.data());
-        });
-
-        return coinsList;
     }
+
+    coins.forEach((doc) => {
+        coinsList.push(doc.data());
+    });
+
+    return coinsList;
 }
 
 const getCoinsLength = async () => {
