@@ -6,7 +6,7 @@ const swaggerUI = require("swagger-ui-express");
 const swaggerJsDoc = require("swagger-jsdoc");
 const cookieParse = require("cookie-parser");
 const routing = require("./routes");
-const database = require("./configs/connect-database");
+const { connectDatabase } = require("./configs/connectDatabase");
 const PORT = process.env.PORT || 4000;
 
 const app = express();
@@ -46,6 +46,8 @@ app.use(express.json());
 app.use(cookieParse());
 
 routing(app);
+
+connectDatabase();
 
 app.listen(PORT, () => {
     console.log(`Server is listening at http://localhost:${PORT}/`);
