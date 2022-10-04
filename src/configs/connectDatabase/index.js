@@ -1,37 +1,27 @@
 const mongoose = require("mongoose");
 require("dotenv").config();
 
+const MONGODB_URI = process.env.MONGODB_URI;
 let database;
-let TestInfo;
 
 const connectDatabase = async () => {
 	try {
-		mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true });
-		mongoose.connection.on("error", (error) => console.log(error));
+		mongoose.connect(MONGODB_URI, { useNewUrlParser: true });
+
+		mongoose.connection.on("error", (error) => {
+			throw new Error(error);
+		});
+
 		mongoose.connection.on("open", () => {
 			console.log("Connect to database successfully");
 			database = mongoose.connection.useDb("TRACKINGINVESTMENT");
-
-			const TestSchema = new mongoose.Schema({
-				name: {
-					type: String,
-				},
-			});
-			TestInfo = database.model("Test", TestSchema);
-			console.log(TestInfo.Test);
-			TestInfo.find({})
-				.then((datas) => {
-					console.log(datas);
-				})
-				.catch((error) => {
-					console.log(error);
-				});
 		});
+
+		return database;
 	} catch (error) {
 		console.log("Connect to database failed with error:", error);
+		return null;
 	}
 };
 
-console.log(TestInfo);
-
-module.exports = { connectDatabase, database, TestInfo };
+module.exports = connectDatabase;

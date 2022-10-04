@@ -1,5 +1,4 @@
 // const database = require("../../configs/connectDatabase");
-// const firebase = require("firebase-admin");
 
 // const { QUERY_LIMIT_ITEM } = require("./../../constants")
 // const { randomFirestoreDocumentId } = require("../../helpers");

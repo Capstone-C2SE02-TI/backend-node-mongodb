@@ -6,7 +6,7 @@ const swaggerUI = require("swagger-ui-express");
 const swaggerJsDoc = require("swagger-jsdoc");
 const cookieParse = require("cookie-parser");
 const routing = require("./routes");
-const { connectDatabase } = require("./configs/connectDatabase");
+const connectDatabase = require("./configs/connectDatabase");
 const PORT = process.env.PORT || 4000;
 
 const app = express();
@@ -14,26 +14,26 @@ dotenv.config();
 
 // Config Swagger
 const swaggerOptions = {
-    definition: {
-        openapi: "3.0.3",
-        info: {
-            title: "SwaggerUI",
-            version: "1.0.0",
-            description: "A simple Express Library API",
-        },
-        servers: [
-            {
-                url: "http://localhost:4000",
-            },
-        ],
-    },
-    apis: [
-        "src/routes/auth.js",
-        "src/routes/forgotPassword.js",
-        "src/routes/display.js",
-        "src/routes/user.js",
-        "src/routes/sites.js",
-    ],
+	definition: {
+		openapi: "3.0.3",
+		info: {
+			title: "SwaggerUI",
+			version: "1.0.0",
+			description: "A simple Express Library API",
+		},
+		servers: [
+			{
+				url: "http://localhost:4000",
+			},
+		],
+	},
+	apis: [
+		"src/routes/auth.js",
+		"src/routes/forgotPassword.js",
+		"src/routes/display.js",
+		"src/routes/user.js",
+		"src/routes/sites.js",
+	],
 };
 const swaggerSpecs = swaggerJsDoc(swaggerOptions);
 app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(swaggerSpecs));
@@ -47,9 +47,13 @@ app.use(cookieParse());
 
 routing(app);
 
-connectDatabase();
+const database = (async function () {
+	await connectDatabase();
+})();
 
 app.listen(PORT, () => {
-    console.log(`Server is listening at http://localhost:${PORT}/`);
-    console.log(`API Documentation: http://localhost:${PORT}/api-docs/`);
+	console.log(`Server is listening at http://localhost:${PORT}/`);
+	console.log(`API Documentation: http://localhost:${PORT}/api-docs/`);
 });
+
+module.exports = { database };

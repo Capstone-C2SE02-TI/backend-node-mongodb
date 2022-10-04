@@ -1,5 +1,4 @@
-// const dotenv = require("dotenv");
-// dotenv.config();
+// require("dotenv").config();
 
 // const { cryptPassword, comparePassword } = require("../helpers");
 // const { validateSignUpBody, validateSignInBody } = require("../validators/user");
