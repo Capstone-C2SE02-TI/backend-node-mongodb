@@ -26,121 +26,65 @@ myOAuth2Client.setCredentials({
 });
 
 function ForgotPasswordController() {
-	// ==> ERROR
+	// ==> DOING
 	this.submitEmail = async (req, res, next) => {
-		try {
-			const myAccessTokenObject = await myOAuth2Client.getAccessToken();
-			const myAccessToken = myAccessTokenObject?.token;
-			// 	"ya29.a0Aa4xrXPZ5LLUjxvtC3axmhxTO7OSHXYcHWXxKXm7qCnNOS3m_tClSxBYJz7jfFcBk9FFDw836nfEYGu-5lkjoaVvZX_-f3HVXQeNZF81zs-cX7Y5qgXLK5542oODky3sY8sHjEH9gtkudt7DbrLnoil_IAHhaCgYKATASARISFQEjDvL9GRNzLUoEQoYUjSanilgR3A0163";
-
-			console.log("myAccessTokenObject:", myAccessTokenObject);
-
-			const transport = nodemailer.createTransport({
-				service: "gmail",
-				auth: {
-					type: "OAuth2",
-					user: ADMIN_EMAIL_ADDRESS,
-					pass: ADMIN_EMAIL_PASSWORD,
-					clientId: GOOGLE_MAILER_CLIENT_ID,
-					clientSecret: GOOGLE_MAILER_CLIENT_SECRET,
-					refreshToken: GOOGLE_MAILER_REFRESH_TOKEN,
-					accessToken: myAccessToken,
-				},
-			});
-
-			const code = randomConfirmationCode();
-			const html = `
-            <div style="padding: 10px; background-color: #003375">
-                <div style="padding: 10px; background-color: white;">
-                    <h4 style="color: #0085ff">Your verification code is:</h4>
-                    <span style="color: black">${code}</span>
-                </div>
-            </div>
-        `;
-
-			const mailOptions = {
-				from: {
-					name: "Tracking Investment's Support Team",
-					address: ADMIN_EMAIL_ADDRESS,
-				},
-				to: req.body.email,
-				subject: "Reset Password - Tracking Investment",
-				html: html,
-			};
-
-			await transport.sendMail(mailOptions);
-
-			res.status(200).json({ message: "SUCCESSFULLY" });
-		} catch (error) {
-			console.log(error);
-			res.status(500).json({ message: "FAILED" });
-		}
-	};
-
-	this.submitEmail2 = async (req, res, next) => {
 		const user = await getUserByEmail(req.body.email);
 
-		const transporter = nodemailer.createTransport({
-			service: "gmail",
-			host: "smtp.gmail.com",
-			port: 465,
-			secure: true,
-			auth: {
-				user: process.env._0x072126sajkxja3181sc33242315_,
-				pass: process.env._0x073126sajkxja3112lkkjs83j22_,
-			},
-			tls: {
-				rejectUnauthorized: false,
-			},
-		});
+		if (user) {
+			try {
+				// Send mail
+				const myAccessTokenObject =
+					await myOAuth2Client.getAccessToken();
+				const myAccessToken = myAccessTokenObject?.token;
 
-		const code = randomConfirmationCode();
-		const html = `
-            <div style="padding: 10px; background-color: #003375">
-                <div style="padding: 10px; background-color: white;">
-                    <h4 style="color: #0085ff">Your verification code is:</h4>
-                    <span style="color: black">${code}</span>
-                </div>
-            </div>
-        `;
+				const transport = nodemailer.createTransport({
+					service: "gmail",
+					auth: {
+						type: "OAuth2",
+						user: ADMIN_EMAIL_ADDRESS,
+						pass: ADMIN_EMAIL_PASSWORD,
+						clientId: GOOGLE_MAILER_CLIENT_ID,
+						clientSecret: GOOGLE_MAILER_CLIENT_SECRET,
+						refreshToken: GOOGLE_MAILER_REFRESH_TOKEN,
+						accessToken: myAccessToken,
+					},
+				});
 
-		const mailOptions = {
-			from: {
-				name: "Tracking Investor's Support Team",
-				address: process.env._0x072126sajkxja3181sc33242315_,
-			},
-			to: req.body.email,
-			subject: "Verify code to create new password - TI Team",
-			html: html,
-		};
+				const mailOptions = {
+					from: {
+						name: "Tracking Investment's Support Team",
+						address: ADMIN_EMAIL_ADDRESS,
+					},
+					to: req.body.email,
+					subject: "Reset Password - Tracking Investment",
+					html: `
+						<div>
+							<div>
+								<h4 style=font-size: 16px">Hi, I'm Hoang Dung from Tracking Investment's Support Team</h4>
+								</br>
+								<h4 style=font-size: 16px">Your reset password code is:</h4>
+								<span style="color: black; font-size: 26px">${randomConfirmationCode()}</span>
+							</div>
+						</div>
+					`,
+				};
 
-		transporter.sendMail(mailOptions, async (error, info) => {
-			if (!error) {
-				if (user) {
-					const updatedUser = await updateUserConfirmationCode(
-						user.docId,
-						code,
-					);
+				await transport.sendMail(mailOptions);
 
-					if (updatedUser) {
-						return res.status(200).json({
-							message:
-								"Submit email successfully. Please check your email",
-						});
-					} else {
-						return res.json({
-							message: "Submit email failed",
-						});
-					}
-				} else {
-					return res.json({ message: "Email not found" });
-				}
-			} else {
-				return res
-					.status(400)
-					.json({ message: "Submit email failedd" });
+				// Store confirmationCode
+				await updateUserConfirmationCode(user.docId, code);
+
+				return res.status(200).json({
+					message: "successfully",
+				});
+			} catch (error) {
+				return res.status(400).json({
+					message: "failed",
+				});
 			}
-		});
+		} else {
+			return res.status(400).json({ message: "email_notfound" });
+		}
 	};
 
 	// ==> DONE
