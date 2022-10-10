@@ -6,7 +6,7 @@ const swaggerUI = require("swagger-ui-express");
 const swaggerJsDoc = require("swagger-jsdoc");
 const cookieParse = require("cookie-parser");
 const routing = require("./routes");
-const connectDatabase = require("./configs/connectDatabase");
+const { connectDatabase } = require("./configs/connectDatabase");
 const PORT = process.env.PORT || 4000;
 
 const app = express();
@@ -45,15 +45,11 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(cookieParse());
 
-routing(app);
+connectDatabase();
 
-const database = (async function () {
-	await connectDatabase();
-})();
+routing(app);
 
 app.listen(PORT, () => {
 	console.log(`Server is listening at http://localhost:${PORT}/`);
 	console.log(`API Documentation: http://localhost:${PORT}/api-docs/`);
 });
-
-module.exports = { database };

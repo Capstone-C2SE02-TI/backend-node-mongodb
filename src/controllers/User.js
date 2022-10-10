@@ -1,7 +1,7 @@
 // const _ = require('lodash');
 // const { QUERY_LIMIT_ITEM } = require("../constants");
 // const { getListOfUsers, getUsersLength } = require("../services/crud-database/admin");
-const User = require("../models/User");
+// const User = require("../models/User");
 
 function UserController() {
 	// this.getlist = async (req, res, next) => {
@@ -60,11 +60,11 @@ function UserController() {
 	//         });
 	// };
 
-	this.getList = (req, res, next) => {
-		User.find({})
-			.then((courses) => res.json(courses))
-			.catch((error) => res.json({ error: error }));
-	};
+	// this.getList = (req, res, next) => {
+	// 	User.find({})
+	// 		.then((courses) => res.json(courses))
+	// 		.catch((error) => res.json({ error: error }));
+	// };
 }
 
 module.exports = new UserController();
