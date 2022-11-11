@@ -33,6 +33,7 @@ const swaggerOptions = {
 		"src/routes/display.js",
 		"src/routes/user.js",
 		"src/routes/sites.js",
+		"src/routes/test.js",
 	],
 };
 const swaggerSpecs = swaggerJsDoc(swaggerOptions);

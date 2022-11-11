@@ -42,7 +42,7 @@
 //         pic: {
 //             type: String,
 //             default:
-//                 "https://res.cloudinary.com/dhzbsq7fj/image/upload/v1643101647/avatardefault_92824_aifry9.png",
+//                 "",
 //         },
 //         code: {
 //             type: String,
