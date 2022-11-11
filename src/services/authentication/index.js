@@ -1,4 +1,5 @@
-require("dotenv").config();
+const dotenv = require("dotenv");
+dotenv.config();
 
 const jwt = require("jsonwebtoken");
 const promisify = require("util").promisify;
@@ -32,24 +33,19 @@ const generateAccessToken = async (accessTokenData) => {
 
 const isAuthed = async (req, res, next) => {
 	const accessTokenHeader = req.headers.authorization;
-	if (!accessTokenHeader) {
-		return false;
-	}
+	if (!accessTokenHeader) return false;
 
 	const cookie = req.cookies.TI_AUTH_COOKIE;
 	const decodeValue1 = await decodeToken(
 		accessTokenHeader,
 		ACCESS_TOKEN_SECRET,
 	);
+
 	const decodeValue2 = await decodeToken(cookie, ACCESS_TOKEN_SECRET);
 
-	if (!decodeValue1 || !decodeValue2) {
-		return false;
-	}
+	if (!decodeValue1 || !decodeValue2) return false;
 
-	if (decodeValue1.username !== decodeValue2.username) {
-		return false;
-	}
+	if (decodeValue1.username !== decodeValue2.username) return false;
 
 	return true;
 };

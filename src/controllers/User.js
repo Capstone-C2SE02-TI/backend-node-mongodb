@@ -1,70 +1,126 @@
-// const _ = require('lodash');
-// const { QUERY_LIMIT_ITEM } = require("../constants");
-// const { getListOfUsers, getUsersLength } = require("../services/crud-database/admin");
-// const User = require("../models/User");
+const _ = require("lodash");
+const {
+	getUserProfile,
+	updateUserProfile,
+	upgradeUserPremiumAccount,
+} = require("../services/crud-database/admin");
+const { validateUpdateProfileBody } = require("../validators/user");
 
 function UserController() {
-	// this.getlist = async (req, res, next) => {
-	//     const usersLength = await getUsersLength();
-	//     console.log(usersLength);
-	//     const totalPage = Math.ceil(usersLength / QUERY_LIMIT_ITEM);
-	//     console.log(totalPage);
+	this.getUserProfile = async (req, res, next) => {
+		let userId = req.query.userId;
 
-	//     let page;
-	//     if (!req.query.page) {
-	//         page = null;
-	//     }
-	//     else {
-	//         const pageInt = Math.floor(_.toNumber(req.query.page));
-	//         if (_.isNaN(pageInt) || pageInt <= 0 || pageInt > totalPage) {
-	//             page = undefined;
-	//         } else {
-	//             page = pageInt;
-	//         }
-	//     }
+		if (!userId) {
+			userId = null;
+		} else {
+			const userIdCheck = _.toString(userId);
 
-	//     await getListOfUsers(page)
-	//         .then((usersList) => {
-	//             if (usersList.length == 0) {
-	//                 return res.status(400)
-	//                     .json({
-	//                         message: "failed-pageindex-invalid",
-	//                         error: "pageindex-invalid",
-	//                         page: req.query.page,
-	//                         totalPage: totalPage,
-	//                         datasLength: 0,
-	//                         datas: []
-	//                     });
-	//             } else {
-	//                 return res.status(200)
-	//                     .json({
-	//                         message: "successfully",
-	//                         error: null,
-	//                         page: page,
-	//                         totalPage: totalPage,
-	//                         datasLength: usersList.length,
-	//                         datas: usersList
-	//                     });
-	//             }
-	//         })
-	//         .catch((error) => {
-	//             return res.status(400)
-	//                 .json({
-	//                     message: "failed",
-	//                     error: error,
-	//                     page: req.query.page,
-	//                     totalPage: totalPage,
-	//                     datasLength: 0,
-	//                     datas: []
-	//                 });
-	//         });
-	// };
+			if (_.isNaN(userIdCheck)) userId = undefined;
+			else userId = Number(userIdCheck);
+		}
 
-	// this.getList = (req, res, next) => {
-	// 	User.find({})
-	// 		.then((courses) => res.json(courses))
-	// 		.catch((error) => res.json({ error: error }));
-	// };
+		await getUserProfile(userId)
+			.then((data) => {
+				if (Object.entries(data).length === 0) {
+					return res.status(400).json({
+						message: "failed-userid-invalid",
+						error: "userid-invalid",
+						data: {},
+					});
+				} else {
+					return res.status(200).json({
+						message: "successfully",
+						error: null,
+						data: data,
+					});
+				}
+			})
+			.catch((error) => {
+				return res.status(400).json({
+					message: "failed",
+					error: error,
+					data: {},
+				});
+			});
+	};
+
+	this.updateUserProfile = async (req, res, next) => {
+		let userId = req.query.userId;
+
+		if (!userId) {
+			userId = null;
+		} else {
+			const userIdCheck = _.toString(userId);
+
+			if (_.isNaN(userIdCheck)) userId = undefined;
+			else userId = Number(userIdCheck);
+		}
+
+		const { status, error } = await validateUpdateProfileBody(
+			req,
+			res,
+			next,
+		);
+
+		if (status === "failed") {
+			return res.status(400).json({ message: error, error: error });
+		} else {
+			const updateInfo = req.body;
+
+			await updateUserProfile(userId, updateInfo)
+				.then((data) => {
+					if (data == "success") {
+						return res.status(200).json({
+							message: "successfully",
+							error: null,
+						});
+					} else {
+						return res.status(400).json({
+							message: data,
+							error: data,
+						});
+					}
+				})
+				.catch((error) => {
+					return res.status(400).json({
+						message: "failed",
+						error: error,
+					});
+				});
+		}
+	};
+
+	this.upgradePremiumAccount = async (req, res, next) => {
+		let userId = req.body.userId;
+
+		if (!userId) {
+			userId = null;
+		} else {
+			if (isNaN(userId)) userId = undefined;
+			else userId = Number(userId);
+		}
+
+		await upgradeUserPremiumAccount(userId)
+			.then((data) => {
+				if (data == "success") {
+					return res.status(200).json({
+						message: "successfully",
+						error: null,
+					});
+				} else {
+					return res.status(400).json({
+						message: data,
+						error: data,
+					});
+				}
+			})
+			.catch((error) => {
+				return res.status(400).json({
+					message: "failed",
+					error: error,
+				});
+			});
+	};
 }
 
 module.exports = new UserController();

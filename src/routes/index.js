@@ -1,15 +1,20 @@
-// const authRouter = require("./auth");
+const authRouter = require("./auth");
 const forgotPasswordRouter = require("./forgotPassword");
-// const userRouter = require("./user");
-// const displayRouter = require("./display");
-const sitesRouter = require("./sites");
+const changePasswordRouter = require("./changePassword");
+const userRouter = require("./user");
+const displayRouter = require("./display");
+const adminRouter = require("./admin");
 
 function routing(app) {
-	// app.use("/auth", authRouter);
+	// User routes
+	app.use("/auth", authRouter);
 	app.use("/forgot-password", forgotPasswordRouter);
-	// app.use("/display", displayRouter);
-	// app.use("/user", userRouter);
-	app.use("/", sitesRouter);
+	app.use("/change-password", changePasswordRouter);
+	app.use("/display", displayRouter);
+	app.use("/user", userRouter);
+
+	// Admin routes
+	app.use("/admin", adminRouter);
 }
 
 module.exports = routing;

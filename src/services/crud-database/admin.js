@@ -1,46 +1,232 @@
-// const database = require("../../configs/connectDatabase");
-// const { QUERY_LIMIT_ITEM } = require("../../constants");
+const database = require("../../configs/connect-database");
+const firebase = require("firebase-admin");
 
-// const getListOfUsers = async (page) => {
-//     if (page === undefined) {
-//         return [];
-//     }
+const checkExistedUserId = async (userId) => {
+	const users = await database
+		.collection("users")
+		.where("userId", "==", userId)
+		.get();
 
-//     let users = [];
-//     let usersList = [];
+	// users._size = 1: existed
+	return users._size === 1;
+};
 
-//     if (page === null) {
-//         users = await database.collection("users")
-//             .orderBy("id", "asc")
-//             .get();
-//     }
-//     else {
-//         const startIndex = ((page - 1) * QUERY_LIMIT_ITEM) + 1;
-//         users = await database.collection("users")
-//             .orderBy("id", "asc")
-//             .startAt(startIndex)
-//             .limit(QUERY_LIMIT_ITEM)
-//             .get();
-//     }
+const getListOfUsers = async () => {
+	let usersList = [];
+	let userInfo = {};
+	let users = await database.collection("users").orderBy("id", "asc").get();
 
-//     users.forEach((doc) => {
-//         usersList.push(doc.data());
-//     });
+	users.forEach((doc) => {
+		const data = doc.data();
 
-//     return usersList;
-// }
+		userInfo = {
+			userId: data.userId,
+			username: data.username,
+			email: data.email,
+			phoneNumber: data.phoneNumber,
+			fullName: data.fullName,
+			avatar: data.avatar,
+			website: data.website,
+			updatedDate: data.updatedDate,
+			createdDate: data.createdDate,
+		};
 
-// const getUsersLength = async () => {
-//     let length = 0;
+		usersList.push(userInfo);
+	});
 
-//     await database.collection("users").get().then(snap => {
-//         length = snap.size
-//     });
+	return usersList;
+};
 
-//     return length || 0;
-// }
+const getUserProfile = async (userId) => {
+	let userInfo = {};
 
-// module.exports = {
-//     getListOfUsers,
-//     getUsersLength
-// };
+	if (!userId) {
+		return {};
+	} else {
+		const users = await database
+			.collection("users")
+			.where("userId", "==", userId)
+			.get();
+
+		users.forEach((doc) => {
+			const data = doc.data();
+
+			userInfo = {
+				userId: data.userId,
+				username: data.username,
+				email: data.email,
+				phoneNumber: data.phoneNumber,
+				fullName: data.fullName,
+				avatar: data.avatar,
+				website: data.website,
+				updatedDate: data.updatedDate,
+				createdDate: data.createdDate,
+			};
+		});
+	}
+
+	return userInfo;
+};
+
+const checkExistedUsernameForUpdateProfile = async (userId, username) => {
+	let check = false;
+	const users = await database.collection("users").get();
+
+	users.forEach((doc) => {
+		if (doc.get("username") == username && doc.get("userId") != userId) {
+			check = true;
+			return;
+		}
+	});
+
+	return check;
+};
+
+const checkExistedEmailForUpdateProfile = async (userId, email) => {
+	let check = false;
+	const users = await database.collection("users").get();
+
+	users.forEach((doc) => {
+		if (doc.get("email") == email && doc.get("userId") != userId) {
+			check = true;
+			return;
+		}
+	});
+
+	return check;
+};
+
+const updateUserProfile = async (userId, updateInfo) => {
+	try {
+		if (!userId) return "userid-required";
+		else {
+			const { fullName, email, phoneNumber, website, avatar } =
+				updateInfo;
+
+			if (!(await checkExistedUserId(userId))) return "user-notfound";
+
+			if (
+				email &&
+				(await checkExistedEmailForUpdateProfile(userId, email))
+			)
+				return "email-existed";
+
+			const users = await database
+				.collection("users")
+				.where("userId", "==", userId)
+				.get();
+
+			const updateInfos = {};
+			if (fullName) updateInfos.fullName = fullName;
+			if (email) updateInfos.email = email;
+			if (phoneNumber) updateInfos.phoneNumber = phoneNumber;
+			if (website) updateInfos.website = website;
+			if (avatar) updateInfos.avatar = avatar;
+
+			if (Object.entries(updateInfos).length !== 0) {
+				users.forEach((doc) => {
+					doc.ref.update({
+						...updateInfos,
+						updatedDate: firebase.firestore.Timestamp.now(),
+					});
+				});
+			}
+
+			return "success";
+		}
+	} catch (error) {
+		return "error";
+	}
+};
+
+const upgradeUserPremiumAccount = async (userId) => {
+	try {
+		if (userId === null) return "userid-required";
+
+		if (userId === undefined) return "userid-invalid";
+
+		if (!(await checkExistedUserId(userId))) return "user-notfound";
+
+		const users = await database
+			.collection("users")
+			.where("userId", "==", userId)
+			.get();
+
+		users.forEach((doc) => {
+			doc.ref.update({ premiumAccount: true });
+		});
+
+		return "success";
+	} catch (error) {
+		return "error";
+	}
+};
+
+const checkExistedUsername = async (username) => {
+	const admins = await database
+		.collection("admins")
+		.where("username", "==", username)
+		.get();
+
+	// admins._size = 1: existed
+	return admins._size === 1;
+};
+
+const getPasswordByUsername = async (username) => {
+	let password;
+
+	const admins = await database
+		.collection("admins")
+		.where("username", "==", username)
+		.get();
+
+	admins.forEach((doc) => {
+		password = doc.get("password");
+	});
+
+	return password;
+};
+
+const getAdminByUsername = async (username) => {
+	let user;
+
+	const admins = await database
+		.collection("admins")
+		.where("username", "==", username)
+		.get();
+
+	admins.forEach((doc) => {
+		user = doc.data();
+	});
+
+	return user;
+};
+
+const deleteUserById = async (userId) => {
+	let rawDataUser = await database
+		.collection("users")
+		.where("id", "==", userId)
+		.get();
+
+	let isDeleted = false;
+
+	rawDataUser.forEach((doc) => {
+		isDeleted = true;
+		doc.ref.delete();
+	});
+
+	return isDeleted;
+};
+
+module.exports = {
+	getListOfUsers,
+	getUserProfile,
+	checkExistedUsername,
+	checkExistedUsernameForUpdateProfile,
+	checkExistedEmailForUpdateProfile,
+	updateUserProfile,
+	upgradeUserPremiumAccount,
+	getPasswordByUsername,
+	getAdminByUsername,
+	deleteUserById,
+};
