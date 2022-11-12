@@ -1,7 +1,7 @@
-const { isAuthed } = require("../../services/authentication");
-
 const dotenv = require("dotenv");
 dotenv.config();
+
+const { isAuthed } = require("../../services/authentication");
 
 const isAuth = async (req, res, next) => {
 	try {

@@ -1,4 +1,5 @@
 const _ = require("lodash");
+const AdminModel = require("../models/Admin");
 const {
 	checkExistedUsername,
 	getPasswordByUsername,
@@ -11,6 +12,16 @@ const { validateSignInBody } = require("../validators/admin");
 const { comparePassword } = require("../helpers");
 
 function AdminController() {
+	this.test = (req, res, next) => {
+		AdminModel.find({})
+			.then((datas) => {
+				console.log(datas);
+			})
+			.catch((error) => {
+				console.log(error);
+			});
+	};
+
 	this.signin = async (req, res, next) => {
 		const { username, password } = req.body;
 		const { status, error } = await validateSignInBody(req, res, next);

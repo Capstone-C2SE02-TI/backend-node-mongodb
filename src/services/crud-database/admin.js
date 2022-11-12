@@ -1,4 +1,4 @@
-const database = require("../../configs/connect-database");
+const database = require("../../configs/connectDatabase");
 const firebase = require("firebase-admin");
 
 const checkExistedUserId = async (userId) => {

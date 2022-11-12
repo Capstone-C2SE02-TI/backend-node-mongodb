@@ -1,4 +1,4 @@
-const database = require("../../configs/connect-database");
+const database = require("../../configs/connectDatabase");
 const firebase = require("firebase-admin");
 const { randomFirestoreDocumentId } = require("../../helpers");
 const _ = require("lodash");
@@ -426,10 +426,14 @@ const getTransactionsOfAllSharks = async () => {
 	let transactions = [];
 
 	rawData.forEach((doc) => {
-		const transactionsWithId = doc.data()["transactionsHistory"].map((transaction) =>{
-			transaction = Object.assign(transaction, {id: doc.data()['id']})
-			return transaction;
-		})
+		const transactionsWithId = doc
+			.data()
+			["transactionsHistory"].map((transaction) => {
+				transaction = Object.assign(transaction, {
+					id: doc.data()["id"],
+				});
+				return transaction;
+			});
 		transactions = transactions.concat(transactionsWithId);
 	});
 
