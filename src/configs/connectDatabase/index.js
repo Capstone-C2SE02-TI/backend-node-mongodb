@@ -11,20 +11,8 @@ const connectDatabase = () => {
 			throw new Error(error);
 		});
 		mongoose.connection.on("open", () => {
-			database = mongoose.connection.useDb("TRACKINGINVESTMENT");
+			// database = mongoose.connection.useDb("TRACKINGINVESTMENT_MAIN");
 			console.log("Connect to database successfully");
-
-			// Test get datas
-			const SharkSchema = new mongoose.Schema({});
-			const SharkModel = database.model("Sharks", SharkSchema);
-
-			SharkModel.find({})
-				.then((datas) => {
-					console.log(datas);
-				})
-				.catch((error) => {
-					console.log(error);
-				});
 		});
 
 		return database;
