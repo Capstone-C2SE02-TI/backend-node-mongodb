@@ -4,70 +4,25 @@ const { checkExistedUserId, checkExistedSharkId } = require("./user");
 const { UserModel, AdminModel } = require("../../models");
 
 const getListOfUsers = async () => {
-	let usersList = [];
-	let userInfo = {};
-	let users = await database.collection("users").orderBy("id", "asc").get();
+	const users = await UserModel.find({})
+		.sort("id")
+		.select(
+			"userId username email phoneNumber fullName avatar website sharksFollowed updatedDate createdDate -_id",
+		);
 
-	users.forEach((doc) => {
-		const data = doc.data();
-
-		userInfo = {
-			userId: data.userId,
-			username: data.username,
-			email: data.email,
-			phoneNumber: data.phoneNumber,
-			fullName: data.fullName,
-			avatar: data.avatar,
-			website: data.website,
-			sharksFollowed: data.sharksFollowed,
-			updatedDate: data.updatedDate,
-			createdDate: data.createdDate,
-		};
-
-		usersList.push(userInfo);
-	});
-
-	return usersList;
+	return users;
 };
 
 const getUserProfile = async (userId) => {
-	let userInfo = {},
-		result = {};
-
-	if (!userId) {
-		return {};
-	} else {
-		const cursor = await UserModel.findOne({ userId: userId });
-
-		console.log(cursor);
-		console.log(
-			cursor.userId,
-			cursor.username,
-			cursor.email,
-			cursor.phoneNumber,
-			cursor.fullName,
-			cursor.avatar,
-			cursor.website,
-			cursor.sharksFollowed,
-			cursor.updatedDate,
-			cursor.createdDate,
+	if (!userId) return {};
+	else {
+		const user = await UserModel.findOne({ userId: userId }).select(
+			"userId username email phoneNumber fullName avatar website sharksFollowed updatedDate createdDate -_id",
 		);
-		//project({
-		// 	userId: 1,
-		// 	username: 1,
-		// 	email: 1,
-		// 	phoneNumber: 1,
-		// 	fullName: 1,
-		// 	avatar: 1,
-		// 	website: 1,
-		// 	sharksFollowed: 1,
-		// 	updatedDate: 1,
-		// 	createdDate: 1,
-		// });
-		// await cursor.forEach(console.dir);
-	}
 
-	return result;
+		if (!user) return {};
+		else return user;
+	}
 };
 
 const checkExistedUsernameForUpdateProfile = async (userId, username) => {
