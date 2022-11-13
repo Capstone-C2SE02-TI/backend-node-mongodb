@@ -36,26 +36,22 @@ function AuthController() {
 				.status(400)
 				.json({ message: "email-existed", error: "email-existed" });
 
-		cryptPassword(password, async (error, hashPassword) => {
-			if (
-				await createNewUser({
-					username,
-					email,
-					phoneNumber,
-					hashPassword,
-				})
-			) {
-				return res.status(200).json({
-					message: "successfully",
-					error: null,
-				});
-			} else {
-				return res.status(400).json({
-					message: "failed",
-					error: error,
-				});
-			}
-		});
+		cryptPassword(password, async (error, hashPassword) =>
+			(await createNewUser({
+				username,
+				email,
+				phoneNumber,
+				hashPassword,
+			})) == true
+				? res.status(200).json({
+						message: "successfully",
+						error: null,
+				  })
+				: res.status(400).json({
+						message: "failed",
+						error: error,
+				  }),
+		);
 	};
 
 	this.signin = async (req, res, next) => {

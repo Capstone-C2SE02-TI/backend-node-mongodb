@@ -15,13 +15,12 @@ function AdminController() {
 		const { username, password } = req.body;
 		const { status, error } = await validateSignInBody(req, res, next);
 
-		if (status === "failed") {
+		if (status === "failed")
 			return res.status(400).json({
 				message: error,
 				error: error,
 				user: null,
 			});
-		}
 
 		if (!(await checkExistedUsername(username))) {
 			return res.status(404).json({
@@ -31,7 +30,6 @@ function AdminController() {
 			});
 		} else {
 			const hashPassword = await getPasswordByUsername(username);
-
 			comparePassword(
 				password,
 				hashPassword,
@@ -103,70 +101,61 @@ function AdminController() {
 	this.getUsersList = async (req, res, next) => {
 		await getListOfUsers()
 			.then((datas) => {
-				if (datas.length == 0) {
-					return res.status(400).json({
-						message: "failed-empty-data",
-						error: "empty-data",
-						datasLength: 0,
-						datas: [],
-					});
-				} else {
-					return res.status(200).json({
-						message: "successfully",
-						error: null,
-						datasLength: datas.length,
-						datas: datas,
-					});
-				}
+				datas.length === 0
+					? res.status(400).json({
+							message: "failed-empty-data",
+							error: "empty-data",
+							datasLength: 0,
+							datas: [],
+					  })
+					: res.status(200).json({
+							message: "successfully",
+							error: null,
+							datasLength: datas.length,
+							datas: datas,
+					  });
 			})
-			.catch((error) => {
-				return res.status(400).json({
+			.catch((error) =>
+				res.status(400).json({
 					message: "failed",
 					error: error,
 					datasLength: 0,
 					datas: [],
-				});
-			});
+				}),
+			);
 	};
 
 	this.getUserDetail = async (req, res, next) => {
 		let userId;
 
-		if (!req.query.userId) {
-			userId = null;
-		} else {
+		if (!req.query.userId) userId = null;
+		else {
 			const userIdCheck = _.toString(req.query.userId);
-
-			if (_.isNaN(userIdCheck)) {
-				userId = undefined;
-			} else {
-				userId = Number(userIdCheck);
-			}
+			if (_.isNaN(userIdCheck)) userId = undefined;
+			else userId = Number(userIdCheck);
 		}
 
 		await getUserProfile(userId)
 			.then((data) => {
-				if (Object.entries(data).length === 0) {
-					return res.status(400).json({
-						message: "failed-userid-invalid",
-						error: "userid-invalid",
-						data: {},
-					});
-				} else {
-					return res.status(200).json({
-						message: "successfully",
-						error: null,
-						data: data,
-					});
-				}
+				Object.entries(data).length === 0
+					? res.status(400).json({
+							message: "failed-userid-invalid",
+							error: "userid-invalid",
+							data: {},
+					  })
+					: res.status(200).json({
+							message: "successfully",
+							error: null,
+							data: data,
+					  });
 			})
-			.catch((error) => {
-				return res.status(400).json({
+			.catch((error) =>
+				res.status(400).json({
 					message: "failed",
 					error: error,
 					data: {},
-				});
-			});
+				}),
+			);
 	};
 }
 

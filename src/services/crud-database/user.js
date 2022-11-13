@@ -18,12 +18,6 @@ const {
 	QUERY_LIMIT_ITEM,
 } = require("../../constants");
 
-// Utilities
-const getValueFromPromise = async (promiseValue) => {
-	const value = await Promise.all(promiseValue);
-	return value;
-};
-
 const getHoursPriceOfToken = async (tokenSymbol) => {
 	const rawData = await database
 		.collection("tokens")

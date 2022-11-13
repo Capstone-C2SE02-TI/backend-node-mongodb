@@ -35,9 +35,9 @@ function ForgotPasswordController() {
 	this.submitEmail = async (req, res, next) => {
 		const { status, error } = await validateSubmitEmailBody(req, res, next);
 
-		if (status === "failed") {
+		if (status === "failed")
 			return res.status(400).json({ message: error, error: error });
-		} else {
+		else {
 			const { email } = req.body;
 			const user = await getUserByEmail(email);
 
@@ -114,23 +114,21 @@ function ForgotPasswordController() {
 				next,
 			);
 
-			if (status === "failed") {
+			if (status === "failed")
 				return res.status(400).json({ message: error, error: error });
-			} else {
+			else {
 				const { email, code } = req.body;
 				const user = await getUserByEmail(email);
 
 				if (user) {
-					if (user.confirmationCode === code) {
-						return res
-							.status(200)
-							.json({ message: "successfully", error: null });
-					} else {
-						return res.status(400).json({
-							message: "wrong-code",
-							error: "wrong-code",
-						});
-					}
+					return user.confirmationCode === code
+						? res
+								.status(200)
+								.json({ message: "successfully", error: null })
+						: res.status(400).json({
+								message: "wrong-code",
+								error: "wrong-code",
+						  });
 				} else {
 					return res.status(400).json({
 						message: "user-notfound",
@@ -150,9 +148,9 @@ function ForgotPasswordController() {
 			next,
 		);
 
-		if (status === "failed") {
+		if (status === "failed")
 			return res.status(400).json({ message: error, error: error });
-		} else {
+		else {
 			const { email, password } = req.body;
 			const user = await getUserByEmail(email);
 
@@ -160,18 +158,18 @@ function ForgotPasswordController() {
 				// Encode password & update in DB
 				cryptPassword(password, async (error, hashPassword) => {
 					await updateUserPassword(user.docId, hashPassword)
-						.then(() => {
-							return res.status(200).json({
+						.then(() =>
+							res.status(200).json({
 								message: "successfully",
 								error: null,
-							});
-						})
-						.catch((error) => {
-							return res.status(400).json({
+							}),
+						)
+						.catch((error) =>
+							res.status(400).json({
 								message: "failed",
 								error: error,
-							});
-						});
+							}),
+						);
 				});
 			} else {
 				return res
