@@ -5,26 +5,6 @@ const { isAdmin } = require("../middlewares/authentication");
 
 /**
  * @swagger
- * tags:
- *   name: Admin
- */
-
-/**
- * @swagger
- * /admin/test:
- *   get:
- *     description: Test
- *     tags: [Admin]
- *     responses:
- *       200:
- *         description: Test successfully
- *       400:
- *         description: Test failed
- */
-router.get("/test", adminController.test);
-
-/**
- * @swagger
  * /admin/signin:
  *   post:
  *     description: Sign In
