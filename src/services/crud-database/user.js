@@ -139,33 +139,17 @@ const checkExistedSharkId = async (sharkId) => {
 };
 
 const getPasswordByUsername = async (username) => {
-	let password;
-
-	const users = await database
-		.collection("users")
-		.where("username", "==", username)
-		.get();
-
-	users.forEach((doc) => {
-		password = doc.get("password");
-	});
-
-	return password;
+	const user = await UserModel.findOne({ username: username }).select(
+		"password -_id",
+	);
+	return user?.password || null;
 };
 
 const getPasswordByEmail = async (email) => {
-	let password;
-
-	const users = await database
-		.collection("users")
-		.where("email", "==", email)
-		.get();
-
-	users.forEach((doc) => {
-		password = doc.get("password");
-	});
-
-	return password;
+	const user = await UserModel.findOne({ email: email }).select(
+		"password -_id",
+	);
+	return user?.password || null;
 };
 
 const getListOfCoinsAndTokens = async () => {

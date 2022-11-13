@@ -1,7 +1,6 @@
 const database = require("../../configs/connectDatabase");
-const firebase = require("firebase-admin");
-const { checkExistedUserId, checkExistedSharkId } = require("./user");
 const { UserModel, AdminModel } = require("../../models");
+const { checkExistedUserId, checkExistedSharkId } = require("./user");
 
 const getListOfUsers = async () => {
 	const users = await UserModel.find({})
@@ -25,6 +24,7 @@ const getUserProfile = async (userId) => {
 	}
 };
 
+// TODO
 const checkExistedUsernameForUpdateProfile = async (userId, username) => {
 	let check = false;
 	const users = await database.collection("users").get();
@@ -39,6 +39,7 @@ const checkExistedUsernameForUpdateProfile = async (userId, username) => {
 	return check;
 };
 
+// TODO
 const checkExistedEmailForUpdateProfile = async (userId, email) => {
 	let check = false;
 	const users = await database.collection("users").get();
@@ -78,13 +79,14 @@ const updateUserProfile = async (userId, updateInfo) => {
 		// 	return "success";
 		// }
 
-		console.log(await checkExistedUsername("levanthuan"));
+		console.log(await getPasswordByUsername("levanthuan"));
 		return "success";
 	} catch (error) {
 		return "error";
 	}
 };
 
+// TODO
 const upgradeUserPremiumAccount = async (userId) => {
 	try {
 		if (userId === null) return "userid-required";
@@ -108,6 +110,7 @@ const upgradeUserPremiumAccount = async (userId) => {
 	}
 };
 
+// TODO
 const followWalletOfShark = async (userId, sharkId) => {
 	try {
 		if (userId === null) return "userid-required";
@@ -159,35 +162,18 @@ const checkExistedUsername = async (username) => {
 };
 
 const getPasswordByUsername = async (username) => {
-	let password;
-
-	const admins = await database
-		.collection("admins")
-		.where("username", "==", username)
-		.get();
-
-	admins.forEach((doc) => {
-		password = doc.get("password");
-	});
-
-	return password;
+	const admin = await AdminModel.findOne({ username: username }).select(
+		"password -_id",
+	);
+	return admin?.password || null;
 };
 
 const getAdminByUsername = async (username) => {
-	let user;
-
-	const admins = await database
-		.collection("admins")
-		.where("username", "==", username)
-		.get();
-
-	admins.forEach((doc) => {
-		user = doc.data();
-	});
-
-	return user;
+	const admin = await AdminModel.findOne({ username: username });
+	return admin;
 };
 
+// TODO
 const deleteUserById = async (userId) => {
 	let rawDataUser = await database
 		.collection("users")
