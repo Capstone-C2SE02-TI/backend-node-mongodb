@@ -119,43 +119,23 @@ const updateUserPassword = async (docId, password) => {
 };
 
 const checkExistedUsername = async (username) => {
-	const users = await database
-		.collection("users")
-		.where("username", "==", username)
-		.get();
-
-	// users._size = 1: existed
-	return users._size === 1;
+	const isExisted = await UserModel.exists({ username: username });
+	return Boolean(isExisted);
 };
 
 const checkExistedEmail = async (email) => {
-	const users = await database
-		.collection("users")
-		.where("email", "==", email)
-		.get();
-
-	// users._size = 1: existed
-	return users._size === 1;
+	const isExisted = await UserModel.exists({ email: email });
+	return Boolean(isExisted);
 };
 
 const checkExistedUserId = async (userId) => {
-	const users = await database
-		.collection("users")
-		.where("userId", "==", userId)
-		.get();
-
-	// users._size = 1: existed
-	return users._size === 1;
+	const isExisted = await UserModel.exists({ userId: userId });
+	return Boolean(isExisted);
 };
 
 const checkExistedSharkId = async (sharkId) => {
-	const sharks = await database
-		.collection("sharks")
-		.where("id", "==", sharkId)
-		.get();
-
-	// sharks._size = 1: existed
-	return sharks._size === 1;
+	const isExisted = await SharkModel.exists({ id: sharkId });
+	return Boolean(isExisted);
 };
 
 const getPasswordByUsername = async (username) => {

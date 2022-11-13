@@ -55,28 +55,31 @@ const checkExistedEmailForUpdateProfile = async (userId, email) => {
 
 const updateUserProfile = async (userId, updateInfo) => {
 	try {
-		if (!userId) return "userid-required";
-		else {
-			const { email } = updateInfo;
+		// if (!userId) return "userid-required";
+		// else {
+		// 	const { email } = updateInfo;
 
-			if (!(await checkExistedUserId(userId))) return "user-notfound";
+		// 	if (!(await checkExistedUserId(userId))) return "user-notfound";
 
-			if (
-				email &&
-				(await checkExistedEmailForUpdateProfile(userId, email))
-			)
-				return "email-existed";
+		// 	if (
+		// 		email &&
+		// 		(await checkExistedEmailForUpdateProfile(userId, email))
+		// 	)
+		// 		return "email-existed";
 
-			await UserModel.findOneAndUpdate({ userId: userId }, updateInfo)
-				.then((data) => {
-					if (!data) throw new Error();
-				})
-				.catch((error) => {
-					throw new Error(error);
-				});
+		// 	await UserModel.findOneAndUpdate({ userId: userId }, updateInfo)
+		// 		.then((data) => {
+		// 			if (!data) throw new Error();
+		// 		})
+		// 		.catch((error) => {
+		// 			throw new Error(error);
+		// 		});
 
-			return "success";
-		}
+		// 	return "success";
+		// }
+
+		console.log(await checkExistedUsername("levanthuan"));
+		return "success";
 	} catch (error) {
 		return "error";
 	}
@@ -151,13 +154,8 @@ const followWalletOfShark = async (userId, sharkId) => {
 };
 
 const checkExistedUsername = async (username) => {
-	const admins = await database
-		.collection("admins")
-		.where("username", "==", username)
-		.get();
-
-	// admins._size = 1: existed
-	return admins._size === 1;
+	const isExisted = await AdminModel.exists({ username: username });
+	return Boolean(isExisted);
 };
 
 const getPasswordByUsername = async (username) => {
