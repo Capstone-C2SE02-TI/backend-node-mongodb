@@ -58,9 +58,8 @@ function UserController() {
 	this.updateUserProfile = async (req, res, next) => {
 		let userId = req.query.userId;
 
-		if (!userId) {
-			userId = null;
-		} else {
+		if (!userId) userId = null;
+		else {
 			const userIdCheck = _.toString(userId);
 
 			if (_.isNaN(userIdCheck)) userId = undefined;
@@ -73,9 +72,9 @@ function UserController() {
 			next,
 		);
 
-		if (status === "failed") {
+		if (status === "failed")
 			return res.status(400).json({ message: error, error: error });
-		} else {
+		else {
 			const updateInfo = req.body;
 
 			await updateUserProfile(userId, updateInfo)

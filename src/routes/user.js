@@ -48,7 +48,8 @@ const { isAuth } = require("../middlewares/authentication");
  *       400:
  *         description: Update user profile failed
  */
-router.post("/profile/update", isAuth, userController.updateUserProfile);
+router.post("/profile/update", userController.updateUserProfile);
+// router.post("/profile/update", isAuth, userController.updateUserProfile);
 
 /**
  * @swagger
@@ -67,7 +68,8 @@ router.post("/profile/update", isAuth, userController.updateUserProfile);
  *       400:
  *         description: Get user profile failed
  */
-router.get("/profile", isAuth, userController.getUserProfile);
+router.get("/profile", userController.getUserProfile);
+// router.get("/profile", isAuth, userController.getUserProfile);
 
 /**
  * @swagger

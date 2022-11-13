@@ -57,8 +57,7 @@ const updateUserProfile = async (userId, updateInfo) => {
 	try {
 		if (!userId) return "userid-required";
 		else {
-			const { fullName, email, phoneNumber, website, avatar } =
-				updateInfo;
+			const { email } = updateInfo;
 
 			if (!(await checkExistedUserId(userId))) return "user-notfound";
 
@@ -68,26 +67,13 @@ const updateUserProfile = async (userId, updateInfo) => {
 			)
 				return "email-existed";
 
-			const users = await database
-				.collection("users")
-				.where("userId", "==", userId)
-				.get();
-
-			const updateInfos = {};
-			if (fullName) updateInfos.fullName = fullName;
-			if (email) updateInfos.email = email;
-			if (phoneNumber) updateInfos.phoneNumber = phoneNumber;
-			if (website) updateInfos.website = website;
-			if (avatar) updateInfos.avatar = avatar;
-
-			if (Object.entries(updateInfos).length !== 0) {
-				users.forEach((doc) => {
-					doc.ref.update({
-						...updateInfos,
-						updatedDate: firebase.firestore.Timestamp.now(),
-					});
+			await UserModel.findOneAndUpdate({ userId: userId }, updateInfo)
+				.then((data) => {
+					if (!data) throw new Error();
+				})
+				.catch((error) => {
+					throw new Error(error);
 				});
-			}
 
 			return "success";
 		}
