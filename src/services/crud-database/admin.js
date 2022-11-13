@@ -1,6 +1,10 @@
 const database = require("../../configs/connectDatabase");
 const { UserModel, AdminModel } = require("../../models");
-const { checkExistedUserId, checkExistedSharkId } = require("./user");
+const {
+	checkExistedUserId,
+	checkExistedSharkId,
+	getUsersLength,
+} = require("./user");
 
 const getListOfUsers = async () => {
 	const users = await UserModel.find({})
@@ -79,7 +83,7 @@ const updateUserProfile = async (userId, updateInfo) => {
 		// 	return "success";
 		// }
 
-		console.log(await getPasswordByUsername("levanthuan"));
+		// console.log(await getUsersLength());
 		return "success";
 	} catch (error) {
 		return "error";

@@ -37,40 +37,22 @@ const getHoursPriceOfToken = async (tokenSymbol) => {
 	return hoursPrice;
 };
 
+// OK
 const getUserByUsername = async (username) => {
-	let user;
-
-	const users = await database
-		.collection("users")
-		.where("username", "==", username)
-		.get();
-
-	users.forEach((doc) => {
-		user = doc.data();
-	});
-
+	const user = await UserModel.findOne({ username: username });
 	return user;
 };
 
+// OK
 const getUserByEmail = async (email) => {
-	let user;
-
-	const users = await database
-		.collection("users")
-		.where("email", "==", email)
-		.get();
-
-	users.forEach((doc) => {
-		user = doc.data();
-		user.docId = doc.id;
-	});
-
+	const user = await UserModel.findOne({ email: email });
 	return user;
 };
 
+// OK
 const getUsersLength = async () => {
-	const users = await database.collection("users").get();
-	return users._size || 0;
+	const length = await UserModel.count({});
+	return length;
 };
 
 const createNewUser = async ({
@@ -118,6 +100,7 @@ const updateUserPassword = async (docId, password) => {
 	return user;
 };
 
+//#region OK
 const checkExistedUsername = async (username) => {
 	const isExisted = await UserModel.exists({ username: username });
 	return Boolean(isExisted);
@@ -151,6 +134,7 @@ const getPasswordByEmail = async (email) => {
 	);
 	return user?.password || null;
 };
+//#endregion
 
 const getListOfCoinsAndTokens = async () => {
 	let coinsList = [];
@@ -181,9 +165,10 @@ const getListOfCoinsAndTokens = async () => {
 	return coinsList;
 };
 
+// OK
 const getCoinsAndTokensLength = async () => {
-	const tokens = await database.collection("tokens").get();
-	return tokens._size || 0;
+	const length = await TokenModel.count({});
+	return length;
 };
 
 const getListReducingCoinsAndTokens = async () => {
@@ -350,9 +335,10 @@ const getListOfTags = async () => {
 	return tagsList;
 };
 
+// OK
 const getSharksLength = async () => {
-	const sharks = await database.collection("sharks").get();
-	return sharks._size || 0;
+	const length = await SharkModel.count({});
+	return length;
 };
 
 const getListOfSharks = async () => {
@@ -391,7 +377,6 @@ const getListCryptosOfShark = async (sharkId) => {
 };
 
 // Transaction history
-
 const getTransactionsOfAllSharks = async (page) => {
 	if (page < 1 || page % 1 !== 0) return [];
 	const rawData = await database
