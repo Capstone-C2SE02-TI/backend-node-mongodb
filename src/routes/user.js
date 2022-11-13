@@ -107,7 +107,8 @@ router.get("/profile", userController.getUserProfile);
  *       400:
  *         description: Change password failed
  */
-router.post("/change-password", isAuth, userController.changePassword);
+router.post("/change-password", userController.changePassword);
+// router.post("/change-password", isAuth, userController.changePassword);
 
 /**
  * @swagger

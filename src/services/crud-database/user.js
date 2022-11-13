@@ -86,18 +86,44 @@ const createNewUser = async ({
 	await database.collection("users").doc(docId).set(newUserInfo);
 };
 
-const updateUserConfirmationCode = async (docId, code) => {
-	const user = database.collection("users").doc(docId);
-	await user.update({ confirmationCode: code });
+// OK
+const updateUserConfirmationCode = async (userId, code) => {
+	try {
+		await UserModel.findOneAndUpdate(
+			{ userId: userId },
+			{ confirmationCode: code },
+		)
+			.then((data) => {
+				if (!data) throw new Error();
+			})
+			.catch((error) => {
+				throw new Error(error);
+			});
 
-	return user;
+		return true;
+	} catch (error) {
+		return false;
+	}
 };
 
-const updateUserPassword = async (docId, password) => {
-	const user = database.collection("users").doc(docId);
-	await user.update({ password: password });
+// OK
+const updateUserPassword = async (userId, password) => {
+	try {
+		await UserModel.findOneAndUpdate(
+			{ userId: userId },
+			{ password: password },
+		)
+			.then((data) => {
+				if (!data) throw new Error();
+			})
+			.catch((error) => {
+				throw new Error(error);
+			});
 
-	return user;
+		return true;
+	} catch (error) {
+		return false;
+	}
 };
 
 //#region OK

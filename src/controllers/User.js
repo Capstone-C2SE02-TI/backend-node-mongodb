@@ -107,9 +107,9 @@ function UserController() {
 			next,
 		);
 
-		if (status === "failed") {
+		if (status === "failed")
 			return res.status(400).json({ message: error, error: error });
-		} else {
+		else {
 			const { email, oldPassword, newPassword } = req.body;
 			const user = await getUserByEmail(email);
 
@@ -124,22 +124,22 @@ function UserController() {
 							cryptPassword(
 								newPassword,
 								async (error, hashPassword) => {
-									await updateUserPassword(
-										user.docId,
-										hashPassword,
-									)
-										.then(() => {
-											return res.status(200).json({
-												message: "successfully",
-												error: null,
-											});
-										})
-										.catch((error) => {
-											return res.status(400).json({
-												message: "failed",
-												error: error,
-											});
+									if (
+										await updateUserPassword(
+											user.userId,
+											hashPassword,
+										)
+									) {
+										return res.status(200).json({
+											message: "successfully",
+											error: null,
 										});
+									} else {
+										return res.status(400).json({
+											message: "failed",
+											error: error,
+										});
+									}
 								},
 							);
 						} else {

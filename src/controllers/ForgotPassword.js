@@ -83,7 +83,7 @@ function ForgotPasswordController() {
 					await transport.sendMail(mailOptions);
 
 					await updateUserConfirmationCode(
-						user.docId,
+						user.userId,
 						confirmationCode,
 					);
 
