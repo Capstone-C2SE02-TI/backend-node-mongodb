@@ -30,23 +30,21 @@ const UserSchema = new mongoose.Schema(
 			minlength: 16,
 			maxlength: 40,
 		},
-		password: {
-			type: String,
-			trim: true,
-			required: true,
-			minLength: 8,
-			maxlength: 16,
-		},
-		fullName: {
-			type: String,
-			trim: true,
-			default: "",
-		},
 		phoneNumber: {
 			type: String,
 			trim: true,
 			minLength: 10,
 			maxlength: 10,
+			default: "",
+		},
+		password: {
+			type: String,
+			trim: true,
+			required: true,
+		},
+		fullName: {
+			type: String,
+			trim: true,
 			default: "",
 		},
 		avatar: {

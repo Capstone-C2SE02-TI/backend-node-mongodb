@@ -1,5 +1,7 @@
+const mongoose = require("mongoose");
+const { Types } = mongoose;
+
 const database = require("../../configs/connectDatabase");
-const firebase = require("firebase-admin");
 const _ = require("lodash");
 const {
 	UserModel,
@@ -15,7 +17,6 @@ const {
 	DEFAULT_USER_WEBSITE,
 	QUERY_LIMIT_ITEM,
 } = require("../../constants");
-const { randomFirestoreDocumentId } = require("../../helpers");
 
 // Utilities
 const getValueFromPromise = async (promiseValue) => {
@@ -55,35 +56,45 @@ const getUsersLength = async () => {
 	return length;
 };
 
+// OK
 const createNewUser = async ({
 	username,
 	email,
 	phoneNumber,
 	hashPassword,
 }) => {
-	const usersLength = await getUsersLength();
-	const id = usersLength ? usersLength + 1 : 1;
+	try {
+		const usersLength = await getUsersLength();
+		const id = usersLength ? usersLength + 1 : 1;
 
-	const currentTimestamp = firebase.firestore.Timestamp.now();
-	const docId = randomFirestoreDocumentId();
+		const newUserInfo = {
+			_id: new Types.ObjectId(),
+			id: id,
+			userId: id,
+			username: username,
+			email: email,
+			phoneNumber: phoneNumber,
+			password: hashPassword,
+			fullName: DEFAULT_USER_FULLNAME,
+			avatar: DEFAULT_USER_AVATAR,
+			website: DEFAULT_USER_WEBSITE,
+			premiumAccount: false,
+			sharkFollowed: [],
+			createdDate: new Date(),
+			updatedDate: new Date(),
+		};
 
-	const newUserInfo = {
-		id: id,
-		userId: id,
-		username: username,
-		email: email,
-		phoneNumber: phoneNumber,
-		password: hashPassword,
-		fullName: DEFAULT_USER_FULLNAME,
-		avatar: DEFAULT_USER_AVATAR,
-		website: DEFAULT_USER_WEBSITE,
-		premiumAccount: false,
-		sharkFollowed: [],
-		createdDate: currentTimestamp,
-		updatedDate: currentTimestamp,
-	};
+		await UserModel.create(newUserInfo)
+			.then((data) => {})
+			.catch((error) => {
+				throw new Error(error);
+			});
 
-	await database.collection("users").doc(docId).set(newUserInfo);
+		return true;
+	} catch (error) {
+		console.log(error);
+		return false;
+	}
 };
 
 // OK
@@ -385,7 +396,6 @@ const getListOfSharks = async () => {
 	return sharksList;
 };
 
-// Crypto of sharks
 const getListCryptosOfShark = async (sharkId) => {
 	const rawData = await database
 		.collection("sharks")
@@ -402,7 +412,6 @@ const getListCryptosOfShark = async (sharkId) => {
 	return cryptos.length !== 0 ? cryptos : -1;
 };
 
-// Transaction history
 const getTransactionsOfAllSharks = async (page) => {
 	if (page < 1 || page % 1 !== 0) return [];
 	const rawData = await database

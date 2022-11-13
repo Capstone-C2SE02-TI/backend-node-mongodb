@@ -4,6 +4,7 @@ const {
 	checkExistedUserId,
 	checkExistedSharkId,
 	getUsersLength,
+	checkExistedEmail,
 } = require("./user");
 
 const getListOfUsers = async () => {
@@ -83,7 +84,7 @@ const updateUserProfile = async (userId, updateInfo) => {
 		// 	return "success";
 		// }
 
-		// console.log(await getUsersLength());
+		console.log(await checkExistedEmail("lvt@gmail.com"));
 		return "success";
 	} catch (error) {
 		return "error";

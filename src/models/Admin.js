@@ -28,8 +28,6 @@ const AdminSchema = new mongoose.Schema({
 		type: String,
 		trim: true,
 		required: true,
-		minLength: 8,
-		maxlength: 16,
 	},
 });
 

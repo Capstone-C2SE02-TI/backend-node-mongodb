@@ -22,36 +22,39 @@ function AuthController() {
 		const { username, email, phoneNumber, password } = req.body;
 		const { status, error } = await validateSignUpBody(req, res, next);
 
-		if (status === "failed") {
+		if (status === "failed")
 			return res.status(400).json({ message: error, error: error });
-		}
 
-		if (await checkExistedUsername(username)) {
+		if (await checkExistedUsername(username))
 			return res.status(400).json({
 				message: "username-existed",
 				error: "username-existed",
 			});
-		}
-		if (await checkExistedEmail(email)) {
+
+		if (await checkExistedEmail(email))
 			return res
 				.status(400)
 				.json({ message: "email-existed", error: "email-existed" });
-		}
 
 		cryptPassword(password, async (error, hashPassword) => {
-			await createNewUser({ username, email, phoneNumber, hashPassword })
-				.then(() => {
-					return res.status(200).json({
-						message: "successfully",
-						error: null,
-					});
+			if (
+				await createNewUser({
+					username,
+					email,
+					phoneNumber,
+					hashPassword,
 				})
-				.catch((error) => {
-					return res.status(400).json({
-						message: "failed",
-						error: error,
-					});
+			) {
+				return res.status(200).json({
+					message: "successfully",
+					error: null,
 				});
+			} else {
+				return res.status(400).json({
+					message: "failed",
+					error: error,
+				});
+			}
 		});
 	};
 
@@ -59,13 +62,12 @@ function AuthController() {
 		const { username, password } = req.body;
 		const { status, error } = await validateSignInBody(req, res, next);
 
-		if (status === "failed") {
+		if (status === "failed")
 			return res.status(400).json({
 				message: error,
 				error: error,
 				user: null,
 			});
-		}
 
 		if (!(await checkExistedUsername(username))) {
 			return res.status(404).json({
@@ -75,7 +77,6 @@ function AuthController() {
 			});
 		} else {
 			const hashPassword = await getPasswordByUsername(username);
-
 			comparePassword(
 				password,
 				hashPassword,
