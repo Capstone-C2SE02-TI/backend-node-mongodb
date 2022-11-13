@@ -1,6 +1,7 @@
 const database = require("../../configs/connectDatabase");
 const firebase = require("firebase-admin");
 const { checkExistedUserId, checkExistedSharkId } = require("./user");
+const { UserModel, AdminModel } = require("../../models");
 
 const getListOfUsers = async () => {
 	let usersList = [];
@@ -30,35 +31,43 @@ const getListOfUsers = async () => {
 };
 
 const getUserProfile = async (userId) => {
-	let userInfo = {};
+	let userInfo = {},
+		result = {};
 
 	if (!userId) {
 		return {};
 	} else {
-		const users = await database
-			.collection("users")
-			.where("userId", "==", userId)
-			.get();
+		const cursor = await UserModel.findOne({ userId: userId });
 
-		users.forEach((doc) => {
-			const data = doc.data();
-
-			userInfo = {
-				userId: data.userId,
-				username: data.username,
-				email: data.email,
-				phoneNumber: data.phoneNumber,
-				fullName: data.fullName,
-				avatar: data.avatar,
-				website: data.website,
-				sharksFollowed: data.sharksFollowed,
-				updatedDate: data.updatedDate,
-				createdDate: data.createdDate,
-			};
-		});
+		console.log(cursor);
+		console.log(
+			cursor.userId,
+			cursor.username,
+			cursor.email,
+			cursor.phoneNumber,
+			cursor.fullName,
+			cursor.avatar,
+			cursor.website,
+			cursor.sharksFollowed,
+			cursor.updatedDate,
+			cursor.createdDate,
+		);
+		//project({
+		// 	userId: 1,
+		// 	username: 1,
+		// 	email: 1,
+		// 	phoneNumber: 1,
+		// 	fullName: 1,
+		// 	avatar: 1,
+		// 	website: 1,
+		// 	sharksFollowed: 1,
+		// 	updatedDate: 1,
+		// 	createdDate: 1,
+		// });
+		// await cursor.forEach(console.dir);
 	}
 
-	return userInfo;
+	return result;
 };
 
 const checkExistedUsernameForUpdateProfile = async (userId, username) => {

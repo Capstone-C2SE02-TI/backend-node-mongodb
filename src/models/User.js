@@ -37,12 +37,12 @@ const UserSchema = new mongoose.Schema(
 			minLength: 8,
 			maxlength: 16,
 		},
-		fullname: {
+		fullName: {
 			type: String,
 			trim: true,
 			default: "",
 		},
-		phonenumber: {
+		phoneNumber: {
 			type: String,
 			trim: true,
 			minLength: 10,
@@ -64,8 +64,12 @@ const UserSchema = new mongoose.Schema(
 			type: Boolean,
 			default: false,
 		},
-		createdAt: { type: Date, default: new Date(), required: true },
-		updatedAt: { type: Date, default: new Date() },
+		sharksFollowed: {
+			type: Array,
+			default: [],
+		},
+		createdDate: { type: Object, default: {} },
+		updatedDate: { type: Object, default: {} },
 	},
 	{ timestamps: true },
 );

@@ -1,7 +1,13 @@
 const database = require("../../configs/connectDatabase");
 const firebase = require("firebase-admin");
-const { randomFirestoreDocumentId } = require("../../helpers");
 const _ = require("lodash");
+const {
+	UserModel,
+	TokenModel,
+	SharkModel,
+	TagModel,
+	TransactionModel,
+} = require("../../models");
 
 const {
 	DEFAULT_USER_FULLNAME,
@@ -9,6 +15,7 @@ const {
 	DEFAULT_USER_WEBSITE,
 	QUERY_LIMIT_ITEM,
 } = require("../../constants");
+const { randomFirestoreDocumentId } = require("../../helpers");
 
 // Utilities
 const getValueFromPromise = async (promiseValue) => {
