@@ -3,7 +3,7 @@ const { UserModel, AdminModel } = require("../../models");
 const {
 	checkExistedUserId,
 	checkExistedSharkId,
-	checkExistedEmail,
+	getUserByUsername,
 } = require("./user");
 
 const getListOfUsers = async () => {
@@ -67,12 +67,7 @@ const updateUserProfile = async (userId, updateInfo) => {
 		// 	return "success";
 		// }
 
-		console.log(
-			await checkExistedEmailForUpdateProfile(
-				42,
-				"levanthuan7@gmail.com",
-			),
-		);
+		// console.log(await getUserByUsername("newww1"));
 		return "success";
 	} catch (error) {
 		return "error";
@@ -163,8 +158,7 @@ const getPasswordByUsername = async (username) => {
 };
 
 const getAdminByUsername = async (username) => {
-	const admin = await AdminModel.findOne({ username: username });
-	return admin;
+	return await AdminModel.findOne({ username: username });
 };
 
 const deleteUserByUserId = async (userId) => {

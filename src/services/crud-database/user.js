@@ -32,25 +32,19 @@ const getHoursPriceOfToken = async (tokenSymbol) => {
 	return hoursPrice;
 };
 
-// OK
+//#region OK
 const getUserByUsername = async (username) => {
-	const user = await UserModel.findOne({ username: username });
-	return user;
+	return await UserModel.findOne({ username: username });
 };
 
-// OK
 const getUserByEmail = async (email) => {
-	const user = await UserModel.findOne({ email: email });
-	return user;
+	return await UserModel.findOne({ email: email });
 };
 
-// OK
 const getUsersLength = async () => {
-	const length = await UserModel.count({});
-	return length;
+	return await UserModel.count({});
 };
 
-// OK
 const createNewUser = async ({
 	username,
 	email,
@@ -86,12 +80,10 @@ const createNewUser = async ({
 
 		return true;
 	} catch (error) {
-		console.log(error);
 		return false;
 	}
 };
 
-// OK
 const updateUserConfirmationCode = async (userId, code) => {
 	try {
 		await UserModel.findOneAndUpdate(
@@ -111,7 +103,6 @@ const updateUserConfirmationCode = async (userId, code) => {
 	}
 };
 
-// OK
 const updateUserPassword = async (userId, password) => {
 	try {
 		await UserModel.findOneAndUpdate(
@@ -131,7 +122,6 @@ const updateUserPassword = async (userId, password) => {
 	}
 };
 
-//#region OK
 const checkExistedUsername = async (username) => {
 	const isExisted = await UserModel.exists({ username: username });
 	return Boolean(isExisted);
@@ -198,8 +188,7 @@ const getListOfCoinsAndTokens = async () => {
 
 // OK
 const getCoinsAndTokensLength = async () => {
-	const length = await TokenModel.count({});
-	return length;
+	return await TokenModel.count({});
 };
 
 const getListReducingCoinsAndTokens = async () => {
@@ -368,8 +357,7 @@ const getListOfTags = async () => {
 
 // OK
 const getSharksLength = async () => {
-	const length = await SharkModel.count({});
-	return length;
+	return await SharkModel.count({});
 };
 
 const getListOfSharks = async () => {
