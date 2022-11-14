@@ -3,7 +3,6 @@ const { UserModel, AdminModel } = require("../../models");
 const {
 	checkExistedUserId,
 	checkExistedSharkId,
-	getUsersLength,
 	checkExistedEmail,
 } = require("./user");
 
@@ -29,34 +28,18 @@ const getUserProfile = async (userId) => {
 	}
 };
 
-// TODO
 const checkExistedUsernameForUpdateProfile = async (userId, username) => {
-	let check = false;
-	const users = await database.collection("users").get();
+	const user = await UserModel.findOne({ username: username });
 
-	users.forEach((doc) => {
-		if (doc.get("username") == username && doc.get("userId") != userId) {
-			check = true;
-			return;
-		}
-	});
-
-	return check;
+	if (user && user.userId !== userId) return true;
+	else return false;
 };
 
-// TODO
 const checkExistedEmailForUpdateProfile = async (userId, email) => {
-	let check = false;
-	const users = await database.collection("users").get();
+	const user = await UserModel.findOne({ email: email });
 
-	users.forEach((doc) => {
-		if (doc.get("email") == email && doc.get("userId") != userId) {
-			check = true;
-			return;
-		}
-	});
-
-	return check;
+	if (user && user.userId !== userId) return true;
+	else return false;
 };
 
 const updateUserProfile = async (userId, updateInfo) => {
@@ -84,14 +67,18 @@ const updateUserProfile = async (userId, updateInfo) => {
 		// 	return "success";
 		// }
 
-		console.log(await checkExistedEmail("lvt@gmail.com"));
+		console.log(
+			await checkExistedEmailForUpdateProfile(
+				42,
+				"levanthuan7@gmail.com",
+			),
+		);
 		return "success";
 	} catch (error) {
 		return "error";
 	}
 };
 
-// TODO
 const upgradeUserPremiumAccount = async (userId) => {
 	try {
 		if (userId === null) return "userid-required";
@@ -100,14 +87,16 @@ const upgradeUserPremiumAccount = async (userId) => {
 
 		if (!(await checkExistedUserId(userId))) return "user-notfound";
 
-		const users = await database
-			.collection("users")
-			.where("userId", "==", userId)
-			.get();
-
-		users.forEach((doc) => {
-			doc.ref.update({ premiumAccount: true });
-		});
+		await UserModel.findOneAndUpdate(
+			{ userId: userId },
+			{ premiumAccount: true },
+		)
+			.then((data) => {
+				if (!data) throw new Error();
+			})
+			.catch((error) => {
+				throw new Error(error);
+			});
 
 		return "success";
 	} catch (error) {
@@ -178,21 +167,13 @@ const getAdminByUsername = async (username) => {
 	return admin;
 };
 
-// TODO
-const deleteUserById = async (userId) => {
-	let rawDataUser = await database
-		.collection("users")
-		.where("id", "==", userId)
-		.get();
-
-	let isDeleted = false;
-
-	rawDataUser.forEach((doc) => {
-		isDeleted = true;
-		doc.ref.delete();
-	});
-
-	return isDeleted;
+const deleteUserByUserId = async (userId) => {
+	try {
+		const deletedObj = await UserModel.deleteOne({ userId: userId });
+		return deletedObj.deletedCount === 1;
+	} catch (error) {
+		return false;
+	}
 };
 
 module.exports = {
@@ -206,5 +187,5 @@ module.exports = {
 	followWalletOfShark,
 	getPasswordByUsername,
 	getAdminByUsername,
-	deleteUserById,
+	deleteUserByUserId,
 };

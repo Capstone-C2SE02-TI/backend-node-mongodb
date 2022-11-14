@@ -3,7 +3,7 @@ const {
 	checkExistedUsername,
 	getPasswordByUsername,
 	getAdminByUsername,
-	deleteUserById,
+	deleteUserByUserId,
 	getListOfUsers,
 	getUserProfile,
 } = require("../services/crud-database/admin");
@@ -82,7 +82,7 @@ function AdminController() {
 					error: "id-notfound",
 				});
 
-			const isDeletedSuccessful = await deleteUserById(checkedId);
+			const isDeletedSuccessful = await deleteUserByUserId(checkedId);
 
 			if (!isDeletedSuccessful)
 				return res.status(404).json({
