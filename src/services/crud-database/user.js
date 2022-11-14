@@ -358,41 +358,27 @@ const getListCryptosOfShark = async (sharkId) => {
 	return shark?.cryptos || -1;
 };
 
+// OK
 const getTransactionsOfAllSharks = async (page) => {
 	if (page < 1 || page % 1 !== 0) return [];
 
-	const rawData = await database
-		.collection("transactions")
-		.orderBy("sortNumber", "asc")
-		.startAt((page - 1) * QUERY_LIMIT_ITEM + 1)
-		.limit(QUERY_LIMIT_ITEM)
-		.get();
+	const transactions = await TransactionModel.find({})
+		.select("-_id")
+		.sort("sortNumber")
+		.skip((page - 1) * QUERY_LIMIT_ITEM)
+		.limit(QUERY_LIMIT_ITEM);
 
-	let transactions = [];
-	rawData.forEach((doc) => {
-		transactions.push(doc.data());
-	});
-
-	return transactions;
+	return transactions || [];
 };
 
+// OK
 const getListTransactionsOfShark = async (sharkId) => {
-	// if (!_.isNumber(sharkId)) return -1;
+	// const shark = await SharkModel.findOne({ id: sharkId }).select(
+	// 	"transactionsHistory -_id",
+	// );
+	// return shark?.transactionsHistory || -1;
 
-	// const rawData = await database
-	// 	.collection("sharks")
-	// 	.where("id", "==", sharkId)
-	// 	.get();
-
-	// let transactions = -1;
-
-	// rawData.forEach((doc) => {
-	// 	transactions = doc.data()["transactionsHistory"];
-	// });
-
-	// return transactions;
-
-	console.log(await getListCryptosOfShark(11));
+	console.log(await getTransactionsOfAllSharks(2));
 };
 
 const getDetailCoinTransactionHistoryOfShark = async (sharkId, coinSymbol) => {
