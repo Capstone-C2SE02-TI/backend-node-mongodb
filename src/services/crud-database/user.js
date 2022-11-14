@@ -18,20 +18,6 @@ const {
 	QUERY_LIMIT_ITEM,
 } = require("../../constants");
 
-const getHoursPriceOfToken = async (tokenSymbol) => {
-	const rawData = await database
-		.collection("tokens")
-		.where("symbol", "==", tokenSymbol.toUpperCase())
-		.get();
-
-	let hoursPrice = {};
-	rawData.forEach((doc) => {
-		hoursPrice = doc.data().originalPrices.hourly;
-	});
-
-	return hoursPrice;
-};
-
 //#region OK
 const getUserByUsername = async (username) => {
 	return await UserModel.findOne({ username: username });
@@ -344,15 +330,10 @@ const getCoinOrTokenDetails = async (coinSymbol) => {
 	return coinInfo;
 };
 
+// OK
 const getListOfTags = async () => {
-	let tagsList = [];
-	const tags = await database.collection("tags").orderBy("id", "asc").get();
-
-	tags.forEach((doc) => {
-		tagsList.push(doc.data());
-	});
-
-	return tagsList;
+	const tags = await TagModel.find({}).sort("id").select("id name -_id");
+	return tags;
 };
 
 // OK
@@ -414,20 +395,22 @@ const getTransactionsOfAllSharks = async (page) => {
 };
 
 const getListTransactionsOfShark = async (sharkId) => {
-	if (!_.isNumber(sharkId)) return -1;
+	// if (!_.isNumber(sharkId)) return -1;
 
-	const rawData = await database
-		.collection("sharks")
-		.where("id", "==", sharkId)
-		.get();
+	// const rawData = await database
+	// 	.collection("sharks")
+	// 	.where("id", "==", sharkId)
+	// 	.get();
 
-	let transactions = -1;
+	// let transactions = -1;
 
-	rawData.forEach((doc) => {
-		transactions = doc.data()["transactionsHistory"];
-	});
+	// rawData.forEach((doc) => {
+	// 	transactions = doc.data()["transactionsHistory"];
+	// });
 
-	return transactions;
+	// return transactions;
+
+	console.log(await getListOfTags());
 };
 
 const getDetailCoinTransactionHistoryOfShark = async (sharkId, coinSymbol) => {
@@ -464,6 +447,15 @@ const getDetailCoinTransactionHistoryOfShark = async (sharkId, coinSymbol) => {
 	} catch (error) {
 		return { message: "error" };
 	}
+};
+
+// OK
+const getHoursPriceOfToken = async (tokenSymbol) => {
+	const token = await TokenModel.findOne({
+		symbol: tokenSymbol.toUpperCase(),
+	}).select("originalPrices -_id");
+
+	return token?.originalPrices?.hourly || {};
 };
 
 module.exports = {
