@@ -353,9 +353,10 @@ const getListTransactionsOfShark = async (sharkId) => {
 	// );
 	// return shark?.transactionsHistory || -1;
 
-	return await getListOfCoinsAndTokens();
+	console.log(await getDetailCoinTransactionHistoryOfShark(1, "efi"));
+
+	return [];
 };
-//#endregion
 
 const getDetailCoinTransactionHistoryOfShark = async (sharkId, coinSymbol) => {
 	try {
@@ -368,32 +369,24 @@ const getDetailCoinTransactionHistoryOfShark = async (sharkId, coinSymbol) => {
 		if (!(await checkExistedSharkId(sharkId)))
 			return { message: "shark-notfound" };
 
-		const sharks = await database
-			.collection("sharks")
-			.where("id", "==", sharkId)
-			.get();
+		const sharks = await SharkModel.findOne({ id: sharkId }).select(
+			"historyDatas -_id",
+		);
 
-		let obj;
+		const historyData = sharks.historyDatas.find(
+			(data) => data.coinSymbol === coinSymbol.toUpperCase(),
+		);
 
-		sharks.forEach((doc) => {
-			obj = doc
-				.data()
-				.historyDatas.find(
-					(data) =>
-						_.lowerCase(data.coinSymbol) ===
-						_.lowerCase(coinSymbol),
-				);
-		});
-
-		if (!obj) return { message: "coin-notfound" };
-
-		return { message: "success", data: obj.historyData };
+		if (!historyData) {
+			return { message: "coin-notfound" };
+		} else {
+			return { message: "success", data: historyData.historyData };
+		}
 	} catch (error) {
 		return { message: "error" };
 	}
 };
 
-// OK
 const getHoursPriceOfToken = async (tokenSymbol) => {
 	const token = await TokenModel.findOne({
 		symbol: tokenSymbol.toUpperCase(),
@@ -401,6 +394,7 @@ const getHoursPriceOfToken = async (tokenSymbol) => {
 
 	return token?.originalPrices?.hourly || {};
 };
+//#endregion
 
 module.exports = {
 	getUserByUsername,
