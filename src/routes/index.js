@@ -17,13 +17,13 @@ function routing(app) {
 	 *   name: Others
 	 */
 
-	/* --- User routes --- */
+	/* User routes */
 	app.use("/auth", authRouter);
 	app.use("/forgot-password", forgotPasswordRouter);
 	app.use("/display", displayRouter);
 	app.use("/user", userRouter);
 
-	/* --- Admin routes --- */
+	/* Admin routes */
 	app.use("/admin", adminRouter);
 }
 

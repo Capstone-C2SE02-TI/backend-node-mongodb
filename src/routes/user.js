@@ -134,11 +134,12 @@ router.post("/change-password", UserController.changePassword);
  *       400:
  *         description: Upgrade premium account failed
  */
-router.post(
-	"/upgrade-premium-account",
-	isAuth,
-	UserController.upgradePremiumAccount,
-);
+router.post("/upgrade-premium-account", UserController.upgradePremiumAccount);
+// router.post(
+// 	"/upgrade-premium-account",
+// 	isAuth,
+// 	UserController.upgradePremiumAccount,
+// );
 
 /**
  * @swagger
@@ -168,6 +169,7 @@ router.post(
  *       400:
  *         description: Follow shark wallet failed
  */
-router.post("/follow-shark-wallet", isAuth, UserController.followSharkWallet);
+router.post("/follow-shark-wallet", UserController.followSharkWallet);
+// router.post("/follow-shark-wallet", isAuth, UserController.followSharkWallet);
 
 module.exports = router;

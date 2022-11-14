@@ -82,7 +82,7 @@ const TokenSchema = new mongoose.Schema({
 	},
 	pricesLast1Day: {
 		type: Array,
-		default: null,
+		default: {},
 	},
 });
 
