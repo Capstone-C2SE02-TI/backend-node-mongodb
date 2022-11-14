@@ -141,41 +141,21 @@ const getPasswordByEmail = async (email) => {
 	);
 	return user?.password || null;
 };
-//#endregion
 
 const getListOfCoinsAndTokens = async () => {
-	let coinsList = [];
-	let coins = await database.collection("tokens").orderBy("id", "asc").get();
+	const tokens = await TokenModel.find({})
+		.select(
+			"id name symbol iconURL tagNames cmcRank usd marketCap circulatingSupply pricesLast1Day -_id",
+		)
+		.sort("id");
 
-	coins.forEach((doc) => {
-		const data = doc.data();
-
-		const coin = {
-			id: data.id,
-			name: data.name,
-			symbol: data.symbol,
-			iconURL: data.iconURL,
-			tagNames: data.tagNames,
-			cmcRank: data.cmcRank,
-			usd: data.usd,
-			marketCap: data.marketCap,
-			circulatingSupply: data.circulatingSupply,
-			pricesLast1Day:
-				data.id >= 1 && data.id <= 10
-					? Object.entries(data.prices.day)
-					: null,
-		};
-
-		coinsList.push(coin);
-	});
-
-	return coinsList;
+	return tokens || [];
 };
 
-// OK
 const getCoinsAndTokensLength = async () => {
 	return await TokenModel.count({});
 };
+//#endregion
 
 const getListReducingCoinsAndTokens = async () => {
 	let reducingCoinsAndTokens = [];
@@ -330,18 +310,16 @@ const getCoinOrTokenDetails = async (coinSymbol) => {
 	return coinInfo;
 };
 
-// OK
+//#region OK
 const getListOfTags = async () => {
 	const tags = await TagModel.find({}).sort("id").select("id name -_id");
 	return tags;
 };
 
-// OK
 const getSharksLength = async () => {
 	return await SharkModel.count({});
 };
 
-// OK
 const getListOfSharks = async () => {
 	const sharks = await SharkModel.find({})
 		.sort("id")
@@ -350,7 +328,6 @@ const getListOfSharks = async () => {
 	return sharks;
 };
 
-// OK
 const getListCryptosOfShark = async (sharkId) => {
 	const shark = await SharkModel.findOne({ id: sharkId }).select(
 		"cryptos -_id",
@@ -358,7 +335,6 @@ const getListCryptosOfShark = async (sharkId) => {
 	return shark?.cryptos || -1;
 };
 
-// OK
 const getTransactionsOfAllSharks = async (page) => {
 	if (page < 1 || page % 1 !== 0) return [];
 
@@ -371,15 +347,15 @@ const getTransactionsOfAllSharks = async (page) => {
 	return transactions || [];
 };
 
-// OK
 const getListTransactionsOfShark = async (sharkId) => {
 	// const shark = await SharkModel.findOne({ id: sharkId }).select(
 	// 	"transactionsHistory -_id",
 	// );
 	// return shark?.transactionsHistory || -1;
 
-	console.log(await getTransactionsOfAllSharks(2));
+	return await getListOfCoinsAndTokens();
 };
+//#endregion
 
 const getDetailCoinTransactionHistoryOfShark = async (sharkId, coinSymbol) => {
 	try {

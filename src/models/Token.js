@@ -80,6 +80,10 @@ const TokenSchema = new mongoose.Schema({
 		required: true,
 		default: {},
 	},
+	pricesLast1Day: {
+		type: Array,
+		default: null,
+	},
 });
 
 module.exports = mongoose.model("Token", TokenSchema);
