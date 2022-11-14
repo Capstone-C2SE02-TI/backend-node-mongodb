@@ -1,8 +1,7 @@
+const database = require("../../configs/connectDatabase");
 const mongoose = require("mongoose");
 const { Types } = mongoose;
 
-const _ = require("lodash");
-const database = require("../../configs/connectDatabase");
 const {
 	UserModel,
 	TokenModel,
@@ -10,7 +9,6 @@ const {
 	TagModel,
 	TransactionModel,
 } = require("../../models");
-
 const {
 	DEFAULT_USER_FULLNAME,
 	DEFAULT_USER_AVATAR,
@@ -264,50 +262,52 @@ const getListTrendingTokens = async () => {
 };
 
 const getCoinOrTokenDetails = async (coinSymbol) => {
-	let coinInfo = {};
-	let fullInfo = [];
+	// let coinInfo = {};
+	// let fullInfo = [];
 
-	if (!coinSymbol) {
-		return {};
-	} else {
-		fullInfo = await database
-			.collection("tokens")
-			.where("symbol", "==", coinSymbol.toUpperCase())
-			.get();
+	// if (!coinSymbol) {
+	// 	return {};
+	// } else {
+	// 	fullInfo = await database
+	// 		.collection("tokens")
+	// 		.where("symbol", "==", coinSymbol.toUpperCase())
+	// 		.get();
 
-		fullInfo.forEach((doc) => {
-			const data = doc.data();
+	// 	fullInfo.forEach((doc) => {
+	// 		const data = doc.data();
 
-			coinInfo = {
-				id: data.id,
-				ethId: data.ethId,
-				name: data.name,
-				type: data.type,
-				symbol: data.symbol,
-				iconURL: data.iconURL,
-				cmcRank: data.cmcRank,
-				tagNames: data.tagNames,
-				maxSupply: data.maxSupply,
-				totalSupply: data.totalSupply,
-				circulatingSupply: data.circulatingSupply,
-				contractAddress: data.contractAddress,
-				marketCap: data.marketCap,
-				urls: data.urls,
-				usd: data.usd,
-				prices:
-					data.id >= 1 && data.id <= 10
-						? {
-								day: Object.entries(data.prices.day),
-								week: Object.entries(data.prices.week),
-								month: Object.entries(data.prices.month),
-								year: Object.entries(data.prices.year),
-						  }
-						: null,
-			};
-		});
-	}
+	// 		coinInfo = {
+	// 			id: data.id,
+	// 			ethId: data.ethId,
+	// 			name: data.name,
+	// 			type: data.type,
+	// 			symbol: data.symbol,
+	// 			iconURL: data.iconURL,
+	// 			cmcRank: data.cmcRank,
+	// 			tagNames: data.tagNames,
+	// 			maxSupply: data.maxSupply,
+	// 			totalSupply: data.totalSupply,
+	// 			circulatingSupply: data.circulatingSupply,
+	// 			contractAddress: data.contractAddress,
+	// 			marketCap: data.marketCap,
+	// 			urls: data.urls,
+	// 			usd: data.usd,
+	// 			prices:
+	// 				data.id >= 1 && data.id <= 10
+	// 					? {
+	// 							day: Object.entries(data.prices.day),
+	// 							week: Object.entries(data.prices.week),
+	// 							month: Object.entries(data.prices.month),
+	// 							year: Object.entries(data.prices.year),
+	// 					  }
+	// 					: null,
+	// 		};
+	// 	});
+	// }
 
-	return coinInfo;
+	// return coinInfo;
+
+	return await getDetailCoinTransactionHistoryOfShark();
 };
 
 //#region OK
@@ -348,14 +348,10 @@ const getTransactionsOfAllSharks = async (page) => {
 };
 
 const getListTransactionsOfShark = async (sharkId) => {
-	// const shark = await SharkModel.findOne({ id: sharkId }).select(
-	// 	"transactionsHistory -_id",
-	// );
-	// return shark?.transactionsHistory || -1;
-
-	console.log(await getDetailCoinTransactionHistoryOfShark(1, "efi"));
-
-	return [];
+	const shark = await SharkModel.findOne({ id: sharkId }).select(
+		"transactionsHistory -_id",
+	);
+	return shark?.transactionsHistory || -1;
 };
 
 const getDetailCoinTransactionHistoryOfShark = async (sharkId, coinSymbol) => {
@@ -377,11 +373,9 @@ const getDetailCoinTransactionHistoryOfShark = async (sharkId, coinSymbol) => {
 			(data) => data.coinSymbol === coinSymbol.toUpperCase(),
 		);
 
-		if (!historyData) {
-			return { message: "coin-notfound" };
-		} else {
-			return { message: "success", data: historyData.historyData };
-		}
+		if (!historyData) return { message: "coin-notfound" };
+
+		return { message: "success", data: historyData.historyData || [] };
 	} catch (error) {
 		return { message: "error" };
 	}
