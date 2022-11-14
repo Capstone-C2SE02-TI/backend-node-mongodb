@@ -1,8 +1,8 @@
 const mongoose = require("mongoose");
 const { Types } = mongoose;
 
-const database = require("../../configs/connectDatabase");
 const _ = require("lodash");
+const database = require("../../configs/connectDatabase");
 const {
 	UserModel,
 	TokenModel,
@@ -341,50 +341,32 @@ const getSharksLength = async () => {
 	return await SharkModel.count({});
 };
 
+// OK
 const getListOfSharks = async () => {
-	let sharksList = [];
-	let sharks = await database.collection("sharks").orderBy("id", "asc").get();
+	const sharks = await SharkModel.find({})
+		.sort("id")
+		.select("id walletAddress totalAssets percent24h -_id");
 
-	sharks.forEach((doc) => {
-		const data = doc.data();
-
-		sharksList.push({
-			id: data.id,
-			percent24h: data.percent24h,
-			walletAddress: data.walletAddress,
-			totalAsset: data.totalAssets,
-		});
-	});
-
-	return sharksList;
+	return sharks;
 };
 
+// OK
 const getListCryptosOfShark = async (sharkId) => {
-	const rawData = await database
-		.collection("sharks")
-		.where("id", "==", sharkId)
-		.get();
-
-	//have data
-	let cryptos = [];
-
-	rawData.forEach((doc) => {
-		cryptos = doc.data()["cryptos"];
-	});
-
-	return cryptos.length !== 0 ? cryptos : -1;
+	const shark = await SharkModel.findOne({ id: sharkId }).select(
+		"cryptos -_id",
+	);
+	return shark?.cryptos || -1;
 };
 
 const getTransactionsOfAllSharks = async (page) => {
 	if (page < 1 || page % 1 !== 0) return [];
+
 	const rawData = await database
 		.collection("transactions")
 		.orderBy("sortNumber", "asc")
 		.startAt((page - 1) * QUERY_LIMIT_ITEM + 1)
 		.limit(QUERY_LIMIT_ITEM)
 		.get();
-
-	// lastDocument = rawData.docs[rawData.docs.length - 1];
 
 	let transactions = [];
 	rawData.forEach((doc) => {
@@ -410,7 +392,7 @@ const getListTransactionsOfShark = async (sharkId) => {
 
 	// return transactions;
 
-	console.log(await getListOfTags());
+	console.log(await getListCryptosOfShark(11));
 };
 
 const getDetailCoinTransactionHistoryOfShark = async (sharkId, coinSymbol) => {
