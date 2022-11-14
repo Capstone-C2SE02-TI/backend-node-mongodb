@@ -1,10 +1,5 @@
-const database = require("../../configs/connectDatabase");
-const { UserModel, AdminModel } = require("../../models");
-const {
-	checkExistedUserId,
-	checkExistedSharkId,
-	getUserByUsername,
-} = require("./user");
+const { AdminModel, UserModel, SharkModel } = require("../../models");
+const { checkExistedUserId, checkExistedSharkId } = require("./user");
 
 const getListOfUsers = async () => {
 	const users = await UserModel.find({})
@@ -44,31 +39,28 @@ const checkExistedEmailForUpdateProfile = async (userId, email) => {
 
 const updateUserProfile = async (userId, updateInfo) => {
 	try {
-		// if (!userId) return "userid-required";
-		// else {
-		// 	const { email } = updateInfo;
+		if (!userId) return "userid-required";
+		else {
+			const { email } = updateInfo;
 
-		// 	if (!(await checkExistedUserId(userId))) return "user-notfound";
+			if (!(await checkExistedUserId(userId))) return "user-notfound";
 
-		// 	if (
-		// 		email &&
-		// 		(await checkExistedEmailForUpdateProfile(userId, email))
-		// 	)
-		// 		return "email-existed";
+			if (
+				email &&
+				(await checkExistedEmailForUpdateProfile(userId, email))
+			)
+				return "email-existed";
 
-		// 	await UserModel.findOneAndUpdate({ userId: userId }, updateInfo)
-		// 		.then((data) => {
-		// 			if (!data) throw new Error();
-		// 		})
-		// 		.catch((error) => {
-		// 			throw new Error(error);
-		// 		});
+			await UserModel.findOneAndUpdate({ userId: userId }, updateInfo)
+				.then((data) => {
+					if (!data) throw new Error();
+				})
+				.catch((error) => {
+					throw new Error(error);
+				});
 
-		// 	return "success";
-		// }
-
-		// console.log(await getUserByUsername("newww1"));
-		return "success";
+			return "success";
+		}
 	} catch (error) {
 		return "error";
 	}
@@ -99,7 +91,6 @@ const upgradeUserPremiumAccount = async (userId) => {
 	}
 };
 
-// TODO
 const followWalletOfShark = async (userId, sharkId) => {
 	try {
 		if (userId === null) return "userid-required";
@@ -111,36 +102,27 @@ const followWalletOfShark = async (userId, sharkId) => {
 		if (!(await checkExistedUserId(userId))) return "user-notfound";
 		if (!(await checkExistedSharkId(sharkId))) return "shark-notfound";
 
-		const users = await database
-			.collection("users")
-			.where("userId", "==", userId)
-			.get();
+		const shark = await SharkModel.findOne({ id: sharkId }).select(
+			"id walletAddress totalAssets percent24h -_id",
+		);
+		const user = await UserModel.findOne({ userId: userId }).select(
+			"sharksFollowed -_id",
+		);
 
-		const sharks = await database
-			.collection("sharks")
-			.where("id", "==", sharkId)
-			.get();
-
-		let sharkInfo = {};
-		sharks.forEach((doc) => {
-			const data = doc.data();
-
-			sharkInfo = {
-				id: data.id,
-				walletAddress: data.walletAddress,
-				totalAssets: data.totalAssets,
-				percent24h: data.percent24h,
-			};
-		});
-
-		users.forEach((doc) => {
-			doc.ref.update({
-				sharksFollowed: [...doc.data().sharksFollowed, sharkInfo],
+		await UserModel.findOneAndUpdate(
+			{ userId: userId },
+			{ sharksFollowed: [...user.sharksFollowed, shark] },
+		)
+			.then((data) => {
+				if (!data) throw new Error();
+			})
+			.catch((error) => {
+				throw new Error(error);
 			});
-		});
 
 		return "success";
 	} catch (error) {
+		console.log(error);
 		return "error";
 	}
 };
