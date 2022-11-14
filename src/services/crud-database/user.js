@@ -185,50 +185,13 @@ const getListTrendingTokens = async () => {
 };
 
 const getCoinOrTokenDetails = async (coinSymbol) => {
-	// let coinInfo = {};
-	// let fullInfo = [];
+	const coinOrToken = await TokenModel.findOne({
+		symbol: coinSymbol.toUpperCase(),
+	}).select(
+		"id ethId name type symbol iconURL cmcRank tagNames maxSupply totalSupply circulatingSupply contractAddress marketCap urls usd prices -_id",
+	);
 
-	// if (!coinSymbol) {
-	// 	return {};
-	// } else {
-	// 	fullInfo = await database
-	// 		.collection("tokens")
-	// 		.where("symbol", "==", coinSymbol.toUpperCase())
-	// 		.get();
-
-	// 	fullInfo.forEach((doc) => {
-	// 		const data = doc.data();
-
-	// 		coinInfo = {
-	// 			id: data.id,
-	// 			ethId: data.ethId,
-	// 			name: data.name,
-	// 			type: data.type,
-	// 			symbol: data.symbol,
-	// 			iconURL: data.iconURL,
-	// 			cmcRank: data.cmcRank,
-	// 			tagNames: data.tagNames,
-	// 			maxSupply: data.maxSupply,
-	// 			totalSupply: data.totalSupply,
-	// 			circulatingSupply: data.circulatingSupply,
-	// 			contractAddress: data.contractAddress,
-	// 			marketCap: data.marketCap,
-	// 			urls: data.urls,
-	// 			usd: data.usd,
-	// 			prices:
-	// 				data.id >= 1 && data.id <= 10
-	// 					? {
-	// 							day: Object.entries(data.prices.day),
-	// 							week: Object.entries(data.prices.week),
-	// 							month: Object.entries(data.prices.month),
-	// 							year: Object.entries(data.prices.year),
-	// 					  }
-	// 					: null,
-	// 		};
-	// 	});
-	// }
-
-	// return coinInfo;
+	return coinOrToken || {};
 };
 
 const getListOfTags = async () => {
