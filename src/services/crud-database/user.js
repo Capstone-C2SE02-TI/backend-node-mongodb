@@ -1,4 +1,3 @@
-const database = require("../../configs/connectDatabase");
 const mongoose = require("mongoose");
 const { Types } = mongoose;
 
@@ -14,9 +13,9 @@ const {
 	DEFAULT_USER_AVATAR,
 	DEFAULT_USER_WEBSITE,
 	QUERY_LIMIT_ITEM,
+	TRENDING_REDUCING_LIMIT_ITEM,
 } = require("../../constants");
 
-//#region OK
 const getUserByUsername = async (username) => {
 	return await UserModel.findOne({ username: username });
 };
@@ -153,110 +152,34 @@ const getListOfCoinsAndTokens = async () => {
 const getCoinsAndTokensLength = async () => {
 	return await TokenModel.count({});
 };
-//#endregion
 
 const getListReducingCoinsAndTokens = async () => {
-	let reducingCoinsAndTokens = [];
-	let rawData = await database.collection("tokens").get();
+	const reducingTokens = await TokenModel.find({})
+		.sort({ "usd.percentChange24h": "asc" })
+		.limit(TRENDING_REDUCING_LIMIT_ITEM)
+		.select("id name symbol iconURL tagNames usd pricesLast1Day -_id");
 
-	rawData.forEach((doc) => {
-		const data = doc.data();
-
-		reducingCoinsAndTokens.push({
-			id: data.id,
-			name: data.name,
-			symbol: data.symbol,
-			iconURL: data.iconURL,
-			tagNames: data.tagNames,
-			usd: {
-				percentChange24h: data.usd.percentChange24h,
-				price: data.usd.price,
-			},
-			pricesLast1Day:
-				data.id >= 1 && data.id <= 10
-					? Object.entries(data.prices.day)
-					: null,
-		});
-	});
-
-	//sort asc
-	reducingCoinsAndTokens.sort(
-		(firstObj, secondObj) =>
-			firstObj.usd.percentChange24h - secondObj.usd.percentChange24h,
-	);
-
-	// get first 10 tokens
-	reducingCoinsAndTokens = reducingCoinsAndTokens.slice(0, 10);
-
-	return reducingCoinsAndTokens;
+	return reducingTokens;
 };
 
 const getListTrendingCoins = async () => {
-	let trendingCoins = [];
-	let rawData = await database
-		.collection("tokens")
-		.where("type", "==", "coin")
-		.get();
-
-	// get data
-	rawData.forEach((doc) => {
-		const data = doc.data();
-
-		trendingCoins.push({
-			id: data.id,
-			name: data.name,
-			symbol: data.symbol,
-			iconURL: data.iconURL,
-			tagNames: data.tagNames,
-			circulatingSupply: data.circulatingSupply,
-			marketCap: data.marketCap,
-			usd: data.usd,
-		});
-	});
-
-	// sort desc
-	trendingCoins.sort(
-		(firstObj, secondObj) =>
-			secondObj.usd.percentChange24h - firstObj.usd.percentChange24h,
-	);
-
-	// get first 10 coins
-	trendingCoins = trendingCoins.slice(0, 10);
+	const trendingCoins = await TokenModel.find({ type: "coin" })
+		.sort({ "usd.percentChange24h": "desc" })
+		.limit(TRENDING_REDUCING_LIMIT_ITEM)
+		.select(
+			"id name symbol iconURL tagNames usd marketCap circulatingSupply -_id",
+		);
 
 	return trendingCoins;
 };
 
 const getListTrendingTokens = async () => {
-	let trendingTokens = [];
-	let rawData = await database
-		.collection("tokens")
-		.where("type", "==", "token")
-		.get();
-
-	// get data
-	rawData.forEach((doc) => {
-		const data = doc.data();
-
-		trendingTokens.push({
-			id: data.id,
-			name: data.name,
-			symbol: data.symbol,
-			iconURL: data.iconURL,
-			tagNames: data.tagNames,
-			circulatingSupply: data.circulatingSupply,
-			marketCap: data.marketCap,
-			usd: data.usd,
-		});
-	});
-
-	// sort desc
-	trendingTokens.sort(
-		(firstObj, secondObj) =>
-			secondObj.usd.percentChange24h - firstObj.usd.percentChange24h,
-	);
-
-	// get first 10 tokens
-	trendingTokens = trendingTokens.slice(0, 10);
+	const trendingTokens = await TokenModel.find({ type: "token" })
+		.sort({ "usd.percentChange24h": "desc" })
+		.limit(TRENDING_REDUCING_LIMIT_ITEM)
+		.select(
+			"id name symbol iconURL tagNames usd marketCap circulatingSupply -_id",
+		);
 
 	return trendingTokens;
 };
@@ -306,14 +229,10 @@ const getCoinOrTokenDetails = async (coinSymbol) => {
 	// }
 
 	// return coinInfo;
-
-	return await getDetailCoinTransactionHistoryOfShark();
 };
 
-//#region OK
 const getListOfTags = async () => {
-	const tags = await TagModel.find({}).sort("id").select("id name -_id");
-	return tags;
+	return await TagModel.find({}).sort("id").select("id name -_id");
 };
 
 const getSharksLength = async () => {
@@ -388,7 +307,6 @@ const getHoursPriceOfToken = async (tokenSymbol) => {
 
 	return token?.originalPrices?.hourly || {};
 };
-//#endregion
 
 module.exports = {
 	getUserByUsername,
