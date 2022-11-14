@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const userController = require("../controllers/User");
+const UserController = require("../controllers/User");
 const { isAuth } = require("../middlewares/authentication");
 
 /**
@@ -48,8 +48,8 @@ const { isAuth } = require("../middlewares/authentication");
  *       400:
  *         description: Update user profile failed
  */
-router.post("/profile/update", userController.updateUserProfile);
-// router.post("/profile/update", isAuth, userController.updateUserProfile);
+router.post("/profile/update", UserController.updateUserProfile);
+// router.post("/profile/update", isAuth, UserController.updateUserProfile);
 
 /**
  * @swagger
@@ -68,8 +68,8 @@ router.post("/profile/update", userController.updateUserProfile);
  *       400:
  *         description: Get user profile failed
  */
-router.get("/profile", userController.getUserProfile);
-// router.get("/profile", isAuth, userController.getUserProfile);
+router.get("/profile", UserController.getUserProfile);
+// router.get("/profile", isAuth, UserController.getUserProfile);
 
 /**
  * @swagger
@@ -107,8 +107,8 @@ router.get("/profile", userController.getUserProfile);
  *       400:
  *         description: Change password failed
  */
-router.post("/change-password", userController.changePassword);
-// router.post("/change-password", isAuth, userController.changePassword);
+router.post("/change-password", UserController.changePassword);
+// router.post("/change-password", isAuth, UserController.changePassword);
 
 /**
  * @swagger
@@ -137,7 +137,7 @@ router.post("/change-password", userController.changePassword);
 router.post(
 	"/upgrade-premium-account",
 	isAuth,
-	userController.upgradePremiumAccount,
+	UserController.upgradePremiumAccount,
 );
 
 /**
@@ -168,6 +168,6 @@ router.post(
  *       400:
  *         description: Follow shark wallet failed
  */
-router.post("/follow-shark-wallet", isAuth, userController.followSharkWallet);
+router.post("/follow-shark-wallet", isAuth, UserController.followSharkWallet);
 
 module.exports = router;
