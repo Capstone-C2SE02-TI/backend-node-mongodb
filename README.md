@@ -7,13 +7,13 @@
 #### 1. Clone project
 
 ```bash
-$ git clone https://github.com/Capstone-C1SE04-TI/backend-node.git
+$ git clone https://github.com/Capstone-C1SE04-TI/backend-node-mongodb.git
 ```
 
-#### 2. Change directory to folder backend-node
+#### 2. Change directory to folder backend-node-mongodb
 
 ```bash
-$ cd backend-node
+$ cd backend-node-mongodb
 ```
 
 #### 3. Install dependencies
