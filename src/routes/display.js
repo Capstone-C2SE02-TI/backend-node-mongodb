@@ -199,6 +199,28 @@ router.get(
 
 /**
  * @swagger
+ * /display/gain-loss/sharks:
+ *   get:
+ *     description: Get list gain and loss of sharks
+ *     tags: [Gain and Loss]
+ *     parameters:
+ *      - in: query
+ *        name: isLoss
+ *        schema:
+ *          type: string
+ *     responses:
+ *       200:
+ *         description: Get list gain and loss of sharks successfully
+ *       400:
+ *         description: Get list gain and loss of sharks failed
+ */
+ router.get(
+	"/gain-loss/sharks",
+	DisplayController.getGainLossOfSharks,
+);
+
+/**
+ * @swagger
  * /display/tags:
  *   get:
  *     description: Get list of tags

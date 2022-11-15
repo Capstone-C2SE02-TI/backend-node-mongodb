@@ -12,6 +12,7 @@ const {
 	getListTransactionsOfShark,
 	getDetailCoinTransactionHistoryOfShark,
 	getTransactionsLength,
+	getGainLossOfSharks,
 } = require("../services/crud-database/user");
 
 function DisplayController() {
@@ -256,7 +257,7 @@ function DisplayController() {
 	this.getListTransactionsLength = async (req, res, next) => {
 		await getTransactionsLength()
 			.then((datas) =>
-				datas === 0 
+				datas === 0
 					? res.status(400).json({
 							message: "failed-listtransaction-not-exist",
 							error: "listtransaction-not-exist",
@@ -344,6 +345,38 @@ function DisplayController() {
 					error: error,
 					datas: null,
 					datasLength: 0,
+				}),
+			);
+	};
+
+	this.getGainLossOfSharks = async (req, res, next) => {
+		if (!req.query.isLoss) isLoss = false;
+		else isLoss = req.query.isLoss === "true";
+
+		await getGainLossOfSharks(isLoss)
+			.then((datas) => 
+				!_.isArray(datas)
+					? res.status(400).json({
+							message: "failed-listGainLoss-invalid",
+							error: "listGainLoss-invalid",
+							datasLength: 0,
+							datas: [],
+					  })
+					: res.status(200).json({
+							message: "successfully",
+							error: null,
+							datasLength: datas.length,
+							datas: datas,
+					  }),
+									
+			
+			)
+			.catch((error) =>
+				res.status(400).json({
+					message: "failed",
+					error: error,
+					datasLength: 0,
+					datas: [],
 				}),
 			);
 	};
