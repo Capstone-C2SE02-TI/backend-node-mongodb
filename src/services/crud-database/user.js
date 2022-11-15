@@ -226,7 +226,7 @@ const getTransactionsOfAllSharks = async (page) => {
 
 	const transactions = await TransactionModel.find({})
 		.select("-_id")
-		.sort({timeStamp: "desc"})
+		.sort({ timeStamp: "desc" })
 		.skip((page - 1) * QUERY_LIMIT_ITEM)
 		.limit(QUERY_LIMIT_ITEM);
 
@@ -240,28 +240,43 @@ const getListTransactionsOfShark = async (sharkId) => {
 	return shark?.transactionsHistory || -1;
 };
 
-const getDetailCoinTransactionHistoryOfShark = async (sharkId, coinSymbol) => {
+const getTradeTransactionHistoryOfShark = async (sharkId, coinSymbol) => {
 	try {
-		if (sharkId === null) return { message: "sharkid-required" };
+		// if (sharkId === null) return { message: "sharkid-required" };
 
-		if (sharkId === undefined) return { message: "sharkid-invalid" };
+		// if (sharkId === undefined) return { message: "sharkid-invalid" };
 
-		if (!coinSymbol) return { message: "coinsymbol-required" };
+		// if (!coinSymbol) return { message: "coinsymbol-required" };
 
-		if (!(await checkExistedSharkId(sharkId)))
-			return { message: "shark-notfound" };
+		// if (!(await checkExistedSharkId(sharkId)))
+		// 	return { message: "shark-notfound" };
 
-		const sharks = await SharkModel.findOne({ id: sharkId }).select(
-			"historyDatas -_id",
-		);
+		// const sharks = await SharkModel.findOne({ id: sharkId }).select(
+		// 	"historyDatas -_id",
+		// );
 
-		const historyData = sharks.historyDatas.find(
-			(data) => data.coinSymbol === coinSymbol.toUpperCase(),
-		);
+		// const historyData = sharks.historyDatas.find(
+		// 	(data) => data.coinSymbol === coinSymbol.toUpperCase(),
+		// );
 
-		if (!historyData) return { message: "coin-notfound" };
+		// if (!historyData) return { message: "coin-notfound" };
+		// else {
+		// 	const coinInfo = await TokenModel.findOne({
+		// 		symbol: coinSymbol.toUpperCase(),
+		// 	}).select(
+		// 		"ethId name symbol iconURL cmcRank maxSupply totalSupply circulatingSupply marketCap contractAddress prices -_id",
+		// 	);
 
-		return { message: "success", data: historyData.historyData || [] };
+		// 	return {
+		// 		message: "success",
+		// 		data: {
+		// 			historyData: historyData.historyData || [],
+		// 			coinInfo: coinInfo || null,
+		// 		},
+		// 	};
+		// }
+
+		
 	} catch (error) {
 		return { message: "error" };
 	}
@@ -300,7 +315,7 @@ module.exports = {
 	getListCryptosOfShark,
 	getTransactionsOfAllSharks,
 	getListTransactionsOfShark,
-	getDetailCoinTransactionHistoryOfShark,
+	getTradeTransactionHistoryOfShark,
 	getHoursPriceOfToken,
 	getTransactionsLength,
 };
