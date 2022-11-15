@@ -217,12 +217,16 @@ const getListCryptosOfShark = async (sharkId) => {
 	return shark?.cryptos || -1;
 };
 
+const getTransactionsLength = async () => {
+	return await TransactionModel.count({});
+};
+
 const getTransactionsOfAllSharks = async (page) => {
 	if (page < 1 || page % 1 !== 0) return [];
 
 	const transactions = await TransactionModel.find({})
 		.select("-_id")
-		.sort("sortNumber")
+		.sort({ timeStamp: "desc" })
 		.skip((page - 1) * QUERY_LIMIT_ITEM)
 		.limit(QUERY_LIMIT_ITEM);
 
@@ -294,6 +298,7 @@ module.exports = {
 	getListTrendingCoins,
 	getListTrendingTokens,
 	getListCryptosOfShark,
+	getTransactionsLength,
 	getTransactionsOfAllSharks,
 	getListTransactionsOfShark,
 	getDetailCoinTransactionHistoryOfShark,

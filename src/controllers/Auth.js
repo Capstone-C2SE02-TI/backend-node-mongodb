@@ -10,10 +10,14 @@ const {
 	checkExistedUsername,
 	checkExistedEmail,
 	getPasswordByUsername,
-	getUserByUsername,
 } = require("../services/crud-database/user");
+const {
+	isAuthed,
+	generateAccessToken,
+	generateRefreshAccessToken,
+} = require("../services/authentication");
 const { cryptPassword, comparePassword } = require("../helpers");
-const { isAuthed, generateAccessToken } = require("../services/authentication");
+const { UserModel } = require("../models");
 
 const TI_AUTH_COOKIE = process.env.TI_AUTH_COOKIE;
 
@@ -76,21 +80,47 @@ function AuthController() {
 			comparePassword(
 				password,
 				hashPassword,
-				async (error, isPasswordMatch) => {
-					if (isPasswordMatch) {
-						const user = await getUserByUsername(username);
-						const cookie = req.cookies[TI_AUTH_COOKIE];
+				async (error, passwordMatch) => {
+					if (passwordMatch) {
+						const user = await UserModel.find({
+							username: username,
+						}).select("accessToken username userId email -_id");
 
-						if (!cookie) {
+						// First time signin
+						if (user.accessToken === "") {
 							const accessToken = await generateAccessToken({
-								username,
+								username: username,
 							});
+							const refreshAccessToken =
+								await generateRefreshAccessToken({
+									username: username,
+								});
 
-							res.cookie(TI_AUTH_COOKIE, accessToken, {
-								// Expire in 1 week
-								maxAge: 604800000,
+							// Update tokens in DB
+							await UserModel.findOneAndUpdate(
+								{ username: username },
+								{
+									accessToken: accessToken,
+									refreshAccessToken: refreshAccessToken,
+								},
+							);
+
+							return res.status(200).json({
+								message: "successfully",
+								error: null,
+								user: {
+									role: "user",
+									username: user.username,
+									userId: user.userId,
+									email: user.email,
+									accessToken: accessToken,
+									refreshAccessToken: refreshAccessToken,
+								},
 							});
+						}
 
+						// Not first time signin
+						if (await isAuthed(req)) {
 							return res.status(200).json({
 								message: "successfully",
 								error: null,
@@ -102,24 +132,11 @@ function AuthController() {
 								},
 							});
 						} else {
-							if (await isAuthed(req)) {
-								return res.status(200).json({
-									message: "successfully",
-									error: null,
-									user: {
-										role: "user",
-										username: user.username,
-										userId: user.userId,
-										email: user.email,
-									},
-								});
-							} else {
-								return res.status(400).json({
-									message: "failed-unauthorized",
-									error: "failed-unauthorized",
-									user: null,
-								});
-							}
+							return res.status(400).json({
+								message: "failed-unauthorized",
+								error: "failed-unauthorized",
+								user: null,
+							});
 						}
 					} else {
 						return res.status(400).json({
