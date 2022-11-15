@@ -11,6 +11,7 @@ const {
 	getTransactionsOfAllSharks,
 	getListTransactionsOfShark,
 	getDetailCoinTransactionHistoryOfShark,
+	getTransactionsLength,
 } = require("../services/crud-database/user");
 
 function DisplayController() {
@@ -248,6 +249,30 @@ function DisplayController() {
 					error: error,
 					datas: [],
 					datasLength: 0,
+				}),
+			);
+	};
+
+	this.getListTransactionsLength = async (req, res, next) => {
+		await getTransactionsLength()
+			.then((datas) =>
+				datas === 0 
+					? res.status(400).json({
+							message: "failed-listtransaction-not-exist",
+							error: "listtransaction-not-exist",
+							datas: 0,
+					  })
+					: res.status(200).json({
+							message: "successfully",
+							error: null,
+							datas: datas,
+					  }),
+			)
+			.catch((error) =>
+				res.status(400).json({
+					message: "failed",
+					error: error,
+					datas: 0,
 				}),
 			);
 	};
