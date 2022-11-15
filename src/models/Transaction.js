@@ -9,9 +9,6 @@ const TransactionSchema = new mongoose.Schema(
 			required: true,
 			unique: true,
 		},
-		sortNumber: {
-			type: Number,
-		},
 		timeStamp: {
 			type: Number,
 			required: true,
