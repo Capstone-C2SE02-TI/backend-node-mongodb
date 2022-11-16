@@ -221,6 +221,28 @@ router.get(
 
 /**
  * @swagger
+ * /display/gain-loss/coins:
+ *   get:
+ *     description: Get list gain and loss of coins
+ *     tags: [Gain and Loss]
+ *     parameters:
+ *      - in: query
+ *        name: isLoss
+ *        schema:
+ *          type: string
+ *     responses:
+ *       200:
+ *         description: Get list gain and loss of coins successfully
+ *       400:
+ *         description: Get list gain and loss of coins failed
+ */
+ router.get(
+	"/gain-loss/coins",
+	DisplayController.getGainLossOfCoins,
+);
+
+/**
+ * @swagger
  * /display/tags:
  *   get:
  *     description: Get list of tags

@@ -13,6 +13,7 @@ const {
 	getDetailCoinTransactionHistoryOfShark,
 	getTransactionsLength,
 	getGainLossOfSharks,
+	getGainLossOfCoins,
 } = require("../services/crud-database/user");
 
 function DisplayController() {
@@ -354,6 +355,38 @@ function DisplayController() {
 		else isLoss = req.query.isLoss === "true";
 
 		await getGainLossOfSharks(isLoss)
+			.then((datas) => 
+				!_.isArray(datas)
+					? res.status(400).json({
+							message: "failed-listGainLoss-invalid",
+							error: "listGainLoss-invalid",
+							datasLength: 0,
+							datas: [],
+					  })
+					: res.status(200).json({
+							message: "successfully",
+							error: null,
+							datasLength: datas.length,
+							datas: datas,
+					  }),
+									
+			
+			)
+			.catch((error) =>
+				res.status(400).json({
+					message: "failed",
+					error: error,
+					datasLength: 0,
+					datas: [],
+				}),
+			);
+	};
+
+	this.getGainLossOfCoins = async (req, res, next) => {
+		if (!req.query.isLoss) isLoss = false;
+		else isLoss = req.query.isLoss === "true";
+
+		await getGainLossOfCoins(isLoss)
 			.then((datas) => 
 				!_.isArray(datas)
 					? res.status(400).json({

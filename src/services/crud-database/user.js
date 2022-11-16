@@ -278,7 +278,6 @@ const getHoursPriceOfToken = async (tokenSymbol) => {
 
 const getGainLossOfSharks = async (isLoss) => {
 	const sortType = isLoss ? "asc" : "desc";
-	console.log(sortType);
 	const sharkGainLoss = isLoss
 		? await SharkModel.find({})
 				.select("id totalAssets percent24h -_id")
@@ -291,6 +290,25 @@ const getGainLossOfSharks = async (isLoss) => {
 				.where("percent24h")
 				.gte(0)
 				.sort({ percent24h: sortType })
+				.limit(20);
+
+	return sharkGainLoss;
+};
+
+const getGainLossOfCoins = async (isLoss) => {
+	const sortType = isLoss ? "asc" : "desc";
+	const sharkGainLoss = isLoss
+		? await TokenModel.find({})
+				.select("symbol usd.price usd.percentChange24h -_id")
+				.where("usd.percentChange24h")
+				.lt(0)
+				.sort({ 'usd.percentChange24h': sortType })
+				.limit(20)
+		: await TokenModel.find({})
+				.select("symbol usd.price usd.percentChange24h -_id")
+				.where("usd.percentChange24h")
+				.gte(0)
+				.sort({ 'usd.percentChange24h': sortType })
 				.limit(20);
 
 	return sharkGainLoss;
@@ -325,4 +343,5 @@ module.exports = {
 	getHoursPriceOfToken,
 	getTransactionsLength,
 	getGainLossOfSharks,
+	getGainLossOfCoins,
 };
