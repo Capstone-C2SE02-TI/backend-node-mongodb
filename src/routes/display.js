@@ -96,7 +96,7 @@ router.get("/sharks", DisplayController.getSharks);
 
 /**
  * @swagger
- * /display/sharks/length:
+ * /display/sharks/transaction-history/length:
  *   get:
  *     description: Get the length of list transactions
  *     tags: [Shark]
@@ -106,7 +106,7 @@ router.get("/sharks", DisplayController.getSharks);
  *       400:
  *         description: Get the length of list transactions failed
  */
- router.get("/sharks/length", DisplayController.getListTransactionsLength);
+ router.get("/sharks/transaction-history/length", DisplayController.getListTransactionsLength);
 
 /**
  * @swagger
