@@ -199,7 +199,7 @@ router.get(
 
 /**
  * @swagger
- * /display/gain-loss/sharks:
+ * /display/sharks/gain-loss:
  *   get:
  *     description: Get list gain and loss of sharks
  *     tags: [Gain and Loss]
@@ -215,13 +215,13 @@ router.get(
  *         description: Get list gain and loss of sharks failed
  */
  router.get(
-	"/gain-loss/sharks",
+	"/sharks/gain-loss",
 	DisplayController.getGainLossOfSharks,
 );
 
 /**
  * @swagger
- * /display/gain-loss/coins:
+ * /display/coins/gain-loss:
  *   get:
  *     description: Get list gain and loss of coins
  *     tags: [Gain and Loss]
@@ -237,7 +237,7 @@ router.get(
  *         description: Get list gain and loss of coins failed
  */
  router.get(
-	"/gain-loss/coins",
+	"/coins/gain-loss",
 	DisplayController.getGainLossOfCoins,
 );
 
