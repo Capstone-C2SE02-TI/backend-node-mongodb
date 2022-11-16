@@ -15,6 +15,7 @@ const {
 	QUERY_LIMIT_ITEM,
 	TRENDING_REDUCING_LIMIT_ITEM,
 } = require("../../constants");
+const { where } = require("../../models/User");
 
 const getUserByUsername = async (username) => {
 	return await UserModel.findOne({ username: username });
@@ -288,6 +289,44 @@ const getHoursPriceOfToken = async (tokenSymbol) => {
 	return token?.originalPrices?.hourly || {};
 };
 
+const getGainLossOfSharks = async (isLoss) => {
+	const sortType = isLoss ? "asc" : "desc";
+	const sharkGainLoss = isLoss
+		? await SharkModel.find({})
+				.select("id totalAssets percent24h -_id")
+				.where("percent24h")
+				.lt(0)
+				.sort({ percent24h: sortType })
+				.limit(20)
+		: await SharkModel.find({})
+				.select("id totalAssets percent24h -_id")
+				.where("percent24h")
+				.gte(0)
+				.sort({ percent24h: sortType })
+				.limit(20);
+
+	return sharkGainLoss;
+};
+
+const getGainLossOfCoins = async (isLoss) => {
+	const sortType = isLoss ? "asc" : "desc";
+	const sharkGainLoss = isLoss
+		? await TokenModel.find({})
+				.select("symbol usd.price usd.percentChange24h -_id")
+				.where("usd.percentChange24h")
+				.lt(0)
+				.sort({ 'usd.percentChange24h': sortType })
+				.limit(20)
+		: await TokenModel.find({})
+				.select("symbol usd.price usd.percentChange24h -_id")
+				.where("usd.percentChange24h")
+				.gte(0)
+				.sort({ 'usd.percentChange24h': sortType })
+				.limit(20);
+
+	return sharkGainLoss;
+};
+
 module.exports = {
 	getUserByUsername,
 	getUserByEmail,
@@ -316,4 +355,6 @@ module.exports = {
 	getTradeTransactionHistoryOfShark,
 	getHoursPriceOfToken,
 	getTransactionsLength,
+	getGainLossOfSharks,
+	getGainLossOfCoins,
 };
