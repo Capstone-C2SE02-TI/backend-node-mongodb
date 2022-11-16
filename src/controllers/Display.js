@@ -257,24 +257,24 @@ function DisplayController() {
 
 	this.getListTransactionsLength = async (req, res, next) => {
 		await getTransactionsLength()
-			.then((datas) =>
-				datas === 0
+			.then((data) =>
+				data === 0
 					? res.status(400).json({
 							message: "failed-listtransaction-not-exist",
 							error: "listtransaction-not-exist",
-							datas: 0,
+							data: 0,
 					  })
 					: res.status(200).json({
 							message: "successfully",
 							error: null,
-							datas: datas,
+							data: data,
 					  }),
 			)
 			.catch((error) =>
 				res.status(400).json({
 					message: "failed",
 					error: error,
-					datas: 0,
+					data: 0,
 				}),
 			);
 	};
@@ -351,6 +351,7 @@ function DisplayController() {
 	};
 
 	this.getGainLossOfSharks = async (req, res, next) => {
+		let isLoss = false;
 		if (!req.query.isLoss) isLoss = false;
 		else isLoss = req.query.isLoss === "true";
 
@@ -358,8 +359,8 @@ function DisplayController() {
 			.then((datas) => 
 				!_.isArray(datas)
 					? res.status(400).json({
-							message: "failed-listGainLoss-invalid",
-							error: "listGainLoss-invalid",
+							message: "failed-listgainloss-invalid",
+							error: "listgainloss-invalid",
 							datasLength: 0,
 							datas: [],
 					  })
@@ -383,6 +384,8 @@ function DisplayController() {
 	};
 
 	this.getGainLossOfCoins = async (req, res, next) => {
+		let isLoss = false;
+
 		if (!req.query.isLoss) isLoss = false;
 		else isLoss = req.query.isLoss === "true";
 
@@ -390,8 +393,8 @@ function DisplayController() {
 			.then((datas) => 
 				!_.isArray(datas)
 					? res.status(400).json({
-							message: "failed-listGainLoss-invalid",
-							error: "listGainLoss-invalid",
+							message: "failed-listgainloss-invalid",
+							error: "listgainloss-invalid",
 							datasLength: 0,
 							datas: [],
 					  })
