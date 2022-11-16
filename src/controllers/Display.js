@@ -10,10 +10,10 @@ const {
 	getListCryptosOfShark,
 	getTransactionsOfAllSharks,
 	getListTransactionsOfShark,
-	getDetailCoinTransactionHistoryOfShark,
 	getTransactionsLength,
 	getGainLossOfSharks,
 	getGainLossOfCoins,
+	getTradeTransactionHistoryOfShark,
 } = require("../services/crud-database/user");
 
 function DisplayController() {
@@ -315,7 +315,7 @@ function DisplayController() {
 			);
 	};
 
-	this.getDetailCoinTransactionHistory = async (req, res, next) => {
+	this.getTradeTransactionHistory = async (req, res, next) => {
 		let { sharkId, coinSymbol } = req.query;
 
 		if (!sharkId) sharkId = null;
@@ -324,7 +324,7 @@ function DisplayController() {
 			else sharkId = Number(sharkId);
 		}
 
-		await getDetailCoinTransactionHistoryOfShark(sharkId, coinSymbol)
+		await getTradeTransactionHistoryOfShark(sharkId, coinSymbol)
 			.then((data) =>
 				data.message === "success"
 					? res.status(200).json({

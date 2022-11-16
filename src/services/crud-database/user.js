@@ -241,7 +241,7 @@ const getListTransactionsOfShark = async (sharkId) => {
 	return shark?.transactionsHistory || -1;
 };
 
-const getDetailCoinTransactionHistoryOfShark = async (sharkId, coinSymbol) => {
+const getTradeTransactionHistoryOfShark = async (sharkId, coinSymbol) => {
 	try {
 		if (sharkId === null) return { message: "sharkid-required" };
 
@@ -261,8 +261,21 @@ const getDetailCoinTransactionHistoryOfShark = async (sharkId, coinSymbol) => {
 		);
 
 		if (!historyData) return { message: "coin-notfound" };
+		else {
+			const coinInfo = await TokenModel.findOne({
+				symbol: coinSymbol.toUpperCase(),
+			}).select(
+				"ethId name symbol iconURL cmcRank maxSupply totalSupply circulatingSupply marketCap contractAddress prices -_id",
+			);
 
-		return { message: "success", data: historyData.historyData || [] };
+			return {
+				message: "success",
+				data: {
+					historyData: historyData.historyData || [],
+					coinInfo: coinInfo || null,
+				},
+			};
+		}
 	} catch (error) {
 		return { message: "error" };
 	}
@@ -339,7 +352,7 @@ module.exports = {
 	getListCryptosOfShark,
 	getTransactionsOfAllSharks,
 	getListTransactionsOfShark,
-	getDetailCoinTransactionHistoryOfShark,
+	getTradeTransactionHistoryOfShark,
 	getHoursPriceOfToken,
 	getTransactionsLength,
 	getGainLossOfSharks,
