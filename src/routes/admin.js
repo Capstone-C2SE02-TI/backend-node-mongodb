@@ -59,19 +59,19 @@ router.post("/signout", AdminController.signout);
  *           schema:
  *             type: object
  *             required:
- *               - id
+ *               - ids
  *             properties:
- *               id:
+ *               ids:
  *                  type: string
  *             example:
- *               id: "10"
+ *               ids: "10"
  *     responses:
  *       200:
  *         description: Delete user successfully
  *       400:
  *         description: Delete user failed
  */
-router.post("/delete-user", AdminController.deleteUser);
+router.post("/delete-user", AdminController.deleteUsers);
 // router.post("/delete-user", isAdmin, AdminController.deleteUser);
 
 /**

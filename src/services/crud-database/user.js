@@ -16,6 +16,8 @@ const {
 	TRENDING_REDUCING_LIMIT_ITEM,
 } = require("../../constants");
 const { where } = require("../../models/User");
+const { log } = require("util");
+const { convertUnixTimestampToNumber} = require("../../helpers");
 
 const getUserByUsername = async (username) => {
 	return await UserModel.findOne({ username: username });
