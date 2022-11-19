@@ -75,14 +75,12 @@ function AdminController() {
 		try {
 			const { ids } = req.body;
 
-			let checkedIds = ids.split(",");
+			const checkedIds = ids;
 			checkedIds.forEach((id) => {
 				id = Number(id);
-				if (!_.isNumber(id) || _.isNaN(id))
-					return res.status(404).json({
-						message: "id-notfound",
-						error: "id-notfound",
-					});
+				if (_.isNaN(id)){
+					Error.captureStackTrace(err);
+				}
 			});
 
 			const isDeletedSuccessful = await deleteUsersByUserId(checkedIds);
