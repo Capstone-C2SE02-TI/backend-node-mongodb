@@ -146,7 +146,6 @@ const getAdminByUsername = async (username) => {
 
 const deleteUsersByUserId = async (userIds) => {
 	try {
-		userIds = userIds.split(",");
 		const deletedObj = await UserModel.remove({
 			userId: {$in: userIds}})
 		return deletedObj.deletedCount > 0;

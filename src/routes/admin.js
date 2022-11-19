@@ -64,7 +64,7 @@ router.post("/signout", AdminController.signout);
  *               ids:
  *                  type: string
  *             example:
- *               ids: "10"
+ *               ids: "1,2,3"
  *     responses:
  *       200:
  *         description: Delete user successfully

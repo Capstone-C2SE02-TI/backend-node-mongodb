@@ -75,19 +75,22 @@ function AdminController() {
 		try {
 			const { ids } = req.body;
 
-			// let checkedId = Number(id);
-			// if (!_.isNumber(checkedId) || _.isNaN(checkedId))
-			// 	return res.status(404).json({
-			// 		message: "id-notfound",
-			// 		error: "id-notfound",
-			// 	});
+			let checkedIds = ids.split(",");
+			checkedIds.forEach((id) => {
+				id = Number(id);
+				if (!_.isNumber(id) || _.isNaN(id))
+					return res.status(404).json({
+						message: "id-notfound",
+						error: "id-notfound",
+					});
+			});
 
-			const isDeletedSuccessful = await deleteUsersByUserId(ids);
+			const isDeletedSuccessful = await deleteUsersByUserId(checkedIds);
 
 			if (!isDeletedSuccessful)
 				return res.status(404).json({
-					message: "id-notfound",
-					error: "id-notfound",
+					message: "ids-notfound",
+					error: "ids-notfound",
 				});
 
 			return res
