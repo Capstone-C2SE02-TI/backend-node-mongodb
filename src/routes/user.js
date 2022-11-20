@@ -205,7 +205,7 @@ router.post("/unfollow-shark-wallet", UserController.unfollowSharkWallet);
 
 /**
  * @swagger
- * /user/list-shark-follower:
+ * /user/list-followed-shark:
  *   get:
  *     description: Get list of shark followers
  *     tags: [User]
@@ -220,7 +220,7 @@ router.post("/unfollow-shark-wallet", UserController.unfollowSharkWallet);
  *       400:
  *         description: Get list of shark followers failed
  */
-router.get("/list-shark-follower", UserController.getSharkFollowed);
-// router.get("/list-shark-follower", isAuth, UserController.getSharkFollowed);
+router.get("/list-followed-shark", UserController.getSharkFollowed);
+// router.get("/list-followed-shark", isAuth, UserController.getSharkFollowed);
 
 module.exports = router;
