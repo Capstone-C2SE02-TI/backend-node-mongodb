@@ -1,6 +1,13 @@
-const { log } = require("util");
 const { AdminModel, UserModel, SharkModel } = require("../../models");
 const { checkExistedUserId, checkExistedSharkId } = require("./user");
+
+const getListOfAdmins = async () => {
+	const admins = await AdminModel.find({})
+		.sort("id")
+		.select("id username email -_id");
+
+	return admins;
+};
 
 const getListOfUsers = async () => {
 	const users = await UserModel.find({})
@@ -156,6 +163,7 @@ const deleteUsersByUserId = async (userIds) => {
 };
 
 module.exports = {
+	getListOfAdmins,
 	getListOfUsers,
 	getUserProfile,
 	checkExistedUsername,
