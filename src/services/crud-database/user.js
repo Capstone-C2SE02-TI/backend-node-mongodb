@@ -15,7 +15,7 @@ const {
 	QUERY_LIMIT_ITEM,
 	TRENDING_REDUCING_LIMIT_ITEM,
 } = require("../../constants");
-const { where } = require("../../models/User");
+
 
 const getUserByUsername = async (username) => {
 	return await UserModel.findOne({ username: username });
