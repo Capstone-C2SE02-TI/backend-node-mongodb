@@ -6,16 +6,15 @@ const {
 	TokenModel,
 	SharkModel,
 	TagModel,
-	TransactionModel,
+	TransactionModel
 } = require("../../models");
 const {
 	DEFAULT_USER_FULLNAME,
 	DEFAULT_USER_AVATAR,
 	DEFAULT_USER_WEBSITE,
 	QUERY_LIMIT_ITEM,
-	TRENDING_REDUCING_LIMIT_ITEM,
+	TRENDING_REDUCING_LIMIT_ITEM
 } = require("../../constants");
-
 
 const getUserByUsername = async (username) => {
 	return await UserModel.findOne({ username: username });
@@ -33,7 +32,7 @@ const createNewUser = async ({
 	username,
 	email,
 	phoneNumber,
-	hashPassword,
+	hashPassword
 }) => {
 	try {
 		const usersLength = await getUsersLength();
@@ -53,7 +52,7 @@ const createNewUser = async ({
 			premiumAccount: false,
 			sharkFollowed: [],
 			createdDate: new Date(),
-			updatedDate: new Date(),
+			updatedDate: new Date()
 		};
 
 		await UserModel.create(newUserInfo)
@@ -72,7 +71,7 @@ const updateUserConfirmationCode = async (userId, code) => {
 	try {
 		await UserModel.findOneAndUpdate(
 			{ userId: userId },
-			{ confirmationCode: code },
+			{ confirmationCode: code }
 		)
 			.then((data) => {
 				if (!data) throw new Error();
@@ -91,7 +90,7 @@ const updateUserPassword = async (userId, password) => {
 	try {
 		await UserModel.findOneAndUpdate(
 			{ userId: userId },
-			{ password: password },
+			{ password: password }
 		)
 			.then((data) => {
 				if (!data) throw new Error();
@@ -128,14 +127,14 @@ const checkExistedSharkId = async (sharkId) => {
 
 const getPasswordByUsername = async (username) => {
 	const user = await UserModel.findOne({ username: username }).select(
-		"password -_id",
+		"password -_id"
 	);
 	return user?.password || null;
 };
 
 const getPasswordByEmail = async (email) => {
 	const user = await UserModel.findOne({ email: email }).select(
-		"password -_id",
+		"password -_id"
 	);
 	return user?.password || null;
 };
@@ -143,7 +142,7 @@ const getPasswordByEmail = async (email) => {
 const getListOfCoinsAndTokens = async () => {
 	const tokens = await TokenModel.find({})
 		.select(
-			"id name symbol iconURL tagNames cmcRank usd marketCap circulatingSupply pricesLast1Day -_id",
+			"id name symbol iconURL tagNames cmcRank usd marketCap circulatingSupply pricesLast1Day -_id"
 		)
 		.sort("id");
 
@@ -168,7 +167,7 @@ const getListTrendingCoins = async () => {
 		.sort({ "usd.percentChange24h": "desc" })
 		.limit(TRENDING_REDUCING_LIMIT_ITEM)
 		.select(
-			"id name symbol iconURL tagNames usd marketCap circulatingSupply -_id",
+			"id name symbol iconURL tagNames usd marketCap circulatingSupply -_id"
 		);
 
 	return trendingCoins;
@@ -179,7 +178,7 @@ const getListTrendingTokens = async () => {
 		.sort({ "usd.percentChange24h": "desc" })
 		.limit(TRENDING_REDUCING_LIMIT_ITEM)
 		.select(
-			"id name symbol iconURL tagNames usd marketCap circulatingSupply -_id",
+			"id name symbol iconURL tagNames usd marketCap circulatingSupply -_id"
 		);
 
 	return trendingTokens;
@@ -187,9 +186,9 @@ const getListTrendingTokens = async () => {
 
 const getCoinOrTokenDetails = async (coinSymbol) => {
 	const coinOrToken = await TokenModel.findOne({
-		symbol: coinSymbol.toUpperCase(),
+		symbol: coinSymbol.toUpperCase()
 	}).select(
-		"id ethId name type symbol iconURL cmcRank tagNames maxSupply totalSupply circulatingSupply contractAddress marketCap urls usd prices -_id",
+		"id ethId name type symbol iconURL cmcRank tagNames maxSupply totalSupply circulatingSupply contractAddress marketCap urls usd prices -_id"
 	);
 
 	return coinOrToken || {};
@@ -213,7 +212,7 @@ const getListOfSharks = async () => {
 
 const getListCryptosOfShark = async (sharkId) => {
 	const shark = await SharkModel.findOne({ id: sharkId }).select(
-		"cryptos -_id",
+		"cryptos -_id"
 	);
 	return shark?.cryptos || -1;
 };
@@ -236,7 +235,7 @@ const getTransactionsOfAllSharks = async (page) => {
 
 const getListTransactionsOfShark = async (sharkId) => {
 	const shark = await SharkModel.findOne({ id: sharkId }).select(
-		"transactionsHistory -_id",
+		"transactionsHistory -_id"
 	);
 	return shark?.transactionsHistory || -1;
 };
@@ -250,33 +249,33 @@ const getTradeTransactionHistoryOfShark = async (sharkId, coinSymbol) => {
 			return { message: "shark-notfound" };
 
 		const sharks = await SharkModel.findOne({ id: sharkId }).select(
-			"historyDatas cryptos -_id",
+			"historyDatas cryptos -_id"
 		);
 		const { historyDatas, cryptos } = sharks;
 
 		const historyData = historyDatas.find(
-			(data) => data.coinSymbol === coinSymbol.toUpperCase(),
+			(data) => data.coinSymbol === coinSymbol.toUpperCase()
 		);
 
 		const coinInfo = await TokenModel.findOne({
-			symbol: coinSymbol.toUpperCase(),
+			symbol: coinSymbol.toUpperCase()
 		}).select(
-			"ethId name symbol iconURL cmcRank maxSupply totalSupply circulatingSupply marketCap contractAddress prices -_id",
+			"ethId name symbol iconURL cmcRank maxSupply totalSupply circulatingSupply marketCap contractAddress prices -_id"
 		);
 
 		if (!historyData) {
 			if (
 				cryptos &&
 				cryptos.find(
-					(crypto) => crypto.symbol === coinSymbol.toUpperCase(),
+					(crypto) => crypto.symbol === coinSymbol.toUpperCase()
 				)
 			) {
 				return {
 					message: "success",
 					data: {
 						historyData: null,
-						coinInfo: coinInfo || null,
-					},
+						coinInfo: coinInfo || null
+					}
 				};
 			} else {
 				return { message: "coin-notfound" };
@@ -286,8 +285,8 @@ const getTradeTransactionHistoryOfShark = async (sharkId, coinSymbol) => {
 				message: "success",
 				data: {
 					historyData: historyData.historyData || null,
-					coinInfo: coinInfo || null,
-				},
+					coinInfo: coinInfo || null
+				}
 			};
 		}
 	} catch (error) {
@@ -297,7 +296,7 @@ const getTradeTransactionHistoryOfShark = async (sharkId, coinSymbol) => {
 
 const getHoursPriceOfToken = async (tokenSymbol) => {
 	const token = await TokenModel.findOne({
-		symbol: tokenSymbol.toUpperCase(),
+		symbol: tokenSymbol.toUpperCase()
 	}).select("originalPrices -_id");
 
 	return token?.originalPrices?.hourly || {};
@@ -371,5 +370,5 @@ module.exports = {
 	getHoursPriceOfToken,
 	getTransactionsLength,
 	getGainLossOfSharks,
-	getGainLossOfCoins,
+	getGainLossOfCoins
 };

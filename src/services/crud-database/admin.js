@@ -13,7 +13,7 @@ const getListOfUsers = async () => {
 	const users = await UserModel.find({})
 		.sort("id")
 		.select(
-			"userId username email phoneNumber fullName avatar website sharksFollowed updatedDate createdDate -_id",
+			"userId username email phoneNumber fullName avatar website sharksFollowed updatedDate createdDate -_id"
 		);
 
 	return users;
@@ -26,7 +26,7 @@ const getListOfSharkFollowed = async (userId) => {
 		return { message: "user-notfound" };
 
 	const users = await UserModel.findOne({ userId: userId }).select(
-		"sharksFollowed -_id",
+		"sharksFollowed -_id"
 	);
 
 	return { message: "success", datas: users.sharksFollowed || [] };
@@ -36,7 +36,7 @@ const getUserProfile = async (userId) => {
 	if (!userId) return {};
 	else {
 		const user = await UserModel.findOne({ userId: userId }).select(
-			"userId username email phoneNumber fullName avatar website sharksFollowed updatedDate createdDate -_id",
+			"userId username email phoneNumber fullName avatar website sharksFollowed updatedDate createdDate -_id"
 		);
 
 		if (!user) return {};
@@ -95,7 +95,7 @@ const upgradeUserPremiumAccount = async (userId) => {
 
 		await UserModel.findOneAndUpdate(
 			{ userId: userId },
-			{ premiumAccount: true },
+			{ premiumAccount: true }
 		)
 			.then((data) => {
 				if (!data) throw new Error();
@@ -122,10 +122,10 @@ const followWalletOfShark = async (userId, sharkId) => {
 		if (!(await checkExistedSharkId(sharkId))) return "shark-notfound";
 
 		const shark = await SharkModel.findOne({ id: sharkId }).select(
-			"id walletAddress totalAssets percent24h -_id",
+			"id walletAddress totalAssets percent24h -_id"
 		);
 		const user = await UserModel.findOne({ userId: userId }).select(
-			"sharksFollowed -_id",
+			"sharksFollowed -_id"
 		);
 
 		const sharksFollowed = user.sharksFollowed;
@@ -138,7 +138,7 @@ const followWalletOfShark = async (userId, sharkId) => {
 
 		await UserModel.findOneAndUpdate(
 			{ userId: userId },
-			{ sharksFollowed: [...sharksFollowed, shark] },
+			{ sharksFollowed: [...sharksFollowed, shark] }
 		)
 			.then((data) => {
 				if (!data) throw new Error();
@@ -166,7 +166,7 @@ const unfollowWalletOfShark = async (userId, sharkId) => {
 		if (!(await checkExistedSharkId(sharkId))) return "shark-notfound";
 
 		const user = await UserModel.findOne({ userId: userId }).select(
-			"sharksFollowed -_id",
+			"sharksFollowed -_id"
 		);
 		let sharksFollowed = user.sharksFollowed;
 
@@ -181,7 +181,7 @@ const unfollowWalletOfShark = async (userId, sharkId) => {
 
 		await UserModel.findOneAndUpdate(
 			{ userId: userId },
-			{ sharksFollowed: sharksFollowed },
+			{ sharksFollowed: sharksFollowed }
 		)
 			.then((data) => {
 				if (!data) throw new Error();
@@ -204,7 +204,7 @@ const checkExistedUsername = async (username) => {
 
 const getPasswordByUsername = async (username) => {
 	const admin = await AdminModel.findOne({ username: username }).select(
-		"password -_id",
+		"password -_id"
 	);
 	return admin?.password || null;
 };
@@ -215,9 +215,9 @@ const getAdminByUsername = async (username) => {
 
 const deleteUsersByUserId = async (userIds) => {
 	try {
-		const deletedObj = 
-		await UserModel.remove({
-			userId: {$in: userIds}})
+		const deletedObj = await UserModel.remove({
+			userId: { $in: userIds }
+		});
 		return deletedObj.deletedCount > 0;
 	} catch (error) {
 		return false;
@@ -238,5 +238,5 @@ module.exports = {
 	unfollowWalletOfShark,
 	getPasswordByUsername,
 	getAdminByUsername,
-	deleteUsersByUserId,
+	deleteUsersByUserId
 };

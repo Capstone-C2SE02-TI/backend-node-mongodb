@@ -8,10 +8,10 @@ const validateSignInBody = async (req, res, next) => {
 	const errors = validationResult(req);
 	return {
 		status: errors.isEmpty() ? "successfully" : "failed",
-		error: errors.array()[0]?.msg,
+		error: errors.array()[0]?.msg
 	};
 };
 
 module.exports = {
-	validateSignInBody,
+	validateSignInBody
 };

@@ -6,38 +6,38 @@ const SharkSchema = new mongoose.Schema({
 	id: {
 		type: Number,
 		required: true,
-		unique: true,
+		unique: true
 	},
 	coins: {
 		type: Object,
-		default: {},
+		default: {}
 	},
 	totalAssets: {
 		type: Number,
-		required: true,
+		required: true
 	},
 	percent24h: {
 		type: Number,
-		required: true,
+		required: true
 	},
 	transactionsHistory: {
 		type: Array,
-		default: [],
+		default: []
 	},
 	walletAddress: {
 		type: String,
 		trim: true,
 		required: true,
-		unique: true,
+		unique: true
 	},
 	cryptos: {
 		type: Array,
-		default: [],
+		default: []
 	},
 	historyDatas: {
 		type: Array,
-		default: [],
-	},
+		default: []
+	}
 });
 
 module.exports = mongoose.model("Shark", SharkSchema);

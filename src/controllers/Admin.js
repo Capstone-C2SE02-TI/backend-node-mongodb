@@ -6,7 +6,7 @@ const {
 	getListOfAdmins,
 	deleteUsersByUserId,
 	getListOfUsers,
-	getUserProfile,
+	getUserProfile
 } = require("../services/crud-database/admin");
 const { validateSignInBody } = require("../validators/admin");
 const { comparePassword } = require("../helpers");
@@ -20,14 +20,14 @@ function AdminController() {
 			return res.status(400).json({
 				message: error,
 				error: error,
-				user: null,
+				user: null
 			});
 
 		if (!(await checkExistedUsername(username))) {
 			return res.status(404).json({
 				message: "username-notfound",
 				error: "username-notfound",
-				user: null,
+				user: null
 			});
 		} else {
 			const hashPassword = await getPasswordByUsername(username);
@@ -44,17 +44,17 @@ function AdminController() {
 							user: {
 								role: "admin",
 								username: admin.username,
-								email: admin.email,
-							},
+								email: admin.email
+							}
 						});
 					} else {
 						return res.status(400).json({
 							message: "incorrect-password",
 							error: "incorrect-password",
-							user: null,
+							user: null
 						});
 					}
-				},
+				}
 			);
 		}
 	};
@@ -80,13 +80,13 @@ function AdminController() {
 							message: "failed-empty-data",
 							error: "empty-data",
 							datasLength: 0,
-							datas: [],
+							datas: []
 					  })
 					: res.status(200).json({
 							message: "successfully",
 							error: null,
 							datasLength: datas.length,
-							datas: datas,
+							datas: datas
 					  });
 			})
 			.catch((error) =>
@@ -94,8 +94,8 @@ function AdminController() {
 					message: "failed",
 					error: error,
 					datasLength: 0,
-					datas: [],
-				}),
+					datas: []
+				})
 			);
 	};
 
@@ -116,7 +116,7 @@ function AdminController() {
 			if (!isDeletedSuccessful)
 				return res.status(404).json({
 					message: "ids-notfound",
-					error: "ids-notfound",
+					error: "ids-notfound"
 				});
 
 			return res
@@ -135,13 +135,13 @@ function AdminController() {
 							message: "failed-empty-data",
 							error: "empty-data",
 							datasLength: 0,
-							datas: [],
+							datas: []
 					  })
 					: res.status(200).json({
 							message: "successfully",
 							error: null,
 							datasLength: datas.length,
-							datas: datas,
+							datas: datas
 					  });
 			})
 			.catch((error) =>
@@ -149,8 +149,8 @@ function AdminController() {
 					message: "failed",
 					error: error,
 					datasLength: 0,
-					datas: [],
-				}),
+					datas: []
+				})
 			);
 	};
 
@@ -170,20 +170,20 @@ function AdminController() {
 					? res.status(400).json({
 							message: "failed-userid-invalid",
 							error: "userid-invalid",
-							data: {},
+							data: {}
 					  })
 					: res.status(200).json({
 							message: "successfully",
 							error: null,
-							data: data,
+							data: data
 					  });
 			})
 			.catch((error) =>
 				res.status(400).json({
 					message: "failed",
 					error: error,
-					data: {},
-				}),
+					data: {}
+				})
 			);
 	};
 }

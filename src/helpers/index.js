@@ -6,16 +6,6 @@ const randomConfirmationCode = () => {
 	return code.toString();
 };
 
-const randomFirestoreDocumentId = () => {
-	const validCharacters =
-		"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789".split(
-			"",
-		);
-	const length = 20;
-
-	return _.sampleSize(validCharacters, length).join("");
-};
-
 const cryptPassword = (password, callback) => {
 	bcrypt.genSalt(10, (error, salt) => {
 		if (error) return callback(error);
@@ -66,8 +56,7 @@ function convertUnixTimestampToNumber(unixTimestamp) {
 
 module.exports = {
 	randomConfirmationCode,
-	randomFirestoreDocumentId,
 	cryptPassword,
 	comparePassword,
-	convertUnixTimestampToNumber,
+	convertUnixTimestampToNumber
 };

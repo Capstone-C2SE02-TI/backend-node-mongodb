@@ -7,107 +7,107 @@ const TransactionSchema = new mongoose.Schema(
 		sharkId: {
 			type: Number,
 			required: true,
-			unique: true,
+			unique: true
 		},
 		timeStamp: {
 			type: Number,
 			required: true,
-			unique: true,
+			unique: true
 		},
 		pastPrice: {
 			type: Number,
-			required: true,
+			required: true
 		},
 		presentPrice: {
 			type: Number,
-			required: true,
+			required: true
 		},
 		numberOfTokens: {
 			type: Number,
-			required: true,
+			required: true
 		},
 		contractAddress: {
 			type: String,
-			trim: true,
+			trim: true
 		},
 		tokenName: {
 			type: String,
-			trim: true,
+			trim: true
 		},
 		tokenSymbol: {
 			type: String,
-			trim: true,
+			trim: true
 		},
 		value: {
 			type: String,
-			trim: true,
+			trim: true
 		},
 		from: {
 			type: String,
-			trim: true,
+			trim: true
 		},
 		to: {
 			type: String,
-			trim: true,
+			trim: true
 		},
 		gas: {
 			type: String,
-			trim: true,
+			trim: true
 		},
 		hash: {
 			type: String,
-			trim: true,
+			trim: true
 		},
 		blockHash: {
 			type: String,
-			trim: true,
+			trim: true
 		},
 		cumulativeGasUsed: {
 			type: String,
-			trim: true,
+			trim: true
 		},
 		blockNumber: {
 			type: String,
-			trim: true,
+			trim: true
 		},
 		nonce: {
 			type: String,
-			trim: true,
+			trim: true
 		},
 		gasPrice: {
 			type: String,
-			trim: true,
+			trim: true
 		},
 		transactionIndex: {
 			type: String,
-			trim: true,
+			trim: true
 		},
 		input: {
 			type: String,
-			trim: true,
+			trim: true
 		},
 		gasUsed: {
 			type: String,
-			trim: true,
+			trim: true
 		},
 		confirmations: {
 			type: String,
-			trim: true,
+			trim: true
 		},
 		tokenDecimal: {
 			type: String,
-			trim: true,
+			trim: true
 		},
 		presentDate: {
 			type: String,
-			trim: true,
+			trim: true
 		},
 		pastDate: {
 			type: String,
-			trim: true,
-		},
+			trim: true
+		}
 	},
-	{ timestamps: true },
+	{ timestamps: true }
 );
 
 module.exports = mongoose.model("Transaction", TransactionSchema);
