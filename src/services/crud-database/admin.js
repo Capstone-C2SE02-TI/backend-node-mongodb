@@ -19,6 +19,19 @@ const getListOfUsers = async () => {
 	return users;
 };
 
+const getListOfSharkFollowed = async (userId) => {
+	if (userId === null) return { message: "userid-required" };
+	if (userId === undefined) return { message: "userid-invalid" };
+	if (!(await checkExistedUserId(userId)))
+		return { message: "user-notfound" };
+
+	const users = await UserModel.findOne({ userId: userId }).select(
+		"sharksFollowed -_id",
+	);
+
+	return { message: "success", datas: users.sharksFollowed || [] };
+};
+
 const getUserProfile = async (userId) => {
 	if (!userId) return {};
 	else {
@@ -77,9 +90,7 @@ const updateUserProfile = async (userId, updateInfo) => {
 const upgradeUserPremiumAccount = async (userId) => {
 	try {
 		if (userId === null) return "userid-required";
-
 		if (userId === undefined) return "userid-invalid";
-
 		if (!(await checkExistedUserId(userId))) return "user-notfound";
 
 		await UserModel.findOneAndUpdate(
@@ -117,9 +128,60 @@ const followWalletOfShark = async (userId, sharkId) => {
 			"sharksFollowed -_id",
 		);
 
+		const sharksFollowed = user.sharksFollowed;
+
+		if (
+			sharksFollowed &&
+			sharksFollowed.find((shark) => shark.id === sharkId)
+		)
+			return "already-followed";
+
 		await UserModel.findOneAndUpdate(
 			{ userId: userId },
-			{ sharksFollowed: [...user.sharksFollowed, shark] },
+			{ sharksFollowed: [...sharksFollowed, shark] },
+		)
+			.then((data) => {
+				if (!data) throw new Error();
+			})
+			.catch((error) => {
+				throw new Error(error);
+			});
+
+		return "success";
+	} catch (error) {
+		console.log(error);
+		return "error";
+	}
+};
+
+const unfollowWalletOfShark = async (userId, sharkId) => {
+	try {
+		if (userId === null) return "userid-required";
+		if (userId === undefined) return "userid-invalid";
+
+		if (sharkId === null) return "sharkid-required";
+		if (sharkId === undefined) return "sharkid-invalid";
+
+		if (!(await checkExistedUserId(userId))) return "user-notfound";
+		if (!(await checkExistedSharkId(sharkId))) return "shark-notfound";
+
+		const user = await UserModel.findOne({ userId: userId }).select(
+			"sharksFollowed -_id",
+		);
+		let sharksFollowed = user.sharksFollowed;
+
+		if (
+			sharksFollowed &&
+			!sharksFollowed.some((shark) => shark.id === sharkId)
+		)
+			return "not-followed-yet";
+
+		// Remove object has key id === sharkId
+		sharksFollowed = sharksFollowed.filter((shark) => shark.id !== sharkId);
+
+		await UserModel.findOneAndUpdate(
+			{ userId: userId },
+			{ sharksFollowed: sharksFollowed },
 		)
 			.then((data) => {
 				if (!data) throw new Error();
@@ -165,6 +227,7 @@ const deleteUsersByUserId = async (userIds) => {
 module.exports = {
 	getListOfAdmins,
 	getListOfUsers,
+	getListOfSharkFollowed,
 	getUserProfile,
 	checkExistedUsername,
 	checkExistedUsernameForUpdateProfile,
@@ -172,6 +235,7 @@ module.exports = {
 	updateUserProfile,
 	upgradeUserPremiumAccount,
 	followWalletOfShark,
+	unfollowWalletOfShark,
 	getPasswordByUsername,
 	getAdminByUsername,
 	deleteUsersByUserId,
