@@ -1,6 +1,14 @@
 const { AdminModel, UserModel, SharkModel } = require("../../models");
 const { checkExistedUserId, checkExistedSharkId } = require("./user");
 
+const getListOfAdmins = async () => {
+	const admins = await AdminModel.find({})
+		.sort("id")
+		.select("id username email -_id");
+
+	return admins;
+};
+
 const getListOfUsers = async () => {
 	const users = await UserModel.find({})
 		.sort("id")
@@ -143,16 +151,19 @@ const getAdminByUsername = async (username) => {
 	return await AdminModel.findOne({ username: username });
 };
 
-const deleteUserByUserId = async (userId) => {
+const deleteUsersByUserId = async (userIds) => {
 	try {
-		const deletedObj = await UserModel.deleteOne({ userId: userId });
-		return deletedObj.deletedCount === 1;
+		const deletedObj = { deletedCount: 2 };
+		// await UserModel.remove({
+		// 	userId: {$in: userIds}})
+		return deletedObj.deletedCount > 0;
 	} catch (error) {
 		return false;
 	}
 };
 
 module.exports = {
+	getListOfAdmins,
 	getListOfUsers,
 	getUserProfile,
 	checkExistedUsername,
@@ -163,5 +174,5 @@ module.exports = {
 	followWalletOfShark,
 	getPasswordByUsername,
 	getAdminByUsername,
-	deleteUserByUserId,
+	deleteUsersByUserId,
 };

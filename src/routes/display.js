@@ -96,6 +96,20 @@ router.get("/sharks", DisplayController.getSharks);
 
 /**
  * @swagger
+ * /display/sharks/transaction-history/length:
+ *   get:
+ *     description: Get the length of list transactions
+ *     tags: [Shark]
+ *     responses:
+ *       200:
+ *         description: Get the length of list transactions successfully
+ *       400:
+ *         description: Get the length of list transactions failed
+ */
+ router.get("/sharks/transaction-history/length", DisplayController.getListTransactionsLength);
+
+/**
+ * @swagger
  * /display/sharks/transaction-history:
  *   get:
  *     description: Get list transactions history of all sharks
@@ -181,6 +195,50 @@ router.get(
 router.get(
 	"/shark/trade-transaction-history",
 	DisplayController.getTradeTransactionHistory,
+);
+
+/**
+ * @swagger
+ * /display/sharks/gain-loss:
+ *   get:
+ *     description: Get list gain and loss of sharks
+ *     tags: [Gain and Loss]
+ *     parameters:
+ *      - in: query
+ *        name: isLoss
+ *        schema:
+ *          type: string
+ *     responses:
+ *       200:
+ *         description: Get list gain and loss of sharks successfully
+ *       400:
+ *         description: Get list gain and loss of sharks failed
+ */
+ router.get(
+	"/sharks/gain-loss",
+	DisplayController.getGainLossOfSharks,
+);
+
+/**
+ * @swagger
+ * /display/coins/gain-loss:
+ *   get:
+ *     description: Get list gain and loss of coins
+ *     tags: [Gain and Loss]
+ *     parameters:
+ *      - in: query
+ *        name: isLoss
+ *        schema:
+ *          type: string
+ *     responses:
+ *       200:
+ *         description: Get list gain and loss of coins successfully
+ *       400:
+ *         description: Get list gain and loss of coins failed
+ */
+ router.get(
+	"/coins/gain-loss",
+	DisplayController.getGainLossOfCoins,
 );
 
 /**

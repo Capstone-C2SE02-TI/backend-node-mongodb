@@ -49,7 +49,22 @@ router.post("/signout", AdminController.signout);
 
 /**
  * @swagger
- * /admin/delete-user:
+ * /admin/list:
+ *   get:
+ *     description: Get list of admins
+ *     tags: [Admin]
+ *     responses:
+ *       200:
+ *         description: Get list of admins successfully
+ *       400:
+ *         description: Get list of admins failed
+ */
+router.get("/list", AdminController.getAdminsList);
+// router.get("/list", isAdmin, AdminController.getAdminsList);
+
+/**
+ * @swagger
+ * /admin/delete-users:
  *   post:
  *     description: Delete user
  *     tags: [Admin]
@@ -59,20 +74,20 @@ router.post("/signout", AdminController.signout);
  *           schema:
  *             type: object
  *             required:
- *               - id
+ *               - ids
  *             properties:
- *               id:
- *                  type: string
+ *               ids:
+ *                  type: array
  *             example:
- *               id: "10"
+ *               ids: [1,2,3]
  *     responses:
  *       200:
- *         description: Delete user successfully
+ *         description: Delete users successfully
  *       400:
- *         description: Delete user failed
+ *         description: Delete users failed
  */
-router.post("/delete-user", AdminController.deleteUser);
-// router.post("/delete-user", isAdmin, AdminController.deleteUser);
+router.post("/delete-users", AdminController.deleteUsers);
+// router.post("/delete-users", isAdmin, AdminController.deleteUser);
 
 /**
  * @swagger

@@ -10,6 +10,9 @@ const {
 	getListCryptosOfShark,
 	getTransactionsOfAllSharks,
 	getListTransactionsOfShark,
+	getTransactionsLength,
+	getGainLossOfSharks,
+	getGainLossOfCoins,
 	getTradeTransactionHistoryOfShark,
 } = require("../services/crud-database/user");
 
@@ -252,6 +255,30 @@ function DisplayController() {
 			);
 	};
 
+	this.getListTransactionsLength = async (req, res, next) => {
+		await getTransactionsLength()
+			.then((data) =>
+				data === 0
+					? res.status(400).json({
+							message: "failed-listtransaction-not-exist",
+							error: "listtransaction-not-exist",
+							data: 0,
+					  })
+					: res.status(200).json({
+							message: "successfully",
+							error: null,
+							data: data,
+					  }),
+			)
+			.catch((error) =>
+				res.status(400).json({
+					message: "failed",
+					error: error,
+					data: 0,
+				}),
+			);
+	};
+
 	this.getListTransactionsOfAllSharks = async (req, res, next) => {
 		let page = req.query.page;
 
@@ -319,6 +346,73 @@ function DisplayController() {
 					error: error,
 					datas: null,
 					datasLength: 0,
+				}),
+			);
+	};
+
+	this.getGainLossOfSharks = async (req, res, next) => {
+		let isLoss = false;
+		if (!req.query.isLoss) isLoss = false;
+		else isLoss = req.query.isLoss === "true";
+
+		await getGainLossOfSharks(isLoss)
+			.then((datas) => 
+				!_.isArray(datas)
+					? res.status(400).json({
+							message: "failed-listgainloss-invalid",
+							error: "listgainloss-invalid",
+							datasLength: 0,
+							datas: [],
+					  })
+					: res.status(200).json({
+							message: "successfully",
+							error: null,
+							datasLength: datas.length,
+							datas: datas,
+					  }),
+									
+			
+			)
+			.catch((error) =>
+				res.status(400).json({
+					message: "failed",
+					error: error,
+					datasLength: 0,
+					datas: [],
+				}),
+			);
+	};
+
+	this.getGainLossOfCoins = async (req, res, next) => {
+		let isLoss = false;
+
+		if (!req.query.isLoss) isLoss = false;
+		else isLoss = req.query.isLoss === "true";
+
+		await getGainLossOfCoins(isLoss)
+			.then((datas) => 
+				!_.isArray(datas)
+					? res.status(400).json({
+							message: "failed-listgainloss-invalid",
+							error: "listgainloss-invalid",
+							datasLength: 0,
+							datas: [],
+					  })
+					: res.status(200).json({
+							message: "successfully",
+							error: null,
+							datasLength: datas.length,
+							datas: datas,
+					  }),
+									
+			
+			)
+			.catch((error) =>
+				res.status(400).json({
+					message: "failed",
+					error: error,
+					datasLength: 0,
+					datas: [],
 				}),
 			);
 	};

@@ -12,6 +12,7 @@ function routing(app) {
 	 *   name: Forgot Password
 	 *   name: Coin - Token
 	 *   name: Shark
+	 *   name: Gain and Loss
 	 *   name: User
 	 *   name: Admin
 	 *   name: Others

@@ -16,6 +16,7 @@ const {
 	TRENDING_REDUCING_LIMIT_ITEM,
 } = require("../../constants");
 
+
 const getUserByUsername = async (username) => {
 	return await UserModel.findOne({ username: username });
 };
@@ -243,34 +244,48 @@ const getListTransactionsOfShark = async (sharkId) => {
 const getTradeTransactionHistoryOfShark = async (sharkId, coinSymbol) => {
 	try {
 		if (sharkId === null) return { message: "sharkid-required" };
-
 		if (sharkId === undefined) return { message: "sharkid-invalid" };
-
 		if (!coinSymbol) return { message: "coinsymbol-required" };
-
 		if (!(await checkExistedSharkId(sharkId)))
 			return { message: "shark-notfound" };
 
 		const sharks = await SharkModel.findOne({ id: sharkId }).select(
-			"historyDatas -_id",
+			"historyDatas cryptos -_id",
 		);
+		const { historyDatas, cryptos } = sharks;
 
-		const historyData = sharks.historyDatas.find(
+		const historyData = historyDatas.find(
 			(data) => data.coinSymbol === coinSymbol.toUpperCase(),
 		);
 
-		if (!historyData) return { message: "coin-notfound" };
-		else {
-			const coinInfo = await TokenModel.findOne({
-				symbol: coinSymbol.toUpperCase(),
-			}).select(
-				"ethId name symbol iconURL cmcRank maxSupply totalSupply circulatingSupply marketCap contractAddress prices -_id",
-			);
+		const coinInfo = await TokenModel.findOne({
+			symbol: coinSymbol.toUpperCase(),
+		}).select(
+			"ethId name symbol iconURL cmcRank maxSupply totalSupply circulatingSupply marketCap contractAddress prices -_id",
+		);
 
+		if (!historyData) {
+			if (
+				cryptos &&
+				cryptos.find(
+					(crypto) => crypto.symbol === coinSymbol.toUpperCase(),
+				)
+			) {
+				return {
+					message: "success",
+					data: {
+						historyData: null,
+						coinInfo: coinInfo || null,
+					},
+				};
+			} else {
+				return { message: "coin-notfound" };
+			}
+		} else {
 			return {
 				message: "success",
 				data: {
-					historyData: historyData.historyData || [],
+					historyData: historyData.historyData || null,
 					coinInfo: coinInfo || null,
 				},
 			};
@@ -286,6 +301,44 @@ const getHoursPriceOfToken = async (tokenSymbol) => {
 	}).select("originalPrices -_id");
 
 	return token?.originalPrices?.hourly || {};
+};
+
+const getGainLossOfSharks = async (isLoss) => {
+	const sortType = isLoss ? "asc" : "desc";
+	const sharkGainLoss = isLoss
+		? await SharkModel.find({})
+				.select("id totalAssets percent24h -_id")
+				.where("percent24h")
+				.lt(0)
+				.sort({ percent24h: sortType })
+				.limit(20)
+		: await SharkModel.find({})
+				.select("id totalAssets percent24h -_id")
+				.where("percent24h")
+				.gte(0)
+				.sort({ percent24h: sortType })
+				.limit(20);
+
+	return sharkGainLoss;
+};
+
+const getGainLossOfCoins = async (isLoss) => {
+	const sortType = isLoss ? "asc" : "desc";
+	const sharkGainLoss = isLoss
+		? await TokenModel.find({})
+				.select("symbol usd.price usd.percentChange24h -_id")
+				.where("usd.percentChange24h")
+				.lt(0)
+				.sort({ "usd.percentChange24h": sortType })
+				.limit(20)
+		: await TokenModel.find({})
+				.select("symbol usd.price usd.percentChange24h -_id")
+				.where("usd.percentChange24h")
+				.gte(0)
+				.sort({ "usd.percentChange24h": sortType })
+				.limit(20);
+
+	return sharkGainLoss;
 };
 
 module.exports = {
@@ -317,4 +370,6 @@ module.exports = {
 	getTradeTransactionHistoryOfShark,
 	getHoursPriceOfToken,
 	getTransactionsLength,
+	getGainLossOfSharks,
+	getGainLossOfCoins,
 };
