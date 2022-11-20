@@ -132,7 +132,7 @@ const followWalletOfShark = async (userId, sharkId) => {
 
 		if (
 			sharksFollowed &&
-			sharksFollowed.find((shark) => shark.id === sharkId)
+			sharksFollowed.some((shark) => shark.id === sharkId)
 		)
 			return "already-followed";
 
