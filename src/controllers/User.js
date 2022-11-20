@@ -11,6 +11,8 @@ const {
 	updateUserProfile,
 	upgradeUserPremiumAccount,
 	followWalletOfShark,
+	unfollowWalletOfShark,
+	getListOfSharkFollowed,
 } = require("../services/crud-database/admin");
 const {
 	validateUpdateProfileBody,
@@ -206,6 +208,77 @@ function UserController() {
 				res.status(400).json({
 					message: "failed",
 					error: error,
+				}),
+			);
+	};
+
+	this.unfollowSharkWallet = async (req, res, next) => {
+		let { userId, sharkId } = req.body;
+
+		if (!userId) userId = null;
+		else {
+			if (isNaN(userId)) userId = undefined;
+			else userId = Number(userId);
+		}
+
+		if (!sharkId) sharkId = null;
+		else {
+			if (isNaN(sharkId)) sharkId = undefined;
+			else sharkId = Number(sharkId);
+		}
+
+		await unfollowWalletOfShark(userId, sharkId)
+			.then((data) => {
+				if (data === "success")
+					return res.status(200).json({
+						message: "successfully",
+						error: null,
+					});
+				else
+					return res.status(400).json({
+						message: data,
+						error: data,
+					});
+			})
+			.catch((error) =>
+				res.status(400).json({
+					message: "failed",
+					error: error,
+				}),
+			);
+	};
+
+	this.getSharkFollowed = async (req, res, next) => {
+		let userId = req.query.userId;
+
+		if (!userId) userId = null;
+		else {
+			if (isNaN(userId)) userId = undefined;
+			else userId = Number(userId);
+		}
+
+		await getListOfSharkFollowed(userId)
+			.then((data) => {
+				data.message === "success"
+					? res.status(200).json({
+							message: "successfully",
+							error: null,
+							datasLength: data.datas.length,
+							datas: data.datas,
+					  })
+					: res.status(400).json({
+							message: data.message,
+							error: data.message,
+							datasLength: 0,
+							datas: [],
+					  });
+			})
+			.catch((error) =>
+				res.status(400).json({
+					message: "failed",
+					error: error,
+					datasLength: 0,
+					datas: [],
 				}),
 			);
 	};

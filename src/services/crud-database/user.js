@@ -364,6 +364,7 @@ module.exports = {
 	getListTrendingCoins,
 	getListTrendingTokens,
 	getListCryptosOfShark,
+	getTransactionsLength,
 	getTransactionsOfAllSharks,
 	getListTransactionsOfShark,
 	getTradeTransactionHistoryOfShark,

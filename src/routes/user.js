@@ -172,4 +172,55 @@ router.post("/upgrade-premium-account", UserController.upgradePremiumAccount);
 router.post("/follow-shark-wallet", UserController.followSharkWallet);
 // router.post("/follow-shark-wallet", isAuth, UserController.followSharkWallet);
 
+/**
+ * @swagger
+ * /user/unfollow-shark-wallet:
+ *   post:
+ *     description: Unfollow shark wallet
+ *     tags: [User]
+ *     requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - userId
+ *               - sharkId
+ *             properties:
+ *               userId:
+ *                  type: string
+ *               sharkId:
+ *                  type: string
+ *             example:
+ *               userId: "1"
+ *               sharkId: "1"
+ *     responses:
+ *       200:
+ *         description: Unfollow shark wallet successfully
+ *       400:
+ *         description: Unfollow shark wallet failed
+ */
+router.post("/unfollow-shark-wallet", UserController.unfollowSharkWallet);
+// router.post("/unfollow-shark-wallet", isAuth, UserController.unfollowSharkWallet);
+
+/**
+ * @swagger
+ * /user/list-shark-follower:
+ *   get:
+ *     description: Get list of shark followers
+ *     tags: [User]
+ *     parameters:
+ *      - in: query
+ *        name: userId
+ *        schema:
+ *          type: string
+ *     responses:
+ *       200:
+ *         description: Get list of shark followers successfully
+ *       400:
+ *         description: Get list of shark followers failed
+ */
+router.get("/list-shark-follower", UserController.getSharkFollowed);
+// router.get("/list-shark-follower", isAuth, UserController.getSharkFollowed);
+
 module.exports = router;
