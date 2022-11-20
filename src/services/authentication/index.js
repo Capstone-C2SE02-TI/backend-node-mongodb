@@ -14,7 +14,7 @@ const generateAccessToken = async (payloadData) => {
 	try {
 		const accessToken = await sign(payloadData, ACCESS_TOKEN_SECRET, {
 			algorithm: ENCODE_ALGORITHM,
-			expiresIn: "7d",
+			expiresIn: "7d"
 		});
 
 		return accessToken;
@@ -30,8 +30,8 @@ const generateRefreshAccessToken = async (payloadData) => {
 			REFRESH_ACCESS_TOKEN_SECRET,
 			{
 				algorithm: ENCODE_ALGORITHM,
-				expiresIn: "7d",
-			},
+				expiresIn: "7d"
+			}
 		);
 
 		return refreshAccessToken;
@@ -44,11 +44,11 @@ const refreshAccessToken = async (refreshToken, userId) => {
 	try {
 		const refreshAccessToken = await decodeToken(
 			refreshToken,
-			REFRESH_ACCESS_TOKEN_SECRET,
+			REFRESH_ACCESS_TOKEN_SECRET
 		);
 
 		const user = await UserModel.find({ userId: userId }).select(
-			"accessToken refreshAccessToken username -_id",
+			"accessToken refreshAccessToken username -_id"
 		);
 
 		// Check valid refreshToken
@@ -56,11 +56,11 @@ const refreshAccessToken = async (refreshToken, userId) => {
 
 		// Generate new tokens
 		const payloadData = {
-			username: user.username,
+			username: user.username
 		};
 		const newAccessToken = await generateAccessToken(payloadData);
 		const newRefreshAccessToken = await generateRefreshAccessToken(
-			payloadData,
+			payloadData
 		);
 
 		return { newAccessToken, newRefreshAccessToken };
@@ -72,7 +72,7 @@ const refreshAccessToken = async (refreshToken, userId) => {
 const decodeToken = async (token, secretKey) => {
 	try {
 		return await verify(token, secretKey, {
-			ignoreExpiration: true,
+			ignoreExpiration: true
 		});
 	} catch (error) {
 		return undefined;
@@ -86,7 +86,7 @@ const isAuthed = async (req, res, next) => {
 	const cookie = req.cookies.TI_AUTH_COOKIE;
 	const decodeValue1 = await decodeToken(
 		accessTokenHeader,
-		ACCESS_TOKEN_SECRET,
+		ACCESS_TOKEN_SECRET
 	);
 
 	const decodeValue2 = await decodeToken(cookie, ACCESS_TOKEN_SECRET);
@@ -103,5 +103,5 @@ module.exports = {
 	generateRefreshAccessToken,
 	refreshAccessToken,
 	decodeToken,
-	isAuthed,
+	isAuthed
 };

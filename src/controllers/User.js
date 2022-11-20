@@ -4,7 +4,7 @@ const { cryptPassword, comparePassword } = require("../helpers");
 const {
 	getUserByEmail,
 	updateUserPassword,
-	getPasswordByEmail,
+	getPasswordByEmail
 } = require("../services/crud-database/user");
 const {
 	getUserProfile,
@@ -12,11 +12,11 @@ const {
 	upgradeUserPremiumAccount,
 	followWalletOfShark,
 	unfollowWalletOfShark,
-	getListOfSharkFollowed,
+	getListOfSharkFollowed
 } = require("../services/crud-database/admin");
 const {
 	validateUpdateProfileBody,
-	validateChangePasswordBody,
+	validateChangePasswordBody
 } = require("../validators/user");
 
 function UserController() {
@@ -36,20 +36,20 @@ function UserController() {
 					? res.status(400).json({
 							message: "failed-userid-invalid",
 							error: "userid-invalid",
-							data: {},
+							data: {}
 					  })
 					: res.status(200).json({
 							message: "successfully",
 							error: null,
-							data: data,
-					  }),
+							data: data
+					  })
 			)
 			.catch((error) =>
 				res.status(400).json({
 					message: "failed",
 					error: error,
-					data: {},
-				}),
+					data: {}
+				})
 			);
 	};
 
@@ -66,7 +66,7 @@ function UserController() {
 		const { status, error } = await validateUpdateProfileBody(
 			req,
 			res,
-			next,
+			next
 		);
 
 		if (status === "failed")
@@ -78,18 +78,18 @@ function UserController() {
 					data === "success"
 						? res.status(200).json({
 								message: "successfully",
-								error: null,
+								error: null
 						  })
 						: res.status(400).json({
 								message: data,
-								error: data,
-						  }),
+								error: data
+						  })
 				)
 				.catch((error) =>
 					res.status(400).json({
 						message: "failed",
-						error: error,
-					}),
+						error: error
+					})
 				);
 		}
 	};
@@ -98,7 +98,7 @@ function UserController() {
 		const { status, error } = await validateChangePasswordBody(
 			req,
 			res,
-			next,
+			next
 		);
 
 		if (status === "failed")
@@ -120,24 +120,24 @@ function UserController() {
 								async (error, hashPassword) =>
 									(await updateUserPassword(
 										user.userId,
-										hashPassword,
+										hashPassword
 									)) === true
 										? res.status(200).json({
 												message: "successfully",
-												error: null,
+												error: null
 										  })
 										: res.status(400).json({
 												message: "failed",
-												error: error,
-										  }),
+												error: error
+										  })
 							);
 						} else {
 							return res.status(400).json({
 								message: "incorrect-oldpassword",
-								error: "incorrect-oldpassword",
+								error: "incorrect-oldpassword"
 							});
 						}
-					},
+					}
 				);
 			} else {
 				return res
@@ -161,18 +161,18 @@ function UserController() {
 				data === "success"
 					? res.status(200).json({
 							message: "successfully",
-							error: null,
+							error: null
 					  })
 					: res.status(400).json({
 							message: data,
-							error: data,
-					  }),
+							error: data
+					  })
 			)
 			.catch((error) =>
 				res.status(400).json({
 					message: "failed",
-					error: error,
-				}),
+					error: error
+				})
 			);
 	};
 
@@ -196,19 +196,19 @@ function UserController() {
 				if (data === "success")
 					return res.status(200).json({
 						message: "successfully",
-						error: null,
+						error: null
 					});
 				else
 					return res.status(400).json({
 						message: data,
-						error: data,
+						error: data
 					});
 			})
 			.catch((error) =>
 				res.status(400).json({
 					message: "failed",
-					error: error,
-				}),
+					error: error
+				})
 			);
 	};
 
@@ -232,19 +232,19 @@ function UserController() {
 				if (data === "success")
 					return res.status(200).json({
 						message: "successfully",
-						error: null,
+						error: null
 					});
 				else
 					return res.status(400).json({
 						message: data,
-						error: data,
+						error: data
 					});
 			})
 			.catch((error) =>
 				res.status(400).json({
 					message: "failed",
-					error: error,
-				}),
+					error: error
+				})
 			);
 	};
 
@@ -264,13 +264,13 @@ function UserController() {
 							message: "successfully",
 							error: null,
 							datasLength: data.datas.length,
-							datas: data.datas,
+							datas: data.datas
 					  })
 					: res.status(400).json({
 							message: data.message,
 							error: data.message,
 							datasLength: 0,
-							datas: [],
+							datas: []
 					  });
 			})
 			.catch((error) =>
@@ -278,8 +278,8 @@ function UserController() {
 					message: "failed",
 					error: error,
 					datasLength: 0,
-					datas: [],
-				}),
+					datas: []
+				})
 			);
 	};
 }

@@ -3,18 +3,18 @@ dotenv.config();
 
 const {
 	validateSignUpBody,
-	validateSignInBody,
+	validateSignInBody
 } = require("../validators/user");
 const {
 	createNewUser,
 	checkExistedUsername,
 	checkExistedEmail,
-	getPasswordByUsername,
+	getPasswordByUsername
 } = require("../services/crud-database/user");
 const {
 	isAuthed,
 	generateAccessToken,
-	generateRefreshAccessToken,
+	generateRefreshAccessToken
 } = require("../services/authentication");
 const { cryptPassword, comparePassword } = require("../helpers");
 const { UserModel } = require("../models");
@@ -32,7 +32,7 @@ function AuthController() {
 		if (await checkExistedUsername(username))
 			return res.status(400).json({
 				message: "username-existed",
-				error: "username-existed",
+				error: "username-existed"
 			});
 
 		if (await checkExistedEmail(email))
@@ -45,16 +45,16 @@ function AuthController() {
 				username,
 				email,
 				phoneNumber,
-				hashPassword,
+				hashPassword
 			})) == true
 				? res.status(200).json({
 						message: "successfully",
-						error: null,
+						error: null
 				  })
 				: res.status(400).json({
 						message: "failed",
-						error: error,
-				  }),
+						error: error
+				  })
 		);
 	};
 
@@ -66,14 +66,14 @@ function AuthController() {
 			return res.status(400).json({
 				message: error,
 				error: error,
-				user: null,
+				user: null
 			});
 
 		if (!(await checkExistedUsername(username))) {
 			return res.status(404).json({
 				message: "username-notfound",
 				error: "username-notfound",
-				user: null,
+				user: null
 			});
 		} else {
 			const hashPassword = await getPasswordByUsername(username);
@@ -83,17 +83,17 @@ function AuthController() {
 				async (error, passwordMatch) => {
 					if (passwordMatch) {
 						const user = await UserModel.find({
-							username: username,
+							username: username
 						}).select("accessToken username userId email -_id");
 
 						// First time signin
 						if (user.accessToken === "") {
 							const accessToken = await generateAccessToken({
-								username: username,
+								username: username
 							});
 							const refreshAccessToken =
 								await generateRefreshAccessToken({
-									username: username,
+									username: username
 								});
 
 							// Update tokens in DB
@@ -101,8 +101,8 @@ function AuthController() {
 								{ username: username },
 								{
 									accessToken: accessToken,
-									refreshAccessToken: refreshAccessToken,
-								},
+									refreshAccessToken: refreshAccessToken
+								}
 							);
 
 							return res.status(200).json({
@@ -114,8 +114,8 @@ function AuthController() {
 									userId: user.userId,
 									email: user.email,
 									accessToken: accessToken,
-									refreshAccessToken: refreshAccessToken,
-								},
+									refreshAccessToken: refreshAccessToken
+								}
 							});
 						}
 
@@ -128,24 +128,24 @@ function AuthController() {
 									role: "user",
 									username: user.username,
 									userId: user.userId,
-									email: user.email,
-								},
+									email: user.email
+								}
 							});
 						} else {
 							return res.status(400).json({
 								message: "failed-unauthorized",
 								error: "failed-unauthorized",
-								user: null,
+								user: null
 							});
 						}
 					} else {
 						return res.status(400).json({
 							message: "incorrect-password",
 							error: "incorrect-password",
-							user: null,
+							user: null
 						});
 					}
-				},
+				}
 			);
 		}
 	};

@@ -11,5 +11,5 @@ module.exports = {
 	SharkModel,
 	TokenModel,
 	TagModel,
-	TransactionModel,
+	TransactionModel
 };
