@@ -3,6 +3,7 @@ const {
 	checkExistedUsername,
 	getPasswordByUsername,
 	getAdminByUsername,
+	getListOfAdmins,
 	deleteUsersByUserId,
 	getListOfUsers,
 	getUserProfile,
@@ -71,6 +72,33 @@ function AdminController() {
 		}
 	};
 
+	this.getAdminsList = async (req, res, next) => {
+		await getListOfAdmins()
+			.then((datas) => {
+				datas.length === 0
+					? res.status(400).json({
+							message: "failed-empty-data",
+							error: "empty-data",
+							datasLength: 0,
+							datas: [],
+					  })
+					: res.status(200).json({
+							message: "successfully",
+							error: null,
+							datasLength: datas.length,
+							datas: datas,
+					  });
+			})
+			.catch((error) =>
+				res.status(400).json({
+					message: "failed",
+					error: error,
+					datasLength: 0,
+					datas: [],
+				}),
+			);
+	};
+
 	this.deleteUsers = async (req, res, next) => {
 		try {
 			const { ids } = req.body;
@@ -78,7 +106,7 @@ function AdminController() {
 			const checkedIds = ids;
 			checkedIds.forEach((id) => {
 				id = Number(id);
-				if (_.isNaN(id)){
+				if (_.isNaN(id)) {
 					Error.captureStackTrace(err);
 				}
 			});

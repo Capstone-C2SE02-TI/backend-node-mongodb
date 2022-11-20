@@ -49,6 +49,21 @@ router.post("/signout", AdminController.signout);
 
 /**
  * @swagger
+ * /admin/list:
+ *   get:
+ *     description: Get list of admins
+ *     tags: [Admin]
+ *     responses:
+ *       200:
+ *         description: Get list of admins successfully
+ *       400:
+ *         description: Get list of admins failed
+ */
+router.get("/list", AdminController.getAdminsList);
+// router.get("/list", isAdmin, AdminController.getAdminsList);
+
+/**
+ * @swagger
  * /admin/delete-users:
  *   post:
  *     description: Delete user
