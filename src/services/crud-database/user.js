@@ -16,7 +16,6 @@ const {
 	TRENDING_REDUCING_LIMIT_ITEM,
 } = require("../../constants");
 
-
 const getUserByUsername = async (username) => {
 	return await UserModel.findOne({ username: username });
 };
@@ -54,6 +53,7 @@ const createNewUser = async ({
 			sharkFollowed: [],
 			createdDate: new Date(),
 			updatedDate: new Date(),
+			walletAddress: "ox12",
 		};
 
 		await UserModel.create(newUserInfo)
@@ -66,6 +66,15 @@ const createNewUser = async ({
 	} catch (error) {
 		return false;
 	}
+};
+
+const getWalletAddress = async (userId) => {
+	const walletAddress = await UserModel.findOne({
+		userId: userId,
+	}).select("walletAddress -_id");
+
+	return  walletAddress;
+
 };
 
 const updateUserConfirmationCode = async (userId, code) => {
@@ -203,7 +212,11 @@ const getSharksLength = async () => {
 	return await SharkModel.count({});
 };
 
-const getListOfSharks = async () => {
+const getListOfSharks = async (userId) => {
+	const isPremium = await getWalletAddress(userId);
+
+	console.log(isPremium ? "PRE" : "NOR");
+
 	const sharks = await SharkModel.find({})
 		.sort("id")
 		.select("id walletAddress totalAssets percent24h -_id");

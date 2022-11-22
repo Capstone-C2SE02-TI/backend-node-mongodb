@@ -62,6 +62,11 @@ const UserSchema = new mongoose.Schema(
 			type: Boolean,
 			default: false,
 		},
+		walletAddress: {
+			type: String,
+			trim: true,
+			default: null,
+		},
 		sharksFollowed: {
 			type: Array,
 			default: [],
