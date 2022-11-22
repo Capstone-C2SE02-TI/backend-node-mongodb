@@ -3,21 +3,17 @@ dotenv.config();
 
 const {
 	validateSignUpBody,
-	validateSignInBody,
+	validateSignInBody
 } = require("../validators/user");
 const {
 	createNewUser,
 	checkExistedUsername,
 	checkExistedEmail,
 	getPasswordByUsername,
+	getUserByUsername
 } = require("../services/crud-database/user");
-const {
-	isAuthed,
-	generateAccessToken,
-	generateRefreshAccessToken,
-} = require("../services/authentication");
+const { isAuthed, generateAccessToken } = require("../services/authentication");
 const { cryptPassword, comparePassword } = require("../helpers");
-const { UserModel } = require("../models");
 
 const TI_AUTH_COOKIE = process.env.TI_AUTH_COOKIE;
 
@@ -32,7 +28,7 @@ function AuthController() {
 		if (await checkExistedUsername(username))
 			return res.status(400).json({
 				message: "username-existed",
-				error: "username-existed",
+				error: "username-existed"
 			});
 
 		if (await checkExistedEmail(email))
@@ -45,16 +41,16 @@ function AuthController() {
 				username,
 				email,
 				phoneNumber,
-				hashPassword,
+				hashPassword
 			})) == true
 				? res.status(200).json({
 						message: "successfully",
-						error: null,
+						error: null
 				  })
 				: res.status(400).json({
 						message: "failed",
-						error: error,
-				  }),
+						error: error
+				  })
 		);
 	};
 
@@ -66,44 +62,34 @@ function AuthController() {
 			return res.status(400).json({
 				message: error,
 				error: error,
-				user: null,
+				user: null
 			});
 
 		if (!(await checkExistedUsername(username))) {
 			return res.status(404).json({
 				message: "username-notfound",
 				error: "username-notfound",
-				user: null,
+				user: null
 			});
 		} else {
 			const hashPassword = await getPasswordByUsername(username);
 			comparePassword(
 				password,
 				hashPassword,
-				async (error, passwordMatch) => {
-					if (passwordMatch) {
-						const user = await UserModel.find({
-							username: username,
-						}).select("accessToken username userId email -_id");
+				async (error, isPasswordMatch) => {
+					if (isPasswordMatch) {
+						const user = await getUserByUsername(username);
+						const cookie = req.cookies[TI_AUTH_COOKIE];
 
-						// First time signin
-						if (user.accessToken === "") {
+						if (!cookie) {
 							const accessToken = await generateAccessToken({
-								username: username,
+								username
 							});
-							const refreshAccessToken =
-								await generateRefreshAccessToken({
-									username: username,
-								});
 
-							// Update tokens in DB
-							await UserModel.findOneAndUpdate(
-								{ username: username },
-								{
-									accessToken: accessToken,
-									refreshAccessToken: refreshAccessToken,
-								},
-							);
+							res.cookie(TI_AUTH_COOKIE, accessToken, {
+								// Expire in 1 week
+								maxAge: 604800000
+							});
 
 							return res.status(200).json({
 								message: "successfully",
@@ -112,40 +98,37 @@ function AuthController() {
 									role: "user",
 									username: user.username,
 									userId: user.userId,
-									email: user.email,
-									accessToken: accessToken,
-									refreshAccessToken: refreshAccessToken,
-								},
-							});
-						}
-
-						// Not first time signin
-						if (await isAuthed(req)) {
-							return res.status(200).json({
-								message: "successfully",
-								error: null,
-								user: {
-									role: "user",
-									username: user.username,
-									userId: user.userId,
-									email: user.email,
-								},
+									email: user.email
+								}
 							});
 						} else {
-							return res.status(400).json({
-								message: "failed-unauthorized",
-								error: "failed-unauthorized",
-								user: null,
-							});
+							if (await isAuthed(req)) {
+								return res.status(200).json({
+									message: "successfully",
+									error: null,
+									user: {
+										role: "user",
+										username: user.username,
+										userId: user.userId,
+										email: user.email
+									}
+								});
+							} else {
+								return res.status(400).json({
+									message: "failed-unauthorized",
+									error: "failed-unauthorized",
+									user: null
+								});
+							}
 						}
 					} else {
 						return res.status(400).json({
 							message: "incorrect-password",
 							error: "incorrect-password",
-							user: null,
+							user: null
 						});
 					}
-				},
+				}
 			);
 		}
 	};

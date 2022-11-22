@@ -13,7 +13,7 @@ const {
 	getTransactionsLength,
 	getGainLossOfSharks,
 	getGainLossOfCoins,
-	getTradeTransactionHistoryOfShark,
+	getTradeTransactionHistoryOfShark
 } = require("../services/crud-database/user");
 
 function DisplayController() {
@@ -25,22 +25,22 @@ function DisplayController() {
 							message: "failed-empty-data",
 							error: "empty-data",
 							datasLength: 0,
-							datas: [],
+							datas: []
 					  })
 					: res.status(200).json({
 							message: "successfully",
 							error: null,
 							datasLength: datas.length,
-							datas: datas,
-					  }),
+							datas: datas
+					  })
 			)
 			.catch((error) =>
 				res.status(400).json({
 					message: "failed",
 					error: error,
 					datasLength: 0,
-					datas: [],
-				}),
+					datas: []
+				})
 			);
 	};
 
@@ -52,22 +52,22 @@ function DisplayController() {
 							message: "failed-empty-data",
 							error: "empty-data",
 							datasLength: 0,
-							datas: [],
+							datas: []
 					  })
 					: res.status(200).json({
 							message: "successfully",
 							error: null,
 							datasLength: datas.length,
-							datas: datas,
-					  }),
+							datas: datas
+					  })
 			)
 			.catch((error) =>
 				res.status(400).json({
 					message: "failed",
 					error: error,
 					datasLength: 0,
-					datas: [],
-				}),
+					datas: []
+				})
 			);
 	};
 
@@ -79,22 +79,22 @@ function DisplayController() {
 							message: "failed-empty-data",
 							error: "empty-data",
 							datasLength: 0,
-							datas: [],
+							datas: []
 					  })
 					: res.status(200).json({
 							message: "successfully",
 							error: null,
 							datasLength: datas.length,
-							datas: datas,
-					  }),
+							datas: datas
+					  })
 			)
 			.catch((error) =>
 				res.status(400).json({
 					message: "failed",
 					error: error,
 					datasLength: 0,
-					datas: [],
-				}),
+					datas: []
+				})
 			);
 	};
 
@@ -106,22 +106,22 @@ function DisplayController() {
 							message: "failed-empty-data",
 							error: "empty-data",
 							datasLength: 0,
-							datas: [],
+							datas: []
 					  })
 					: res.status(200).json({
 							message: "successfully",
 							error: null,
 							datasLength: datas.length,
-							datas: datas,
-					  }),
+							datas: datas
+					  })
 			)
 			.catch((error) =>
 				res.status(400).json({
 					message: "failed",
 					error: error,
 					datasLength: 0,
-					datas: [],
-				}),
+					datas: []
+				})
 			);
 	};
 
@@ -139,20 +139,20 @@ function DisplayController() {
 					? res.status(400).json({
 							message: "failed-symbol-invalid",
 							error: "symbol-invalid",
-							data: {},
+							data: {}
 					  })
 					: res.status(200).json({
 							message: "successfully",
 							error: null,
-							data: data,
-					  }),
+							data: data
+					  })
 			)
 			.catch((error) =>
 				res.status(400).json({
 					message: "failed",
 					error: error,
-					data: {},
-				}),
+					data: {}
+				})
 			);
 	};
 
@@ -165,22 +165,22 @@ function DisplayController() {
 							message: "failed-empty-data",
 							error: "empty-data",
 							datasLength: 0,
-							datas: [],
+							datas: []
 					  })
 					: res.status(200).json({
 							message: "successfully",
 							error: null,
 							datasLength: datas.length,
-							datas: datas,
-					  }),
+							datas: datas
+					  })
 			)
 			.catch((error) =>
 				res.status(400).json({
 					message: "failed",
 					error: error,
 					datasLength: 0,
-					datas: [],
-				}),
+					datas: []
+				})
 			);
 	};
 
@@ -201,22 +201,22 @@ function DisplayController() {
 							message: "failed-sharkid-invalid",
 							error: "sharkid-invalid",
 							datas: [],
-							datasLength: 0,
+							datasLength: 0
 					  })
 					: res.status(200).json({
 							message: "successfully",
 							error: null,
 							datas: datas,
-							datasLength: datas.length,
-					  }),
+							datasLength: datas.length
+					  })
 			)
 			.catch((error) =>
 				res.status(400).json({
 					message: "failed",
 					error: error,
 					datas: [],
-					datasLength: 0,
-				}),
+					datasLength: 0
+				})
 			);
 	};
 
@@ -237,22 +237,22 @@ function DisplayController() {
 							message: "failed-sharkid-invalid",
 							error: "sharkid-invalid",
 							datas: [],
-							datasLength: 0,
+							datasLength: 0
 					  })
 					: res.status(200).json({
 							message: "successfully",
 							error: null,
 							datas: datas,
-							datasLength: datas.length,
-					  }),
+							datasLength: datas.length
+					  })
 			)
 			.catch((error) =>
 				res.status(400).json({
 					message: "failed",
 					error: error,
 					datas: [],
-					datasLength: 0,
-				}),
+					datasLength: 0
+				})
 			);
 	};
 
@@ -263,20 +263,20 @@ function DisplayController() {
 					? res.status(400).json({
 							message: "failed-listtransaction-not-exist",
 							error: "listtransaction-not-exist",
-							data: 0,
+							data: 0
 					  })
 					: res.status(200).json({
 							message: "successfully",
 							error: null,
-							data: data,
-					  }),
+							data: data
+					  })
 			)
 			.catch((error) =>
 				res.status(400).json({
 					message: "failed",
 					error: error,
-					data: 0,
-				}),
+					data: 0
+				})
 			);
 	};
 
@@ -297,22 +297,22 @@ function DisplayController() {
 							message: "failed-listtransaction-not-exist",
 							error: "listtransaction-not-exist",
 							datasLength: 0,
-							datas: [],
+							datas: []
 					  })
 					: res.status(200).json({
 							message: "successfully",
 							error: null,
 							datasLength: datas.length,
-							datas: datas,
-					  }),
+							datas: datas
+					  })
 			)
 			.catch((error) =>
 				res.status(400).json({
 					message: "failed",
 					error: error,
 					datasLength: 0,
-					datas: [],
-				}),
+					datas: []
+				})
 			);
 	};
 
@@ -332,22 +332,22 @@ function DisplayController() {
 							message: "successfully",
 							error: null,
 							datas: data.data,
-							datasLength: data.data.length,
+							datasLength: data.data.length
 					  })
 					: res.status(400).json({
 							message: data.message,
 							error: data.message,
 							datas: null,
-							datasLength: 0,
-					  }),
+							datasLength: 0
+					  })
 			)
 			.catch((error) =>
 				res.status(400).json({
 					message: "failed",
 					error: error,
 					datas: null,
-					datasLength: 0,
-				}),
+					datasLength: 0
+				})
 			);
 	};
 
@@ -357,30 +357,28 @@ function DisplayController() {
 		else isLoss = req.query.isLoss === "true";
 
 		await getGainLossOfSharks(isLoss)
-			.then((datas) => 
+			.then((datas) =>
 				!_.isArray(datas)
 					? res.status(400).json({
 							message: "failed-listgainloss-invalid",
 							error: "listgainloss-invalid",
 							datasLength: 0,
-							datas: [],
+							datas: []
 					  })
 					: res.status(200).json({
 							message: "successfully",
 							error: null,
 							datasLength: datas.length,
-							datas: datas,
-					  }),
-									
-			
+							datas: datas
+					  })
 			)
 			.catch((error) =>
 				res.status(400).json({
 					message: "failed",
 					error: error,
 					datasLength: 0,
-					datas: [],
-				}),
+					datas: []
+				})
 			);
 	};
 
@@ -391,30 +389,28 @@ function DisplayController() {
 		else isLoss = req.query.isLoss === "true";
 
 		await getGainLossOfCoins(isLoss)
-			.then((datas) => 
+			.then((datas) =>
 				!_.isArray(datas)
 					? res.status(400).json({
 							message: "failed-listgainloss-invalid",
 							error: "listgainloss-invalid",
 							datasLength: 0,
-							datas: [],
+							datas: []
 					  })
 					: res.status(200).json({
 							message: "successfully",
 							error: null,
 							datasLength: datas.length,
-							datas: datas,
-					  }),
-									
-			
+							datas: datas
+					  })
 			)
 			.catch((error) =>
 				res.status(400).json({
 					message: "failed",
 					error: error,
 					datasLength: 0,
-					datas: [],
-				}),
+					datas: []
+				})
 			);
 	};
 
@@ -426,22 +422,22 @@ function DisplayController() {
 							message: "failed-empty-data",
 							error: "empty-data",
 							datasLength: 0,
-							datas: [],
+							datas: []
 					  })
 					: res.status(200).json({
 							message: "successfully",
 							error: null,
 							datasLength: datas.length,
-							datas: datas,
-					  }),
+							datas: datas
+					  })
 			)
 			.catch((error) =>
 				res.status(400).json({
 					message: "failed",
 					error: error,
 					datasLength: 0,
-					datas: [],
-				}),
+					datas: []
+				})
 			);
 	};
 }

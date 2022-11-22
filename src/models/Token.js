@@ -6,84 +6,82 @@ const TokenSchema = new mongoose.Schema({
 	id: {
 		type: Number,
 		required: true,
-		unique: true,
+		unique: true
 	},
 	ethId: {
 		type: Number,
-		unique: true,
+		unique: true
 	},
 	cmcRank: {
 		type: Number,
 		required: true,
-		unique: true,
+		unique: true
 	},
 	name: {
 		type: String,
 		trim: true,
-		required: true,
+		required: true
 	},
 	symbol: {
 		type: String,
 		trim: true,
 		required: true,
-		unique: true,
+		unique: true
 	},
 	contractAddress: {
 		type: String,
 		trim: true,
 		required: true,
-		unique: true,
+		unique: true
 	},
 	type: {
 		type: String,
 		trim: true,
-		required: true,
+		required: true
 	},
 	iconURL: {
 		type: String,
 		trim: true,
-		default: "",
+		default: ""
 	},
 	marketCap: {
-		type: Number,
+		type: Number
 	},
 	maxSupply: {
-		type: Number,
+		type: Number
 	},
 	totalSupply: {
-		type: Number,
+		type: Number
 	},
 	circulatingSupply: {
-		type: Number,
+		type: Number
 	},
 	tagNames: {
 		type: Array,
-		default: [],
+		default: []
 	},
 	urls: {
 		type: Object,
 		required: true,
-		default: {},
+		default: {}
 	},
 	usd: {
 		type: Object,
 		required: true,
-		default: {},
+		default: {}
 	},
 	prices: {
 		type: Object,
-		required: true,
-		default: {},
+		default: {}
 	},
 	originalPrices: {
 		type: Object,
-		required: true,
-		default: {},
+		default: {}
 	},
 	pricesLast1Day: {
 		type: Array,
-		default: {},
-	},
+		default: []
+	}
 });
 
 module.exports = mongoose.model("Token", TokenSchema);

@@ -13,7 +13,7 @@ const {
 	validateNewConfirmPassword,
 	validateFullNameOptional,
 	validateWebsiteOptional,
-	validateAvatarOptional,
+	validateAvatarOptional
 } = require("./index.js");
 
 const validateSignUpBody = async (req, res, next) => {
@@ -26,7 +26,7 @@ const validateSignUpBody = async (req, res, next) => {
 	const errors = validationResult(req);
 	return {
 		status: errors.isEmpty() ? "successfully" : "failed",
-		error: errors.array()[0]?.msg,
+		error: errors.array()[0]?.msg
 	};
 };
 
@@ -37,7 +37,7 @@ const validateSignInBody = async (req, res, next) => {
 	const errors = validationResult(req);
 	return {
 		status: errors.isEmpty() ? "successfully" : "failed",
-		error: errors.array()[0]?.msg,
+		error: errors.array()[0]?.msg
 	};
 };
 
@@ -47,7 +47,7 @@ const validateSubmitEmailBody = async (req, res, next) => {
 	const errors = validationResult(req);
 	return {
 		status: errors.isEmpty() ? "successfully" : "failed",
-		error: errors.array()[0]?.msg,
+		error: errors.array()[0]?.msg
 	};
 };
 
@@ -58,7 +58,7 @@ const validateSubmitCodeBody = async (req, res, next) => {
 	const errors = validationResult(req);
 	return {
 		status: errors.isEmpty() ? "successfully" : "failed",
-		error: errors.array()[0]?.msg,
+		error: errors.array()[0]?.msg
 	};
 };
 
@@ -70,7 +70,7 @@ const validateCreateNewPasswordBody = async (req, res, next) => {
 	const errors = validationResult(req);
 	return {
 		status: errors.isEmpty() ? "successfully" : "failed",
-		error: errors.array()[0]?.msg,
+		error: errors.array()[0]?.msg
 	};
 };
 
@@ -83,7 +83,7 @@ const validateChangePasswordBody = async (req, res, next) => {
 	const errors = validationResult(req);
 	return {
 		status: errors.isEmpty() ? "successfully" : "failed",
-		error: errors.array()[0]?.msg,
+		error: errors.array()[0]?.msg
 	};
 };
 
@@ -97,7 +97,7 @@ const validateUpdateProfileBody = async (req, res, next) => {
 	const errors = validationResult(req);
 	return {
 		status: errors.isEmpty() ? "successfully" : "failed",
-		error: errors.array()[0]?.msg,
+		error: errors.array()[0]?.msg
 	};
 };
 
@@ -108,5 +108,5 @@ module.exports = {
 	validateSubmitCodeBody,
 	validateCreateNewPasswordBody,
 	validateChangePasswordBody,
-	validateUpdateProfileBody,
+	validateUpdateProfileBody
 };

@@ -16,7 +16,7 @@ const DisplayController = require("../controllers/Display");
  */
 router.get(
 	"/coins-and-tokens/reducing",
-	DisplayController.getReducingCoinsAndTokens,
+	DisplayController.getReducingCoinsAndTokens
 );
 
 /**
@@ -111,7 +111,10 @@ router.get("/sharks", DisplayController.getSharks);
  *       400:
  *         description: Get the length of list transactions failed
  */
- router.get("/sharks/transaction-history/length", DisplayController.getListTransactionsLength);
+router.get(
+	"/sharks/transaction-history/length",
+	DisplayController.getListTransactionsLength
+);
 
 /**
  * @swagger
@@ -132,7 +135,7 @@ router.get("/sharks", DisplayController.getSharks);
  */
 router.get(
 	"/sharks/transaction-history",
-	DisplayController.getListTransactionsOfAllSharks,
+	DisplayController.getListTransactionsOfAllSharks
 );
 
 /**
@@ -173,7 +176,7 @@ router.get("/shark/crypto", DisplayController.getCryptosOfShark);
  */
 router.get(
 	"/shark/transaction-history",
-	DisplayController.getTransactionsOfShark,
+	DisplayController.getTransactionsOfShark
 );
 
 /**
@@ -199,7 +202,7 @@ router.get(
  */
 router.get(
 	"/shark/trade-transaction-history",
-	DisplayController.getTradeTransactionHistory,
+	DisplayController.getTradeTransactionHistory
 );
 
 /**
@@ -219,10 +222,7 @@ router.get(
  *       400:
  *         description: Get list gain and loss of sharks failed
  */
- router.get(
-	"/sharks/gain-loss",
-	DisplayController.getGainLossOfSharks,
-);
+router.get("/sharks/gain-loss", DisplayController.getGainLossOfSharks);
 
 /**
  * @swagger
@@ -241,10 +241,7 @@ router.get(
  *       400:
  *         description: Get list gain and loss of coins failed
  */
- router.get(
-	"/coins/gain-loss",
-	DisplayController.getGainLossOfCoins,
-);
+router.get("/coins/gain-loss", DisplayController.getGainLossOfCoins);
 
 /**
  * @swagger

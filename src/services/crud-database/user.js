@@ -6,14 +6,14 @@ const {
 	TokenModel,
 	SharkModel,
 	TagModel,
-	TransactionModel,
+	TransactionModel
 } = require("../../models");
 const {
 	DEFAULT_USER_FULLNAME,
 	DEFAULT_USER_AVATAR,
 	DEFAULT_USER_WEBSITE,
 	QUERY_LIMIT_ITEM,
-	TRENDING_REDUCING_LIMIT_ITEM,
+	TRENDING_REDUCING_LIMIT_ITEM
 } = require("../../constants");
 
 const getUserByUsername = async (username) => {
@@ -32,7 +32,7 @@ const createNewUser = async ({
 	username,
 	email,
 	phoneNumber,
-	hashPassword,
+	hashPassword
 }) => {
 	try {
 		const usersLength = await getUsersLength();
@@ -53,7 +53,7 @@ const createNewUser = async ({
 			sharkFollowed: [],
 			createdDate: new Date(),
 			updatedDate: new Date(),
-			walletAddress: "ox12",
+			walletAddress: "ox12"
 		};
 
 		await UserModel.create(newUserInfo)
@@ -70,18 +70,17 @@ const createNewUser = async ({
 
 const getWalletAddress = async (userId) => {
 	const walletAddress = await UserModel.findOne({
-		userId: userId,
+		userId: userId
 	}).select("walletAddress -_id");
 
-	return  walletAddress;
-
+	return walletAddress;
 };
 
 const updateUserConfirmationCode = async (userId, code) => {
 	try {
 		await UserModel.findOneAndUpdate(
 			{ userId: userId },
-			{ confirmationCode: code },
+			{ confirmationCode: code }
 		)
 			.then((data) => {
 				if (!data) throw new Error();
@@ -100,7 +99,7 @@ const updateUserPassword = async (userId, password) => {
 	try {
 		await UserModel.findOneAndUpdate(
 			{ userId: userId },
-			{ password: password },
+			{ password: password }
 		)
 			.then((data) => {
 				if (!data) throw new Error();
@@ -137,14 +136,14 @@ const checkExistedSharkId = async (sharkId) => {
 
 const getPasswordByUsername = async (username) => {
 	const user = await UserModel.findOne({ username: username }).select(
-		"password -_id",
+		"password -_id"
 	);
 	return user?.password || null;
 };
 
 const getPasswordByEmail = async (email) => {
 	const user = await UserModel.findOne({ email: email }).select(
-		"password -_id",
+		"password -_id"
 	);
 	return user?.password || null;
 };
@@ -152,7 +151,7 @@ const getPasswordByEmail = async (email) => {
 const getListOfCoinsAndTokens = async () => {
 	const tokens = await TokenModel.find({})
 		.select(
-			"id name symbol iconURL tagNames cmcRank usd marketCap circulatingSupply pricesLast1Day -_id",
+			"id name symbol iconURL tagNames cmcRank usd marketCap circulatingSupply pricesLast1Day -_id"
 		)
 		.sort("id");
 
@@ -177,7 +176,7 @@ const getListTrendingCoins = async () => {
 		.sort({ "usd.percentChange24h": "desc" })
 		.limit(TRENDING_REDUCING_LIMIT_ITEM)
 		.select(
-			"id name symbol iconURL tagNames usd marketCap circulatingSupply -_id",
+			"id name symbol iconURL tagNames usd marketCap circulatingSupply -_id"
 		);
 
 	return trendingCoins;
@@ -188,7 +187,7 @@ const getListTrendingTokens = async () => {
 		.sort({ "usd.percentChange24h": "desc" })
 		.limit(TRENDING_REDUCING_LIMIT_ITEM)
 		.select(
-			"id name symbol iconURL tagNames usd marketCap circulatingSupply -_id",
+			"id name symbol iconURL tagNames usd marketCap circulatingSupply -_id"
 		);
 
 	return trendingTokens;
@@ -196,9 +195,9 @@ const getListTrendingTokens = async () => {
 
 const getCoinOrTokenDetails = async (coinSymbol) => {
 	const coinOrToken = await TokenModel.findOne({
-		symbol: coinSymbol.toUpperCase(),
+		symbol: coinSymbol.toUpperCase()
 	}).select(
-		"id ethId name type symbol iconURL cmcRank tagNames maxSupply totalSupply circulatingSupply contractAddress marketCap urls usd prices -_id",
+		"id ethId name type symbol iconURL cmcRank tagNames maxSupply totalSupply circulatingSupply contractAddress marketCap urls usd prices -_id"
 	);
 
 	return coinOrToken || {};
@@ -213,20 +212,115 @@ const getSharksLength = async () => {
 };
 
 const getListOfSharks = async (userId) => {
-	const isPremium = await getWalletAddress(userId);
-
-	console.log(isPremium ? "PRE" : "NOR");
 
 	const sharks = await SharkModel.find({})
 		.sort("id")
-		.select("id walletAddress totalAssets percent24h -_id");
+		.select("id walletAddress totalAssets percent24h followers -_id");
 
-	return sharks;
+	sharksList = sharks.map((shark) =>{
+		const isFollowed = shark.followers.includes(userId);
+		let objShark = {...shark._doc, isFollowed: isFollowed};
+		return objShark;
+
+	})
+
+	return sharksList;
+};
+
+const followWalletOfShark = async (userId, sharkId) => {
+	try {
+		if (userId === null) return "userid-required";
+		if (userId === undefined) return "userid-invalid";
+
+		if (sharkId === null) return "sharkid-required";
+		if (sharkId === undefined) return "sharkid-invalid";
+
+		if (!(await checkExistedUserId(userId))) return "user-notfound";
+		if (!(await checkExistedSharkId(sharkId))) return "shark-notfound";
+
+		const shark = await SharkModel.findOne({ id: sharkId }).select(
+			"id walletAddress totalAssets percent24h followers -_id"
+		);
+
+		const sharkFollowers = shark.followers;
+
+		if (sharkFollowers && sharkFollowers.some((id) => id === userId))
+			return "already-followed";
+
+		await SharkModel.findOneAndUpdate(
+			{ id: sharkId },
+			{ followers: [...sharkFollowers, userId] },
+			{ new: true }
+		)
+			.then((data) => {
+				if (!data) throw new Error();
+			})
+			.catch((error) => {
+				throw new Error(error);
+			});
+
+		return "success";
+	} catch (error) {
+		return "error";
+	}
+};
+
+const unfollowWalletOfShark = async (userId, sharkId) => {
+	try {
+		if (userId === null) return "userid-required";
+		if (userId === undefined) return "userid-invalid";
+
+		if (sharkId === null) return "sharkid-required";
+		if (sharkId === undefined) return "sharkid-invalid";
+
+		if (!(await checkExistedUserId(userId))) return "user-notfound";
+		if (!(await checkExistedSharkId(sharkId))) return "shark-notfound";
+
+		const shark = await SharkModel.findOne({ id: sharkId }).select(
+			"followers -_id"
+		);
+		let sharkFollowers = shark.followers;
+
+		if (sharkFollowers && !sharkFollowers.some((id) => id === userId))
+			return "not-followed-yet";
+
+		// Remove object has key id === sharkId
+		sharkFollowers = sharkFollowers.filter((id) => id !== userId);
+
+		await SharkModel.findOneAndUpdate(
+			{ id: sharkId },
+			{ followers: sharkFollowers }
+		)
+			.then((data) => {
+				if (!data) throw new Error();
+			})
+			.catch((error) => {
+				throw new Error(error);
+			});
+
+		return "success";
+	} catch (error) {
+		console.log(error);
+		return "error";
+	}
+};
+
+const getListOfSharkFollowed = async (userId) => {
+	if (userId === null) return { message: "userid-required" };
+	if (userId === undefined) return { message: "userid-invalid" };
+	if (!(await checkExistedUserId(userId)))
+		return { message: "user-notfound" };
+
+	const users = await SharkModel.find({ followers: userId }).select(
+		"id totalAssets percent24h -_id"
+	);
+
+	return { message: "success", datas: users || [] };
 };
 
 const getListCryptosOfShark = async (sharkId) => {
 	const shark = await SharkModel.findOne({ id: sharkId }).select(
-		"cryptos -_id",
+		"cryptos -_id"
 	);
 	return shark?.cryptos || -1;
 };
@@ -249,7 +343,7 @@ const getTransactionsOfAllSharks = async (page) => {
 
 const getListTransactionsOfShark = async (sharkId) => {
 	const shark = await SharkModel.findOne({ id: sharkId }).select(
-		"transactionsHistory -_id",
+		"transactionsHistory -_id"
 	);
 	return shark?.transactionsHistory || -1;
 };
@@ -263,33 +357,33 @@ const getTradeTransactionHistoryOfShark = async (sharkId, coinSymbol) => {
 			return { message: "shark-notfound" };
 
 		const sharks = await SharkModel.findOne({ id: sharkId }).select(
-			"historyDatas cryptos -_id",
+			"historyDatas cryptos -_id"
 		);
 		const { historyDatas, cryptos } = sharks;
 
 		const historyData = historyDatas.find(
-			(data) => data.coinSymbol === coinSymbol.toUpperCase(),
+			(data) => data.coinSymbol === coinSymbol.toUpperCase()
 		);
 
 		const coinInfo = await TokenModel.findOne({
-			symbol: coinSymbol.toUpperCase(),
+			symbol: coinSymbol.toUpperCase()
 		}).select(
-			"ethId name symbol iconURL cmcRank maxSupply totalSupply circulatingSupply marketCap contractAddress prices -_id",
+			"ethId name symbol iconURL cmcRank maxSupply totalSupply circulatingSupply marketCap contractAddress prices -_id"
 		);
 
 		if (!historyData) {
 			if (
 				cryptos &&
 				cryptos.find(
-					(crypto) => crypto.symbol === coinSymbol.toUpperCase(),
+					(crypto) => crypto.symbol === coinSymbol.toUpperCase()
 				)
 			) {
 				return {
 					message: "success",
 					data: {
 						historyData: null,
-						coinInfo: coinInfo || null,
-					},
+						coinInfo: coinInfo || null
+					}
 				};
 			} else {
 				return { message: "coin-notfound" };
@@ -299,8 +393,8 @@ const getTradeTransactionHistoryOfShark = async (sharkId, coinSymbol) => {
 				message: "success",
 				data: {
 					historyData: historyData.historyData || null,
-					coinInfo: coinInfo || null,
-				},
+					coinInfo: coinInfo || null
+				}
 			};
 		}
 	} catch (error) {
@@ -310,7 +404,7 @@ const getTradeTransactionHistoryOfShark = async (sharkId, coinSymbol) => {
 
 const getHoursPriceOfToken = async (tokenSymbol) => {
 	const token = await TokenModel.findOne({
-		symbol: tokenSymbol.toUpperCase(),
+		symbol: tokenSymbol.toUpperCase()
 	}).select("originalPrices -_id");
 
 	return token?.originalPrices?.hourly || {};
@@ -385,4 +479,7 @@ module.exports = {
 	getTransactionsLength,
 	getGainLossOfSharks,
 	getGainLossOfCoins,
+	getListOfSharkFollowed,
+	followWalletOfShark,
+	unfollowWalletOfShark
 };

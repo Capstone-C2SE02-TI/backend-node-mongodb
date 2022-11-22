@@ -7,12 +7,12 @@ const UserSchema = new mongoose.Schema(
 		id: {
 			type: Number,
 			required: true,
-			unique: true,
+			unique: true
 		},
 		userId: {
 			type: Number,
 			required: true,
-			unique: true,
+			unique: true
 		},
 		username: {
 			type: String,
@@ -20,7 +20,7 @@ const UserSchema = new mongoose.Schema(
 			required: true,
 			unique: true,
 			minLength: 5,
-			maxlength: 16,
+			maxlength: 16
 		},
 		email: {
 			type: String,
@@ -28,39 +28,39 @@ const UserSchema = new mongoose.Schema(
 			required: true,
 			unique: true,
 			minlength: 16,
-			maxlength: 40,
+			maxlength: 40
 		},
 		phoneNumber: {
 			type: String,
 			trim: true,
 			minLength: 10,
 			maxlength: 10,
-			default: "",
+			default: ""
 		},
 		password: {
 			type: String,
 			trim: true,
-			required: true,
+			required: true
 		},
 		fullName: {
 			type: String,
 			trim: true,
-			default: "",
+			default: ""
 		},
 		avatar: {
 			type: String,
 			trim: true,
 			default:
-				"https://res.cloudinary.com/dhzbsq7fj/image/upload/v1643101647/avatardefault_92824_aifry9.png",
+				"https://res.cloudinary.com/dhzbsq7fj/image/upload/v1643101647/avatardefault_92824_aifry9.png"
 		},
 		website: {
 			type: String,
 			trim: true,
-			default: "",
+			default: ""
 		},
 		premiumAccount: {
 			type: Boolean,
-			default: false,
+			default: false
 		},
 		walletAddress: {
 			type: String,
@@ -69,12 +69,10 @@ const UserSchema = new mongoose.Schema(
 		},
 		sharksFollowed: {
 			type: Array,
-			default: [],
-		},
-		createdDate: { type: Object, default: {} },
-		updatedDate: { type: Object, default: {} },
+			default: []
+		}
 	},
-	{ timestamps: true },
+	{ timestamps: true }
 );
 
 module.exports = mongoose.model("User", UserSchema);
