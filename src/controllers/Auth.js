@@ -9,7 +9,8 @@ const {
 	createNewUser,
 	checkExistedUsername,
 	checkExistedEmail,
-	getPasswordByUsername
+	getPasswordByUsername,
+	getUserByUsername
 } = require("../services/crud-database/user");
 const { isAuthed, generateAccessToken } = require("../services/authentication");
 const { cryptPassword, comparePassword } = require("../helpers");
