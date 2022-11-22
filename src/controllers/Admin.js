@@ -10,6 +10,7 @@ const {
 } = require("../services/crud-database/admin");
 const { validateSignInBody } = require("../validators/admin");
 const { comparePassword } = require("../helpers");
+const { UserModel } = require("../models");
 
 function AdminController() {
 	this.signin = async (req, res, next) => {

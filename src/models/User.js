@@ -65,9 +65,7 @@ const UserSchema = new mongoose.Schema(
 		sharksFollowed: {
 			type: Array,
 			default: []
-		},
-		createdDate: { type: Object, default: {} },
-		updatedDate: { type: Object, default: {} }
+		}
 	},
 	{ timestamps: true }
 );

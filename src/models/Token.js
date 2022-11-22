@@ -72,17 +72,15 @@ const TokenSchema = new mongoose.Schema({
 	},
 	prices: {
 		type: Object,
-		required: true,
 		default: {}
 	},
 	originalPrices: {
 		type: Object,
-		required: true,
 		default: {}
 	},
 	pricesLast1Day: {
 		type: Array,
-		default: {}
+		default: []
 	}
 });
 
