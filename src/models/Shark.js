@@ -1,9 +1,7 @@
 const mongoose = require("mongoose");
-const { ObjectId } = mongoose.Schema.Types;
 
 const SharkSchema = new mongoose.Schema(
 	{
-		_id: { type: ObjectId },
 		id: {
 			type: Number,
 			required: true,
