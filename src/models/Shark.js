@@ -37,7 +37,13 @@ const SharkSchema = new mongoose.Schema({
 	historyDatas: {
 		type: Array,
 		default: []
-	}
+	},
+	followers:[
+		{
+			type: Number,
+			ref:"User"
+		}
+	],
 });
 
 module.exports = mongoose.model("Shark", SharkSchema);
