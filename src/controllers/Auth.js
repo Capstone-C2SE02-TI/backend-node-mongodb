@@ -12,8 +12,8 @@ const {
 	getPasswordByUsername,
 	getUserByUsername
 } = require("../services/crud-database/user");
-const { isAuthed, generateAccessToken } = require("../services/authentication");
 const { cryptPassword, comparePassword } = require("../helpers");
+const { isAuthed, generateAccessToken } = require("../services/authentication");
 
 const TI_AUTH_COOKIE = process.env.TI_AUTH_COOKIE;
 
