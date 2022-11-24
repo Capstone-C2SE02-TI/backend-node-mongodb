@@ -193,15 +193,16 @@ function UserController() {
 
 		await followWalletOfShark(userId, sharkId)
 			.then((data) => {
-				if (data === "success")
+				if (data.message === "success")
 					return res.status(200).json({
 						message: "successfully",
-						error: null
+						error: null,
+						data: data.data
 					});
 				else
 					return res.status(400).json({
-						message: data,
-						error: data
+						message: data.message,
+						error: data.message
 					});
 			})
 			.catch((error) =>
@@ -229,15 +230,16 @@ function UserController() {
 
 		await unfollowWalletOfShark(userId, sharkId)
 			.then((data) => {
-				if (data === "success")
+				if (data.message === "success")
 					return res.status(200).json({
 						message: "successfully",
-						error: null
+						error: null,
+						data: data.data
 					});
 				else
 					return res.status(400).json({
-						message: data,
-						error: data
+						message: data.message,
+						error: data.error
 					});
 			})
 			.catch((error) =>
