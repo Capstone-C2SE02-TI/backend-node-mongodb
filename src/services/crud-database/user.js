@@ -1,6 +1,3 @@
-const mongoose = require("mongoose");
-const { Types } = mongoose;
-
 const {
 	UserModel,
 	TokenModel,
@@ -9,9 +6,6 @@ const {
 	TransactionModel
 } = require("../../models");
 const {
-	DEFAULT_USER_FULLNAME,
-	DEFAULT_USER_AVATAR,
-	DEFAULT_USER_WEBSITE,
 	QUERY_LIMIT_ITEM,
 	TRENDING_REDUCING_LIMIT_ITEM
 } = require("../../constants");
@@ -35,25 +29,11 @@ const createNewUser = async ({
 	hashPassword
 }) => {
 	try {
-		const usersLength = await getUsersLength();
-		const id = usersLength ? usersLength + 1 : 1;
-
 		const newUserInfo = {
-			_id: new Types.ObjectId(),
-			id: id,
-			userId: id,
 			username: username,
 			email: email,
 			phoneNumber: phoneNumber,
-			password: hashPassword,
-			fullName: DEFAULT_USER_FULLNAME,
-			avatar: DEFAULT_USER_AVATAR,
-			website: DEFAULT_USER_WEBSITE,
-			premiumAccount: false,
-			sharkFollowed: [],
-			createdDate: new Date(),
-			updatedDate: new Date(),
-			walletAddress: "ox12"
+			password: hashPassword
 		};
 
 		await UserModel.create(newUserInfo)

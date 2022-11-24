@@ -1,10 +1,10 @@
-const { AdminModel, UserModel, SharkModel } = require("../../models");
-const { checkExistedUserId, checkExistedSharkId } = require("./user");
+const { AdminModel, UserModel } = require("../../models");
+const { checkExistedUserId } = require("./user");
 
 const getListOfAdmins = async () => {
 	const admins = await AdminModel.find({})
 		.sort("id")
-		.select("id username email -_id");
+		.select("id username email  -_id");
 
 	return admins;
 };
@@ -13,7 +13,7 @@ const getListOfUsers = async () => {
 	const users = await UserModel.find({})
 		.sort("id")
 		.select(
-			"userId username email phoneNumber fullName avatar website sharksFollowed updatedAt createdAt -_id"
+			"userId username email phoneNumber fullName avatar website sharksFollowed updatedAt createdAt  -_id"
 		);
 
 	return users;
@@ -23,7 +23,7 @@ const getUserProfile = async (userId) => {
 	if (!userId) return {};
 	else {
 		const user = await UserModel.findOne({ userId: userId }).select(
-			"userId username email phoneNumber fullName avatar website sharksFollowed updatedAt createdAt -_id"
+			"userId username email phoneNumber fullName avatar website sharksFollowed updatedAt createdAt  -_id"
 		);
 
 		if (!user) return {};
@@ -104,7 +104,7 @@ const checkExistedUsername = async (username) => {
 
 const getPasswordByUsername = async (username) => {
 	const admin = await AdminModel.findOne({ username: username }).select(
-		"password -_id"
+		"password  -_id"
 	);
 	return admin?.password || null;
 };
