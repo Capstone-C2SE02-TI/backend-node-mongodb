@@ -303,7 +303,7 @@ const getListOfSharkFollowed = async (userId) => {
 		return { message: "user-notfound" };
 
 	const users = await SharkModel.find({ followers: userId }).select(
-		"id totalAssets percent24h -_id"
+		"id totalAssets percent24h transactionsHistory	-_id"
 	);
 
 	return { message: "success", datas: users || [] };
