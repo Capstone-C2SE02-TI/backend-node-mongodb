@@ -255,7 +255,7 @@ module.exports = router;
  * @swagger
  * /user/delete-shark-not-found:
  *   delete:
- *     description: Add new shark
+ *     description: Delete shark not found data
  *     tags: [User]
  *     requestBody:
  *       content:
@@ -271,8 +271,8 @@ module.exports = router;
  *               walletAddress: "0x..."
  *     responses:
  *       200:
- *         description: Add new user successfully
+ *         description: Delete shark successfully
  *       400:
- *         description: Add new user failed
+ *         description: Delete shark failed
  */
   router.delete("/delete-shark-not-found", UserController.deleteSharkNotFound);

@@ -443,14 +443,15 @@ const getGainLossOfCoins = async (isLoss) => {
 const addNewShark = async (walletAddress) => {
 	try {
 		const addedData = await SharkModel.create({
+			id:11,
 			walletAddress: walletAddress,
 			totalAssets: 0,
 			percent24h: 0
 		});
 
 		return addedData instanceof SharkModel
-			? { message: "add-successful", isAdded: true }
-			: { message: "add-failed", isAdded: false };
+			? { message: "successful", isAdded: true }
+			: { message: "wallet-address-exists", isAdded: false };
 	} catch (error) {
 		return { message: "error", error: error };
 	}
@@ -462,7 +463,7 @@ const deleteSharkNotFound = async (walletAddress) => {
 			walletAddress: walletAddress
 		});
 		return deletedData.deletedCount > 0
-			? { message: "delete-successful", isDeleted: true }
+			? { message: "successful", isDeleted: true }
 			: { message: "wallet-address-notfound", isDeleted: false };
 	} catch (error) {
 		return { message: "error", error: error };
