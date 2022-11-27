@@ -9,6 +9,7 @@ const {
 	QUERY_LIMIT_ITEM,
 	TRENDING_REDUCING_LIMIT_ITEM
 } = require("../../constants");
+const Shark = require("../../models/Shark");
 
 const getUserByUsername = async (username) => {
 	return await UserModel.findOne({ username: username });
@@ -218,8 +219,8 @@ const followWalletOfShark = async (userId, sharkId) => {
 		if (!(await checkExistedSharkId(sharkId)))
 			return { message: "shark-notfound" };
 
-		const shark = await SharkModel.findOne({ id: sharkId }).select(
-			"id walletAddress totalAssets percent24h followers -_id"
+		const shark = await SharkModel.findOne({ sharkId: sharkId }).select(
+			"sharkId walletAddress totalAssets percent24h followers -_id"
 		);
 
 		const sharkFollowers = shark.followers;
@@ -230,7 +231,7 @@ const followWalletOfShark = async (userId, sharkId) => {
 		sharkFollowers.push(userId);
 
 		await SharkModel.findOneAndUpdate(
-			{ id: sharkId },
+			{ sharkId: sharkId },
 			{ followers: sharkFollowers },
 			{ new: true }
 		)
@@ -264,8 +265,8 @@ const unfollowWalletOfShark = async (userId, sharkId) => {
 		if (!(await checkExistedSharkId(sharkId)))
 			return { message: "shark-notfound" };
 
-		const shark = await SharkModel.findOne({ id: sharkId }).select(
-			"id walletAddress totalAssets percent24h followers -_id"
+		const shark = await SharkModel.findOne({ sharkId: sharkId }).select(
+			"sharkId walletAddress totalAssets percent24h followers -_id"
 		);
 		let sharkFollowers = shark.followers;
 
@@ -276,7 +277,7 @@ const unfollowWalletOfShark = async (userId, sharkId) => {
 		sharkFollowers = sharkFollowers.filter((id) => id !== userId);
 
 		await SharkModel.findOneAndUpdate(
-			{ id: sharkId },
+			{ sharkId: sharkId },
 			{ followers: sharkFollowers }
 		)
 			.then((data) => {
@@ -303,14 +304,14 @@ const getListOfSharkFollowed = async (userId) => {
 		return { message: "user-notfound" };
 
 	const users = await SharkModel.find({ followers: userId }).select(
-		"id totalAssets percent24h transactionsHistory	-_id"
+		"id totalAssets percent24h transactionsHistory -_id"
 	);
 
 	return { message: "success", datas: users || [] };
 };
 
 const getListCryptosOfShark = async (sharkId) => {
-	const shark = await SharkModel.findOne({ id: sharkId }).select(
+	const shark = await SharkModel.findOne({ sharkId: sharkId }).select(
 		"cryptos -_id"
 	);
 	return shark?.cryptos || -1;
@@ -333,7 +334,7 @@ const getTransactionsOfAllSharks = async (page) => {
 };
 
 const getListTransactionsOfShark = async (sharkId) => {
-	const shark = await SharkModel.findOne({ id: sharkId }).select(
+	const shark = await SharkModel.findOne({ sharkId: sharkId }).select(
 		"transactionsHistory -_id"
 	);
 	return shark?.transactionsHistory || -1;
@@ -347,7 +348,7 @@ const getTradeTransactionHistoryOfShark = async (sharkId, coinSymbol) => {
 		if (!(await checkExistedSharkId(sharkId)))
 			return { message: "shark-notfound" };
 
-		const sharks = await SharkModel.findOne({ id: sharkId }).select(
+		const sharks = await SharkModel.findOne({ sharkId: sharkId }).select(
 			"historyDatas cryptos -_id"
 		);
 		const { historyDatas, cryptos } = sharks;
@@ -405,13 +406,13 @@ const getGainLossOfSharks = async (isLoss) => {
 	const sortType = isLoss ? "asc" : "desc";
 	const sharkGainLoss = isLoss
 		? await SharkModel.find({})
-				.select("id totalAssets percent24h -_id")
+				.select("sharkId totalAssets percent24h -_id")
 				.where("percent24h")
 				.lt(0)
 				.sort({ percent24h: sortType })
 				.limit(20)
 		: await SharkModel.find({})
-				.select("id totalAssets percent24h -_id")
+				.select("sharkId totalAssets percent24h -_id")
 				.where("percent24h")
 				.gte(0)
 				.sort({ percent24h: sortType })
@@ -438,6 +439,31 @@ const getGainLossOfCoins = async (isLoss) => {
 
 	return sharkGainLoss;
 };
+
+const addNewShark = async (walletAddress) => {
+	try{
+		const addedData = await SharkModel.create({
+			walletAddress: walletAddress,
+			totalAssets:0,
+			percent24h: 0,
+			
+		})
+		console.log(addedData instanceof SharkModel);
+		return {message: "add-successful", isAdded: true};
+	}catch(error){
+		return {message: "error", error: error}
+	}
+}
+
+const deleteSharkNotFound = async (walletAddress) => {
+	try{
+		const deletedData = await SharkModel.remove({walletAddress: walletAddress});
+		return deletedData.deletedCount > 0 ? {message: "delete successful", isDeleted: true} : {message: "delete failed", isDeleted: false};
+	}
+	catch(error){
+		return {message: "error", error: error}
+	}
+} 
 
 module.exports = {
 	getUserByUsername,
@@ -472,5 +498,7 @@ module.exports = {
 	getGainLossOfCoins,
 	getListOfSharkFollowed,
 	followWalletOfShark,
-	unfollowWalletOfShark
+	unfollowWalletOfShark,
+	addNewShark,
+	deleteSharkNotFound,
 };

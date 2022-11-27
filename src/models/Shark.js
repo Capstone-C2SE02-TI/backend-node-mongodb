@@ -1,12 +1,8 @@
 const mongoose = require("mongoose");
+const AutoIncrement = require("mongoose-sequence")(mongoose);
 
 const SharkSchema = new mongoose.Schema(
 	{
-		id: {
-			type: Number,
-			required: true,
-			unique: true
-		},
 		coins: {
 			type: Object,
 			default: {}
@@ -44,5 +40,7 @@ const SharkSchema = new mongoose.Schema(
 	},
 	{ versionKey: false }
 );
+
+UserSchema.plugin(AutoIncrement, { inc_field: "sharkId" });
 
 module.exports = mongoose.model("Shark", SharkSchema);
