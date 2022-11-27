@@ -3,10 +3,6 @@ const AutoIncrement = require("mongoose-sequence")(mongoose);
 
 const SharkSchema = new mongoose.Schema(
 	{
-		id: {
-			type: Number,
-			unique: true
-		},
 		sharkId: {
 			type: Number,
 			unique: true
