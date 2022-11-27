@@ -224,3 +224,55 @@ router.get("/list-followed-shark", UserController.getSharkFollowed);
 // router.get("/list-followed-shark", isAuth, UserController.getSharkFollowed);
 
 module.exports = router;
+
+/**
+ * @swagger
+ * /user/add-new-shark:
+ *   post:
+ *     description: Add new shark
+ *     tags: [User]
+ *     requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - walletAddress
+ *             properties:
+ *               walletAddress:
+ *                  type: string
+ *             example:
+ *               walletAddress: "0x..."
+ *     responses:
+ *       200:
+ *         description: Add new user successfully
+ *       400:
+ *         description: Add new user failed
+ */
+ router.post("/add-new-shark", UserController.addNewShark);
+
+ /**
+ * @swagger
+ * /user/delete-shark-not-found:
+ *   delete:
+ *     description: Delete shark not found data
+ *     tags: [User]
+ *     requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - walletAddress
+ *             properties:
+ *               walletAddress:
+ *                  type: string
+ *             example:
+ *               walletAddress: "0x..."
+ *     responses:
+ *       200:
+ *         description: Delete shark successfully
+ *       400:
+ *         description: Delete shark failed
+ */
+  router.delete("/delete-shark-not-found", UserController.deleteSharkNotFound);
