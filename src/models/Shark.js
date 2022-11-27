@@ -3,21 +3,19 @@ const AutoIncrement = require("mongoose-sequence")(mongoose);
 
 const SharkSchema = new mongoose.Schema(
 	{
-		sharkId: {
-			type: Number,
-			unique: true
-		},
 		coins: {
 			type: Object,
 			default: {}
 		},
 		totalAssets: {
 			type: Number,
-			required: true
+			required: true,
+			default: 0
 		},
 		percent24h: {
 			type: Number,
-			required: true
+			required: true,
+			default: 0
 		},
 		transactionsHistory: {
 			type: Array,
@@ -27,7 +25,8 @@ const SharkSchema = new mongoose.Schema(
 			type: String,
 			trim: true,
 			required: true,
-			unique: true
+			unique: true,
+			default: ""
 		},
 		cryptos: {
 			type: Array,

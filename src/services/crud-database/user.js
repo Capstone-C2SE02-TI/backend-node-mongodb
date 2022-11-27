@@ -9,7 +9,6 @@ const {
 	QUERY_LIMIT_ITEM,
 	TRENDING_REDUCING_LIMIT_ITEM
 } = require("../../constants");
-const Shark = require("../../models/Shark");
 
 const getUserByUsername = async (username) => {
 	return await UserModel.findOne({ username: username });
@@ -144,34 +143,28 @@ const getCoinsAndTokensLength = async () => {
 };
 
 const getListReducingCoinsAndTokens = async () => {
-	const reducingTokens = await TokenModel.find({})
+	return await TokenModel.find({})
 		.sort({ "usd.percentChange24h": "asc" })
 		.limit(TRENDING_REDUCING_LIMIT_ITEM)
 		.select("id name symbol iconURL tagNames usd pricesLast1Day -_id");
-
-	return reducingTokens;
 };
 
 const getListTrendingCoins = async () => {
-	const trendingCoins = await TokenModel.find({ type: "coin" })
+	return await TokenModel.find({ type: "coin" })
 		.sort({ "usd.percentChange24h": "desc" })
 		.limit(TRENDING_REDUCING_LIMIT_ITEM)
 		.select(
 			"id name symbol iconURL tagNames usd marketCap circulatingSupply -_id"
 		);
-
-	return trendingCoins;
 };
 
 const getListTrendingTokens = async () => {
-	const trendingTokens = await TokenModel.find({ type: "token" })
+	return await TokenModel.find({ type: "token" })
 		.sort({ "usd.percentChange24h": "desc" })
 		.limit(TRENDING_REDUCING_LIMIT_ITEM)
 		.select(
 			"id name symbol iconURL tagNames usd marketCap circulatingSupply -_id"
 		);
-
-	return trendingTokens;
 };
 
 const getCoinOrTokenDetails = async (coinSymbol) => {
@@ -443,10 +436,7 @@ const getGainLossOfCoins = async (isLoss) => {
 const addNewShark = async (walletAddress) => {
 	try {
 		const addedData = await SharkModel.create({
-			id:11,
-			walletAddress: walletAddress,
-			totalAssets: 0,
-			percent24h: 0
+			walletAddress: walletAddress
 		});
 
 		return addedData instanceof SharkModel

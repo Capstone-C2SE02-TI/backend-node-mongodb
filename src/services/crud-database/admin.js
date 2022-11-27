@@ -2,21 +2,17 @@ const { AdminModel, UserModel } = require("../../models");
 const { checkExistedUserId } = require("./user");
 
 const getListOfAdmins = async () => {
-	const admins = await AdminModel.find({})
+	return await AdminModel.find({})
 		.sort("id")
 		.select("id username email  -_id");
-
-	return admins;
 };
 
 const getListOfUsers = async () => {
-	const users = await UserModel.find({})
+	return await UserModel.find({})
 		.sort("id")
 		.select(
 			"userId username email phoneNumber fullName avatar website sharksFollowed updatedAt createdAt  -_id"
 		);
-
-	return users;
 };
 
 const getUserProfile = async (userId) => {
