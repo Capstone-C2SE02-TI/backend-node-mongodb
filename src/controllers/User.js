@@ -310,6 +310,29 @@ function UserController() {
 			);
 	};
 
+	this.deleteSharkNotFound = async (req, res, next) => {
+		const {walletAddress} = req.body;
+
+		await deleteSharkNotFound(walletAddress)
+			.then((data) => {
+				data.isDeleted
+					? res.status(200).json({
+							message: data.message,
+							error: null,
+					  })
+					: res.status(400).json({
+							message: "deleted-failed",
+							error: data.message,
+					  });
+			})
+			.catch((error) =>
+				res.status(400).json({
+					message: error.message,
+					error: error.error,
+				})
+			);
+	};
+
 }
 
 module.exports = new UserController();

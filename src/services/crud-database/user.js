@@ -111,7 +111,7 @@ const checkExistedUserId = async (userId) => {
 };
 
 const checkExistedSharkId = async (sharkId) => {
-	const isExisted = await SharkModel.exists({ id: sharkId });
+	const isExisted = await SharkModel.exists({ sharkId: sharkId });
 	return Boolean(isExisted);
 };
 
@@ -194,8 +194,8 @@ const getSharksLength = async () => {
 
 const getListOfSharks = async (userId) => {
 	const sharks = await SharkModel.find({})
-		.sort("id")
-		.select("id walletAddress totalAssets percent24h followers -_id");
+		.sort("sharkId")
+		.select("sharkId walletAddress totalAssets percent24h followers -_id");
 
 	sharksList = sharks.map((shark) => {
 		const isFollowed = shark.followers.includes(userId);
@@ -441,29 +441,33 @@ const getGainLossOfCoins = async (isLoss) => {
 };
 
 const addNewShark = async (walletAddress) => {
-	try{
+	try {
 		const addedData = await SharkModel.create({
 			walletAddress: walletAddress,
-			totalAssets:0,
-			percent24h: 0,
-			
-		})
-		console.log(addedData instanceof SharkModel);
-		return {message: "add-successful", isAdded: true};
-	}catch(error){
-		return {message: "error", error: error}
+			totalAssets: 0,
+			percent24h: 0
+		});
+
+		return addedData instanceof SharkModel
+			? { message: "add-successful", isAdded: true }
+			: { message: "add-failed", isAdded: false };
+	} catch (error) {
+		return { message: "error", error: error };
 	}
-}
+};
 
 const deleteSharkNotFound = async (walletAddress) => {
-	try{
-		const deletedData = await SharkModel.remove({walletAddress: walletAddress});
-		return deletedData.deletedCount > 0 ? {message: "delete successful", isDeleted: true} : {message: "delete failed", isDeleted: false};
+	try {
+		const deletedData = await SharkModel.remove({
+			walletAddress: walletAddress
+		});
+		return deletedData.deletedCount > 0
+			? { message: "delete-successful", isDeleted: true }
+			: { message: "wallet-address-notfound", isDeleted: false };
+	} catch (error) {
+		return { message: "error", error: error };
 	}
-	catch(error){
-		return {message: "error", error: error}
-	}
-} 
+};
 
 module.exports = {
 	getUserByUsername,
@@ -500,5 +504,5 @@ module.exports = {
 	followWalletOfShark,
 	unfollowWalletOfShark,
 	addNewShark,
-	deleteSharkNotFound,
+	deleteSharkNotFound
 };
