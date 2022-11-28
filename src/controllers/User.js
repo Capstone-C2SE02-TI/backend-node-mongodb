@@ -9,12 +9,12 @@ const {
 	unfollowWalletOfShark,
 	getListOfSharkFollowed,
 	addNewShark,
-	deleteSharkNotFound,
+	deleteSharkNotFound
 } = require("../services/crud-database/user");
 const {
 	getUserProfile,
 	updateUserProfile,
-	upgradeUserPremiumAccount,
+	upgradeUserPremiumAccount
 } = require("../services/crud-database/admin");
 const {
 	validateUpdateProfileBody,
@@ -288,51 +288,50 @@ function UserController() {
 	};
 
 	this.addNewShark = async (req, res, next) => {
-		const {walletAddress} = req.body;
+		const { walletAddress } = req.body;
 
 		await addNewShark(walletAddress)
 			.then((data) => {
 				data.isAdded
 					? res.status(200).json({
 							message: data.message,
-							error: null,
+							error: null
 					  })
 					: res.status(400).json({
 							message: "add-failed",
-							error: data.message,
+							error: data.message
 					  });
 			})
 			.catch((error) =>
 				res.status(400).json({
 					message: error.message,
-					error: error.error,
+					error: error.error
 				})
 			);
 	};
 
 	this.deleteSharkNotFound = async (req, res, next) => {
-		const {walletAddress} = req.body;
+		const { walletAddress } = req.body;
 
 		await deleteSharkNotFound(walletAddress)
 			.then((data) => {
 				data.isDeleted
 					? res.status(200).json({
 							message: data.message,
-							error: null,
+							error: null
 					  })
 					: res.status(400).json({
 							message: "deleted-failed",
-							error: data.message,
+							error: data.message
 					  });
 			})
 			.catch((error) =>
 				res.status(400).json({
 					message: error.message,
-					error: error.error,
+					error: error.error
 				})
 			);
 	};
-
 }
 
 module.exports = new UserController();

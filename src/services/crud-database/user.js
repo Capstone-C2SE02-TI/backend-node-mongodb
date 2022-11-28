@@ -249,26 +249,20 @@ const unfollowWalletOfShark = async (userId, sharkId) => {
 	try {
 		if (userId === null) return "userid-required";
 		if (userId === undefined) return "userid-invalid";
-
 		if (sharkId === null) return { message: "sharkid-required" };
 		if (sharkId === undefined) return { message: "sharkid-invalid" };
-
 		if (!(await checkExistedUserId(userId)))
 			return { message: "user-notfound" };
 		if (!(await checkExistedSharkId(sharkId)))
 			return { message: "shark-notfound" };
-
 		const shark = await SharkModel.findOne({ sharkId: sharkId }).select(
 			"sharkId walletAddress totalAssets percent24h followers -_id"
 		);
 		let sharkFollowers = shark.followers;
-
 		if (sharkFollowers && !sharkFollowers.some((id) => id === userId))
 			return { message: "not-followed-yet" };
-
 		// Remove object has key id === sharkId
 		sharkFollowers = sharkFollowers.filter((id) => id !== userId);
-
 		await SharkModel.findOneAndUpdate(
 			{ sharkId: sharkId },
 			{ followers: sharkFollowers }
@@ -279,11 +273,8 @@ const unfollowWalletOfShark = async (userId, sharkId) => {
 			.catch((error) => {
 				throw new Error(error);
 			});
-
 		shark.followers = sharkFollowers;
-
 		const infoUnfollow = { ...shark._doc, isFollowed: false };
-
 		return { message: "success", data: infoUnfollow };
 	} catch (error) {
 		return { message: "error-unfollow-failed", error: error };

@@ -249,9 +249,9 @@ module.exports = router;
  *       400:
  *         description: Add new user failed
  */
- router.post("/add-new-shark", UserController.addNewShark);
+router.post("/add-new-shark", UserController.addNewShark);
 
- /**
+/**
  * @swagger
  * /user/delete-shark-not-found:
  *   delete:
@@ -275,4 +275,4 @@ module.exports = router;
  *       400:
  *         description: Delete shark failed
  */
-  router.delete("/delete-shark-not-found", UserController.deleteSharkNotFound);
+router.delete("/delete-shark-not-found", UserController.deleteSharkNotFound);
