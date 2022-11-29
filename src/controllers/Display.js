@@ -257,7 +257,13 @@ function DisplayController() {
 	};
 
 	this.getListTransactionsLength = async (req, res, next) => {
-		await getTransactionsLength()
+		let { valueFilter } = req.body;
+		
+		valueFilter = _.toNumber(valueFilter);
+		
+		if (_.isNaN(valueFilter) || valueFilter < 0) valueFilter = 0;
+
+		await getTransactionsLength(valueFilter)
 			.then((data) =>
 				data === 0
 					? res.status(400).json({
@@ -281,16 +287,19 @@ function DisplayController() {
 	};
 
 	this.getListTransactionsOfAllSharks = async (req, res, next) => {
-		let page = req.query.page;
+		let { page, valueFilter } = req.body;
+
+		valueFilter = _.toNumber(valueFilter);
 
 		if (!page) page = null;
+		else if (_.isNaN(valueFilter) || valueFilter < 0) valueFilter = 0;
 		else {
 			const numberCheck = _.toNumber(page);
 			if (_.isNaN(numberCheck)) page = undefined;
 			else page = numberCheck;
 		}
 
-		await getTransactionsOfAllSharks(page)
+		await getTransactionsOfAllSharks(page, valueFilter)
 			.then((datas) =>
 				!_.isArray(datas)
 					? res.status(400).json({

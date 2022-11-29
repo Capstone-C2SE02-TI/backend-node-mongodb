@@ -102,16 +102,28 @@ router.get("/sharks", DisplayController.getSharks);
 /**
  * @swagger
  * /display/sharks/transaction-history/length:
- *   get:
+ *   post:
  *     description: Get the length of list transactions
  *     tags: [Shark]
+ *     requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - valueFilter
+ *             properties:
+ *               valueFilter:
+ *                  type: string
+ *             example:
+ *               valueFilter: "10"
  *     responses:
  *       200:
  *         description: Get the length of list transactions successfully
  *       400:
  *         description: Get the length of list transactions failed
  */
-router.get(
+router.post(
 	"/sharks/transaction-history/length",
 	DisplayController.getListTransactionsLength
 );
@@ -119,21 +131,32 @@ router.get(
 /**
  * @swagger
  * /display/sharks/transaction-history:
- *   get:
+ *   post:
  *     description: Get list transactions history of all sharks
  *     tags: [Shark]
- *     parameters:
- *      - in: query
- *        name: page
- *        schema:
- *          type: string
+ *     requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - page
+ *               - valueFilter
+ *             properties:
+ *               page:
+ *                  type: string
+ *               valueFilter:
+ *                  type: string
+ *             example:
+ *               page: "1"
+ *               valueFilter: "10"
  *     responses:
  *       200:
  *         description: Get list transactions history of all sharks successfully
  *       400:
  *         description: Get list transactions history of all sharks failed
  */
-router.get(
+router.post(
 	"/sharks/transaction-history",
 	DisplayController.getListTransactionsOfAllSharks
 );
