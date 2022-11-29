@@ -301,18 +301,47 @@ const getListCryptosOfShark = async (sharkId) => {
 	return shark?.cryptos || -1;
 };
 
-const getTransactionsLength = async () => {
-	return await TransactionModel.count({});
+const getTransactionsLength = async (valueFilter = 0) => {
+	return await TransactionModel.aggregate([
+		{
+			$project: {
+				total: { $multiply: ["$presentPrice", "$numberOfTokens"] }
+			}
+		},
+
+		{ $match: { total: { $gte: valueFilter } } },
+		{ $count: "transactionsLength"}
+	]);
 };
 
-const getTransactionsOfAllSharks = async (page) => {
+const getTransactionsOfAllSharks = async (page, valueFilter = 0) => {
 	if (page < 1 || page % 1 !== 0) return [];
 
-	const transactions = await TransactionModel.find({})
-		.select("-_id")
+	const transactions = await TransactionModel.aggregate([
+		{
+			$project: {
+				_id: 0,
+				timeStamp: 1,
+				sharkId: 1,
+				hash: 1,
+				from: 1,
+				to: 1,
+				numberOfTokens: 1,
+				pastPrice: 1,
+				presentPrice: 1,
+				total: { $multiply: ["$presentPrice", "$numberOfTokens"] }
+			}
+		},
+
+		{ $match: { total: { $gte: valueFilter } } }
+	])
+		// .where("total")
+		// .gte(valueFilter)
 		.sort({ timeStamp: "desc" })
 		.skip((page - 1) * QUERY_LIMIT_ITEM)
 		.limit(QUERY_LIMIT_ITEM);
+
+	// .select("-_id")
 
 	return transactions || [];
 };
