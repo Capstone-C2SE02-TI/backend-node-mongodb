@@ -123,7 +123,7 @@ const getPasswordByEmail = async (email) => {
 const getListOfCoinsAndTokens = async () => {
 	const tokens = await CoinModel.find({})
 		.select(
-			"coinId name symbol iconURL tagNames cmcRank usd marketCap circulatingSupply pricesLast1Day -_id"
+			"coinId name type symbol iconURL tagNames cmcRank usd marketCap circulatingSupply pricesLast1Day -_id"
 		)
 		.sort("coinId");
 
