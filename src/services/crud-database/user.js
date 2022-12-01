@@ -367,7 +367,7 @@ const getTradeTransactionHistoryOfShark = async (sharkId, coinSymbol) => {
 		const { historyDatas, cryptos } = sharks;
 
 		const historyData = historyDatas.find(
-			(data) => data.coinSymbol === coinSymbol.toLowerCase()
+			(data) => data.coinSymbol === coinSymbol.toUpperCase()
 		);
 
 		const coinInfo = await CoinModel.findOne({
@@ -380,7 +380,7 @@ const getTradeTransactionHistoryOfShark = async (sharkId, coinSymbol) => {
 			if (
 				cryptos &&
 				cryptos.find(
-					(crypto) => crypto.symbol === coinSymbol.toLowerCase()
+					(crypto) => crypto.symbol === coinSymbol.toUpperCase()
 				)
 			) {
 				return {
