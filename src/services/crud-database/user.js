@@ -1,6 +1,6 @@
 const {
 	UserModel,
-	TokenModel,
+	CoinModel,
 	SharkModel,
 	TagModel,
 	TransactionModel
@@ -46,14 +46,6 @@ const createNewUser = async ({
 	} catch (error) {
 		return false;
 	}
-};
-
-const getWalletAddress = async (userId) => {
-	const walletAddress = await UserModel.findOne({
-		userId: userId
-	}).select("walletAddress -_id");
-
-	return walletAddress;
 };
 
 const updateUserConfirmationCode = async (userId, code) => {
@@ -129,49 +121,51 @@ const getPasswordByEmail = async (email) => {
 };
 
 const getListOfCoinsAndTokens = async () => {
-	const tokens = await TokenModel.find({})
+	const tokens = await CoinModel.find({})
 		.select(
-			"id name symbol iconURL tagNames cmcRank usd marketCap circulatingSupply pricesLast1Day -_id"
+			"coinId name type symbol iconURL tagNames cmcRank usd marketCap circulatingSupply pricesLast1Day -_id"
 		)
-		.sort("id");
+		.sort("coinId");
 
 	return tokens || [];
 };
 
 const getCoinsAndTokensLength = async () => {
-	return await TokenModel.count({});
+	return await CoinModel.count({});
 };
 
 const getListReducingCoinsAndTokens = async () => {
-	return await TokenModel.find({})
+	return await CoinModel.find({})
 		.sort({ "usd.percentChange24h": "asc" })
 		.limit(TRENDING_REDUCING_LIMIT_ITEM)
-		.select("id name symbol iconURL tagNames usd pricesLast1Day -_id");
+		.select(
+			"coinId name type symbol iconURL tagNames usd pricesLast1Day -_id"
+		);
 };
 
 const getListTrendingCoins = async () => {
-	return await TokenModel.find({ type: "coin" })
+	return await CoinModel.find({ type: "coin" })
 		.sort({ "usd.percentChange24h": "desc" })
 		.limit(TRENDING_REDUCING_LIMIT_ITEM)
 		.select(
-			"id name symbol iconURL tagNames usd marketCap circulatingSupply -_id"
+			"coinId name type symbol iconURL tagNames usd marketCap circulatingSupply -_id"
 		);
 };
 
 const getListTrendingTokens = async () => {
-	return await TokenModel.find({ type: "token" })
+	return await CoinModel.find({ type: "token" })
 		.sort({ "usd.percentChange24h": "desc" })
 		.limit(TRENDING_REDUCING_LIMIT_ITEM)
 		.select(
-			"id name symbol iconURL tagNames usd marketCap circulatingSupply -_id"
+			"coinId name type symbol iconURL tagNames usd marketCap circulatingSupply -_id"
 		);
 };
 
 const getCoinOrTokenDetails = async (coinSymbol) => {
-	const coinOrToken = await TokenModel.findOne({
-		symbol: coinSymbol.toUpperCase()
+	const coinOrToken = await CoinModel.findOne({
+		symbol: coinSymbol.toLowerCase()
 	}).select(
-		"id ethId name type symbol iconURL cmcRank tagNames maxSupply totalSupply circulatingSupply contractAddress marketCap urls usd prices -_id"
+		"coinId ethId coingeckoId name type symbol iconURL cmcRank tagNames maxSupply totalSupply circulatingSupply contractAddress marketCap urls usd prices -_id"
 	);
 
 	return coinOrToken || {};
@@ -251,16 +245,20 @@ const unfollowWalletOfShark = async (userId, sharkId) => {
 		if (userId === undefined) return "userid-invalid";
 		if (sharkId === null) return { message: "sharkid-required" };
 		if (sharkId === undefined) return { message: "sharkid-invalid" };
+
 		if (!(await checkExistedUserId(userId)))
 			return { message: "user-notfound" };
 		if (!(await checkExistedSharkId(sharkId)))
 			return { message: "shark-notfound" };
+
 		const shark = await SharkModel.findOne({ sharkId: sharkId }).select(
 			"sharkId walletAddress totalAssets percent24h followers -_id"
 		);
 		let sharkFollowers = shark.followers;
+
 		if (sharkFollowers && !sharkFollowers.some((id) => id === userId))
 			return { message: "not-followed-yet" };
+
 		// Remove object has key id === sharkId
 		sharkFollowers = sharkFollowers.filter((id) => id !== userId);
 		await SharkModel.findOneAndUpdate(
@@ -273,8 +271,10 @@ const unfollowWalletOfShark = async (userId, sharkId) => {
 			.catch((error) => {
 				throw new Error(error);
 			});
+
 		shark.followers = sharkFollowers;
 		const infoUnfollow = { ...shark._doc, isFollowed: false };
+
 		return { message: "success", data: infoUnfollow };
 	} catch (error) {
 		return { message: "error-unfollow-failed", error: error };
@@ -310,7 +310,7 @@ const getTransactionsLength = async (valueFilter = 0) => {
 		},
 
 		{ $match: { total: { $gte: valueFilter } } },
-		{ $count: "transactionsLength"}
+		{ $count: "transactionsLength" }
 	]);
 };
 
@@ -366,16 +366,18 @@ const getTradeTransactionHistoryOfShark = async (sharkId, coinSymbol) => {
 		);
 		const { historyDatas, cryptos } = sharks;
 
+		// Need reset to toLowerCase()
 		const historyData = historyDatas.find(
 			(data) => data.coinSymbol === coinSymbol.toUpperCase()
 		);
 
-		const coinInfo = await TokenModel.findOne({
-			symbol: coinSymbol.toUpperCase()
+		const coinInfo = await CoinModel.findOne({
+			symbol: coinSymbol.toLowerCase()
 		}).select(
-			"ethId name symbol iconURL cmcRank maxSupply totalSupply circulatingSupply marketCap contractAddress prices -_id"
+			"coinId name symbol iconURL cmcRank maxSupply totalSupply circulatingSupply marketCap contractAddress prices -_id"
 		);
 
+		// Need reset to toLowerCase()
 		if (!historyData) {
 			if (
 				cryptos &&
@@ -408,8 +410,8 @@ const getTradeTransactionHistoryOfShark = async (sharkId, coinSymbol) => {
 };
 
 const getHoursPriceOfToken = async (tokenSymbol) => {
-	const token = await TokenModel.findOne({
-		symbol: tokenSymbol.toUpperCase()
+	const token = await CoinModel.findOne({
+		symbol: tokenSymbol.toLowerCase()
 	}).select("originalPrices -_id");
 
 	return token?.originalPrices?.hourly || {};
@@ -437,13 +439,13 @@ const getGainLossOfSharks = async (isLoss) => {
 const getGainLossOfCoins = async (isLoss) => {
 	const sortType = isLoss ? "asc" : "desc";
 	const sharkGainLoss = isLoss
-		? await TokenModel.find({})
+		? await CoinModel.find({})
 				.select("symbol usd.price usd.percentChange24h -_id")
 				.where("usd.percentChange24h")
 				.lt(0)
 				.sort({ "usd.percentChange24h": sortType })
 				.limit(20)
-		: await TokenModel.find({})
+		: await CoinModel.find({})
 				.select("symbol usd.price usd.percentChange24h -_id")
 				.where("usd.percentChange24h")
 				.gte(0)
