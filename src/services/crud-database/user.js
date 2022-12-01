@@ -366,6 +366,7 @@ const getTradeTransactionHistoryOfShark = async (sharkId, coinSymbol) => {
 		);
 		const { historyDatas, cryptos } = sharks;
 
+		// Need reset to toLowerCase()
 		const historyData = historyDatas.find(
 			(data) => data.coinSymbol === coinSymbol.toUpperCase()
 		);
@@ -376,6 +377,7 @@ const getTradeTransactionHistoryOfShark = async (sharkId, coinSymbol) => {
 			"coinId name symbol iconURL cmcRank maxSupply totalSupply circulatingSupply marketCap contractAddress prices -_id"
 		);
 
+		// Need reset to toLowerCase()
 		if (!historyData) {
 			if (
 				cryptos &&
