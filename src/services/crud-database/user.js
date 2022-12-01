@@ -165,7 +165,7 @@ const getCoinOrTokenDetails = async (coinSymbol) => {
 	const coinOrToken = await CoinModel.findOne({
 		symbol: coinSymbol.toLowerCase()
 	}).select(
-		"coinId ethId name type symbol iconURL cmcRank tagNames maxSupply totalSupply circulatingSupply contractAddress marketCap urls usd prices -_id"
+		"coinId ethId coingeckoId name type symbol iconURL cmcRank tagNames maxSupply totalSupply circulatingSupply contractAddress marketCap urls usd prices -_id"
 	);
 
 	return coinOrToken || {};
@@ -367,11 +367,11 @@ const getTradeTransactionHistoryOfShark = async (sharkId, coinSymbol) => {
 		const { historyDatas, cryptos } = sharks;
 
 		const historyData = historyDatas.find(
-			(data) => data.coinSymbol === coinSymbol.toUpperCase()
+			(data) => data.coinSymbol === coinSymbol.toLowerCase()
 		);
 
 		const coinInfo = await CoinModel.findOne({
-			symbol: coinSymbol.toUpperCase()
+			symbol: coinSymbol.toLowerCase()
 		}).select(
 			"coinId name symbol iconURL cmcRank maxSupply totalSupply circulatingSupply marketCap contractAddress prices -_id"
 		);
@@ -380,7 +380,7 @@ const getTradeTransactionHistoryOfShark = async (sharkId, coinSymbol) => {
 			if (
 				cryptos &&
 				cryptos.find(
-					(crypto) => crypto.symbol === coinSymbol.toUpperCase()
+					(crypto) => crypto.symbol === coinSymbol.toLowerCase()
 				)
 			) {
 				return {
@@ -409,7 +409,7 @@ const getTradeTransactionHistoryOfShark = async (sharkId, coinSymbol) => {
 
 const getHoursPriceOfToken = async (tokenSymbol) => {
 	const token = await CoinModel.findOne({
-		symbol: tokenSymbol.toUpperCase()
+		symbol: tokenSymbol.toLowerCase()
 	}).select("originalPrices -_id");
 
 	return token?.originalPrices?.hourly || {};
