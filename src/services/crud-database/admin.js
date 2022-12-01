@@ -45,7 +45,8 @@ const updateUserProfile = async (userId, updateInfo) => {
 	try {
 		if (!userId) return "userid-required";
 		else {
-			const { email } = updateInfo;
+			const { fullName, email, phoneNumber, website, avatar } =
+				updateInfo;
 
 			if (!(await checkExistedUserId(userId))) return "user-notfound";
 
@@ -55,7 +56,15 @@ const updateUserProfile = async (userId, updateInfo) => {
 			)
 				return "email-existed";
 
-			await UserModel.findOneAndUpdate({ userId: userId }, updateInfo)
+			const newUpdateInfo = {
+				fullName: fullName === "" ? undefined : fullName,
+				email: email === "" ? undefined : email,
+				phoneNumber: phoneNumber === "" ? undefined : phoneNumber,
+				website: website === "" ? undefined : website,
+				avatar: avatar === "" ? undefined : avatar
+			};
+
+			await UserModel.findOneAndUpdate({ userId: userId }, newUpdateInfo)
 				.then((data) => {
 					if (!data) throw new Error();
 				})
