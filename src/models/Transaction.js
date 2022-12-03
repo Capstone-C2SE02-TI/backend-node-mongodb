@@ -2,27 +2,26 @@ const mongoose = require("mongoose");
 
 const TransactionSchema = new mongoose.Schema(
 	{
-		sharkId: {
-			type: Number,
-			required: true,
-			unique: true
+		id: {
+			type: Number
+		},
+		transactionId: {
+			type: Number
+		},
+		investorId: {
+			type: Number
 		},
 		timeStamp: {
-			type: Number,
-			required: true,
-			unique: true
+			type: Number
 		},
 		pastPrice: {
-			type: Number,
-			required: true
+			type: Number
 		},
 		presentPrice: {
-			type: Number,
-			required: true
+			type: Number
 		},
 		numberOfTokens: {
-			type: Number,
-			required: true
+			type: Number
 		},
 		contractAddress: {
 			type: String,

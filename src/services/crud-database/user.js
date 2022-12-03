@@ -1,7 +1,7 @@
 const {
 	UserModel,
 	CoinModel,
-	SharkModel,
+	InvestorModel,
 	TagModel,
 	TransactionModel
 } = require("../../models");
@@ -102,7 +102,7 @@ const checkExistedUserId = async (userId) => {
 };
 
 const checkExistedSharkId = async (sharkId) => {
-	const isExisted = await SharkModel.exists({ sharkId: sharkId });
+	const isExisted = await InvestorModel.exists({ sharkId: sharkId });
 	return Boolean(isExisted);
 };
 
@@ -176,11 +176,11 @@ const getListOfTags = async () => {
 };
 
 const getSharksLength = async () => {
-	return await SharkModel.count({});
+	return await InvestorModel.count({});
 };
 
 const getListOfSharks = async (userId) => {
-	const sharks = await SharkModel.find({})
+	const sharks = await InvestorModel.find({ isShark: true })
 		.sort("sharkId")
 		.select("sharkId walletAddress totalAssets percent24h followers -_id");
 
@@ -206,7 +206,7 @@ const followWalletOfShark = async (userId, sharkId) => {
 		if (!(await checkExistedSharkId(sharkId)))
 			return { message: "shark-notfound" };
 
-		const shark = await SharkModel.findOne({ sharkId: sharkId }).select(
+		const shark = await InvestorModel.findOne({ sharkId: sharkId }).select(
 			"sharkId walletAddress totalAssets percent24h followers -_id"
 		);
 
@@ -217,7 +217,7 @@ const followWalletOfShark = async (userId, sharkId) => {
 
 		sharkFollowers.push(userId);
 
-		await SharkModel.findOneAndUpdate(
+		await InvestorModel.findOneAndUpdate(
 			{ sharkId: sharkId },
 			{ followers: sharkFollowers },
 			{ new: true }
@@ -251,7 +251,7 @@ const unfollowWalletOfShark = async (userId, sharkId) => {
 		if (!(await checkExistedSharkId(sharkId)))
 			return { message: "shark-notfound" };
 
-		const shark = await SharkModel.findOne({ sharkId: sharkId }).select(
+		const shark = await InvestorModel.findOne({ sharkId: sharkId }).select(
 			"sharkId walletAddress totalAssets percent24h followers -_id"
 		);
 		let sharkFollowers = shark.followers;
@@ -261,7 +261,7 @@ const unfollowWalletOfShark = async (userId, sharkId) => {
 
 		// Remove object has key id === sharkId
 		sharkFollowers = sharkFollowers.filter((id) => id !== userId);
-		await SharkModel.findOneAndUpdate(
+		await InvestorModel.findOneAndUpdate(
 			{ sharkId: sharkId },
 			{ followers: sharkFollowers }
 		)
@@ -287,7 +287,7 @@ const getListOfSharkFollowed = async (userId) => {
 	if (!(await checkExistedUserId(userId)))
 		return { message: "user-notfound" };
 
-	const users = await SharkModel.find({ followers: userId }).select(
+	const users = await InvestorModel.find({ followers: userId }).select(
 		"sharkId totalAssets percent24h transactionsHistory walletAddress -_id"
 	);
 
@@ -295,7 +295,7 @@ const getListOfSharkFollowed = async (userId) => {
 };
 
 const getListCryptosOfShark = async (sharkId) => {
-	const shark = await SharkModel.findOne({ sharkId: sharkId }).select(
+	const shark = await InvestorModel.findOne({ sharkId: sharkId }).select(
 		"cryptos -_id"
 	);
 	return shark?.cryptos || -1;
@@ -341,13 +341,11 @@ const getTransactionsOfAllSharks = async (page, valueFilter = 0) => {
 		.skip((page - 1) * QUERY_LIMIT_ITEM)
 		.limit(QUERY_LIMIT_ITEM);
 
-	// .select("-_id")
-
 	return transactions || [];
 };
 
 const getListTransactionsOfShark = async (sharkId) => {
-	const shark = await SharkModel.findOne({ sharkId: sharkId }).select(
+	const shark = await InvestorModel.findOne({ sharkId: sharkId }).select(
 		"transactionsHistory -_id"
 	);
 	return shark?.transactionsHistory || -1;
@@ -361,7 +359,7 @@ const getTradeTransactionHistoryOfShark = async (sharkId, coinSymbol) => {
 		if (!(await checkExistedSharkId(sharkId)))
 			return { message: "shark-notfound" };
 
-		const sharks = await SharkModel.findOne({ sharkId: sharkId }).select(
+		const sharks = await InvestorModel.findOne({ sharkId: sharkId }).select(
 			"historyDatas cryptos -_id"
 		);
 		const { historyDatas, cryptos } = sharks;
@@ -420,13 +418,13 @@ const getHoursPriceOfToken = async (tokenSymbol) => {
 const getGainLossOfSharks = async (isLoss) => {
 	const sortType = isLoss ? "asc" : "desc";
 	const sharkGainLoss = isLoss
-		? await SharkModel.find({})
+		? await InvestorModel.find({})
 				.select("sharkId totalAssets percent24h -_id")
 				.where("percent24h")
 				.lt(0)
 				.sort({ percent24h: sortType })
 				.limit(20)
-		: await SharkModel.find({})
+		: await InvestorModel.find({})
 				.select("sharkId totalAssets percent24h -_id")
 				.where("percent24h")
 				.gte(0)
@@ -457,11 +455,11 @@ const getGainLossOfCoins = async (isLoss) => {
 
 const addNewShark = async (walletAddress) => {
 	try {
-		const addedData = await SharkModel.create({
+		const addedData = await InvestorModel.create({
 			walletAddress: walletAddress
 		});
 
-		return addedData instanceof SharkModel
+		return addedData instanceof InvestorModel
 			? { message: "successful", isAdded: true }
 			: { message: "wallet-address-exists", isAdded: false };
 	} catch (error) {
@@ -471,7 +469,7 @@ const addNewShark = async (walletAddress) => {
 
 const deleteSharkNotFound = async (walletAddress) => {
 	try {
-		const deletedData = await SharkModel.remove({
+		const deletedData = await InvestorModel.remove({
 			walletAddress: walletAddress
 		});
 		return deletedData.deletedCount > 0
