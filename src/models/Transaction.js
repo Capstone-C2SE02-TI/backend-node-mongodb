@@ -8,7 +8,7 @@ const TransactionSchema = new mongoose.Schema(
 		transactionId: {
 			type: Number
 		},
-		investorId: {
+		sharkId: {
 			type: Number
 		},
 		timeStamp: {
