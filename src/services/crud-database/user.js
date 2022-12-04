@@ -182,7 +182,9 @@ const getSharksLength = async () => {
 const getListOfSharks = async (userId) => {
 	const sharks = await InvestorModel.find({ isShark: true })
 		.sort("sharkId")
-		.select("sharkId walletAddress totalAssets percent24h followers -_id");
+		.select(
+			"sharkId walletAddress totalAssets percent24h followers isShark -_id"
+		);
 
 	sharksList = sharks.map((shark) => {
 		const isFollowed = shark.followers.includes(userId);
