@@ -1,20 +1,22 @@
 const mongoose = require("mongoose");
 const AutoIncrement = require("mongoose-sequence")(mongoose);
 
-const SharkSchema = new mongoose.Schema(
+const InvestorSchema = new mongoose.Schema(
 	{
+		isShark: {
+			type: Boolean,
+			default: false
+		},
 		coins: {
 			type: Object,
 			default: {}
 		},
 		totalAssets: {
-			type: Number,
-			required: true,
-			default: 0
+			type: String,
+			default: "0"
 		},
 		percent24h: {
 			type: Number,
-			required: true,
 			default: 0
 		},
 		transactionsHistory: {
@@ -23,9 +25,6 @@ const SharkSchema = new mongoose.Schema(
 		},
 		walletAddress: {
 			type: String,
-			trim: true,
-			required: true,
-			unique: true,
 			default: ""
 		},
 		cryptos: {
@@ -44,6 +43,6 @@ const SharkSchema = new mongoose.Schema(
 	{ versionKey: false }
 );
 
-// SharkSchema.plugin(AutoIncrement, { inc_field: "sharkId" });
+InvestorSchema.plugin(AutoIncrement, { inc_field: "sharkId" });
 
-module.exports = mongoose.model("Shark", SharkSchema);
+module.exports = mongoose.model("Investor", InvestorSchema);
