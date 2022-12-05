@@ -44,6 +44,6 @@ const SharkSchema = new mongoose.Schema(
 	{ versionKey: false }
 );
 
-SharkSchema.plugin(AutoIncrement, { inc_field: "sharkId" });
+// SharkSchema.plugin(AutoIncrement, { inc_field: "sharkId" });
 
-module.exports = mongoose.model("Shark", SharkSchema); 
+module.exports = mongoose.model("Shark", SharkSchema);

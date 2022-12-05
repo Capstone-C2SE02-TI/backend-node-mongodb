@@ -458,11 +458,12 @@ const getGainLossOfCoins = async (isLoss) => {
 const addNewShark = async (walletAddress) => {
 	try {
 		const addedData = await InvestorModel.create({
-			walletAddress: walletAddress
+			walletAddress: walletAddress,
+			isShark: true
 		});
 
 		return addedData instanceof InvestorModel
-			? { message: "successful", isAdded: true }
+			? { message: "successfully", isAdded: true }
 			: { message: "wallet-address-exists", isAdded: false };
 	} catch (error) {
 		return { message: "error", error: error };
@@ -475,7 +476,7 @@ const deleteSharkNotFound = async (walletAddress) => {
 			walletAddress: walletAddress
 		});
 		return deletedData.deletedCount > 0
-			? { message: "successful", isDeleted: true }
+			? { message: "successfully", isDeleted: true }
 			: { message: "wallet-address-notfound", isDeleted: false };
 	} catch (error) {
 		return { message: "error", error: error };

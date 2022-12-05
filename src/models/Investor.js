@@ -1,10 +1,8 @@
 const mongoose = require("mongoose");
+const AutoIncrement = require("mongoose-sequence")(mongoose);
 
 const InvestorSchema = new mongoose.Schema(
 	{
-		sharkId: {
-			type: Number
-		},
 		isShark: {
 			type: Boolean,
 			default: false
@@ -15,7 +13,7 @@ const InvestorSchema = new mongoose.Schema(
 		},
 		totalAssets: {
 			type: String,
-			default: ""
+			default: "0"
 		},
 		percent24h: {
 			type: Number,
@@ -44,5 +42,7 @@ const InvestorSchema = new mongoose.Schema(
 	},
 	{ versionKey: false }
 );
+
+InvestorSchema.plugin(AutoIncrement, { inc_field: "sharkId" });
 
 module.exports = mongoose.model("Investor", InvestorSchema);
