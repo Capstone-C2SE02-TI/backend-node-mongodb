@@ -9,6 +9,7 @@ const {
 	QUERY_LIMIT_ITEM,
 	TRENDING_REDUCING_LIMIT_ITEM
 } = require("../../constants");
+const { convertUnixTimestampToNumber } = require("../../helpers");
 
 const getUserByUsername = async (username) => {
 	return await UserModel.findOne({ username: username });
@@ -316,6 +317,27 @@ const getTransactionsLength = async (valueFilter = 0) => {
 	]);
 };
 
+const getTransactionsOfAllSharks1 = async (page, valueFilter = 0) => {
+	let transactions = await InvestorModel.find({"transactionsHistory.500": { $exists: 0 }, isShark: 1}).select(
+		"sharkId transactionsHistory -_id"
+	);
+	transactions = transactions.reduce((curr, transaction) => {
+		transaction.transactionsHistory = transaction.transactionsHistory.map(
+			(trans) => {
+				return Object.assign({ sharkId: transaction.sharkId }, trans);
+			}
+		);
+		return curr.concat(transaction.transactionsHistory);
+	}, []);
+
+	transactions.forEach(async (transac) => {
+		const doc = new TransactionModel(transac);
+		await doc.save();
+	});
+
+	return transactions;
+};
+
 const getTransactionsOfAllSharks = async (page, valueFilter = 0) => {
 	if (page < 1 || page % 1 !== 0) return [];
 
@@ -344,6 +366,162 @@ const getTransactionsOfAllSharks = async (page, valueFilter = 0) => {
 		.limit(QUERY_LIMIT_ITEM);
 
 	return transactions || [];
+};
+
+const getValueFromPromise = async (promiseValue) => {
+	const value = await Promise.all(promiseValue);
+	return value;
+};
+
+const getDateNearTransaction = (dateList, dateTransaction) => {
+	let datePricesTokenCut = dateList.map((date) => {
+		return date["date"].slice(0, 10);
+	});
+
+	let dateTransactionCut = dateTransaction.slice(0, 10);
+	let positionDate = null;
+	// Cut hour
+	let dateCutByHours = datePricesTokenCut.filter((date, index) => {
+		if (Number(date) === Number(dateTransactionCut)) positionDate = index;
+		return Number(date) === Number(dateTransactionCut);
+	});
+
+	if (dateCutByHours.length > 0) {
+		// date transaction before date change price
+		if (Number(dateTransaction) < Number(dateList[positionDate]))
+			return positionDate === dateList.length - 1
+				? dateList[dateList.length - 1]
+				: dateList[positionDate + 1];
+		else return dateList[positionDate];
+	}
+
+	// cut date
+	let dateCutByDates = datePricesTokenCut.filter((date, index) => {
+		date = date.slice(0, 8);
+		if (Number(date) === Number(dateTransactionCut.slice(0, 8)))
+			positionDate = index;
+		return Number(date) === Number(dateTransactionCut.slice(0, 8));
+	});
+
+	let hourTrade = dateTransactionCut.slice(8);
+	let datesCutLength = dateCutByDates.length;
+	for (let i = 0; i < datesCutLength; i++) {
+		if (Number(hourTrade) > Number(dateCutByDates[i].slice(8)))
+			return dateList[positionDate - datesCutLength + i + 1];
+	}
+
+	return positionDate === null
+		? {
+				date: "none",
+				value: 0
+		  }
+		: positionDate === dateList.length - 1
+		? dateList[dateList.length - 1]
+		: dateList[positionDate + 1];
+};
+
+const getListTransactionsOfShark1 = async (sharkId) => {
+	// if (!_.isNumber(sharkId)) return -1;
+	const rawData = await InvestorModel.find(
+		{ "transactionsHistory.500": { $exists: 0 }, isShark: 1 },
+		{ transactionsHistory: 1, sharkId: 1 }
+	)
+	
+
+	// return rawData[0].transactionsHistory;
+	console.log('done phase 1');  
+
+	// for(let sharkIndex = 0; sharkIndex <= rawData.length; ++sharkIndex){
+	// 	console.log(sharkIndex);
+	// }
+	await rawData.forEach(async (element) => {
+		let transactions = await element.transactionsHistory.map(
+			async (transaction) => {
+				let numberOfTokens =
+					Number(transaction["value"]) /
+					Math.pow(10, Number(transaction["tokenDecimal"]));
+
+				let hoursPrice = await getHoursPriceOfToken(
+					transaction["tokenSymbol"]
+				);
+
+				// found hourly price
+				if (typeof hoursPrice !== "undefined") {
+					hoursPrice = Object.keys(hoursPrice).map((unixDate) => {
+						let date = convertUnixTimestampToNumber(unixDate);
+						date = date.toString();
+						return {
+							date: date,
+							value: hoursPrice[unixDate]
+						};
+					});
+
+					hoursPrice.sort(
+						(firstObj, secondObj) =>
+							secondObj["date"] - firstObj["date"]
+					);
+				}
+
+				let presentData =
+					typeof hoursPrice !== "undefined"
+						? hoursPrice[0]
+						: undefined;
+
+				const dateTransac = convertUnixTimestampToNumber(
+					transaction["timeStamp"]
+				);
+				const dateNearTransaction =
+					typeof hoursPrice !== "undefined"
+						? getDateNearTransaction(
+								hoursPrice,
+								dateTransac.toString()
+						  )
+						: { date: "none", value: 0 };
+
+				// if(transaction['hash'] === '0xa46515d756825d6544339d25a590575b7195cab1d0aa797aaa0acb90a30b5220')
+				// console.log(dateTransac.toString());
+
+				let presentPrice =
+					typeof presentData === "undefined"
+						? 0
+						: presentData["value"];
+
+				let presentDate =
+					typeof presentData === "undefined"
+						? 0
+						: presentData["date"];
+
+				Object.assign(transaction, {
+					numberOfTokens: numberOfTokens,
+					pastDate: dateNearTransaction["date"],
+					pastPrice: dateNearTransaction["value"],
+					presentDate: presentDate,
+					presentPrice: presentPrice
+				});
+
+				return transaction;
+			}
+		);
+		transactions = await getValueFromPromise(transactions);
+		
+		// console.log(transactions[0]);
+
+		const x = await InvestorModel.updateOne(
+			{ sharkId: element.sharkId },
+			{ transactionsHistory: transactions },
+		).exec((err, result) => {
+			// console.log("err:" + err + "\nresult: " + result);
+			if(err) {
+				console.log(typeof err[1]);
+			}
+			// console.log( transactions[0]);
+
+		}); 
+		console.log(x.modifiedCount);
+	});
+	console.log('done phase 2');
+
+	return 1;
 };
 
 const getListTransactionsOfShark = async (sharkId) => {
@@ -460,9 +638,11 @@ const addNewShark = async (walletAddress, userId) => {
 		if (!(await checkExistedUserId(userId)))
 			return { message: "user-notfound", isAdded: false };
 
-		const sharkExisted = await InvestorModel.findOne({walletAddress: walletAddress});
+		const sharkExisted = await InvestorModel.findOne({
+			walletAddress: walletAddress
+		});
 
-		if(sharkExisted !== null)
+		if (sharkExisted !== null)
 			return { message: "wallet-address-exists", isAdded: false };
 
 		const addedData = await InvestorModel.create({
@@ -470,12 +650,20 @@ const addNewShark = async (walletAddress, userId) => {
 			isShark: true
 		});
 
-		const user = await UserModel.findOneAndUpdate({userId: userId},
-			{$push:{addedSharks: walletAddress}}, {new: true});
+		const user = await UserModel.findOneAndUpdate(
+			{ userId: userId },
+			{ $push: { addedSharks: walletAddress } },
+			{ new: true }
+		);
 
 		let addedSharks = user.addedSharks;
 
-		return { message: "successfully", isAdded: true, data: addedData, sharkAdded: addedSharks }
+		return {
+			message: "successfully",
+			isAdded: true,
+			data: addedData,
+			sharkAdded: addedSharks
+		};
 	} catch (error) {
 		return { message: "error", error: error };
 	}
@@ -483,26 +671,28 @@ const addNewShark = async (walletAddress, userId) => {
 
 const deleteSharkNotFound = async (walletAddress, userId) => {
 	try {
-
 		if (!(await checkExistedUserId(userId)))
-		return { message: "user-notfound", isDeleted: false };
+			return { message: "user-notfound", isDeleted: false };
 
-		const sharkExisted = await InvestorModel.findOne({walletAddress: walletAddress});
+		const sharkExisted = await InvestorModel.findOne({
+			walletAddress: walletAddress
+		});
 
-		if(sharkExisted === null)
+		if (sharkExisted === null)
 			return { message: "wallet-address-not-exists", isAdded: false };
 
-		const user = await UserModel.findOneAndUpdate({userId: userId},
-			{$pull:{addedSharks: walletAddress}});
+		const user = await UserModel.findOneAndUpdate(
+			{ userId: userId },
+			{ $pull: { addedSharks: walletAddress } }
+		);
 
 		const deletedData = await InvestorModel.remove({
 			walletAddress: walletAddress
 		});
 
-
 		return deletedData.deletedCount > 0
-			? { message: "successfully", isDeleted: true, }
-			: { message: "wallet-address-notfound", isDeleted: false};
+			? { message: "successfully", isDeleted: true }
+			: { message: "wallet-address-notfound", isDeleted: false };
 	} catch (error) {
 		return { message: "error", error: error };
 	}

@@ -25,7 +25,7 @@ const comparePassword = (plainPassword, hashPassword, callback) => {
 };
 
 function convertUnixTimestampToNumber(unixTimestamp) {
-	const date = new Date(unixTimestamp * 1000);
+	const date = new Date(Number(unixTimestamp) * 1000);
 
 	const year =
 		date.getFullYear() < 10
