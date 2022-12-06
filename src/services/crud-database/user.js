@@ -284,8 +284,16 @@ const getListOfSharkFollowed = async (userId) => {
 	if (!(await checkExistedUserId(userId)))
 		return { message: "user-notfound" };
 
-	const users = await InvestorModel.find({ followers: userId }).select(
-		"sharkId totalAssets percent24h transactionsHistory walletAddress -_id"
+	const projection = {
+		sharkId: 1,
+		totalAssets: 1,
+		percent24h: 1,
+		walletAddress: 1
+	};
+
+	const users = await InvestorModel.find(
+		{ followers: { $in: [userId] } },
+		projection
 	);
 
 	return { message: "success", datas: users || [] };
@@ -316,7 +324,6 @@ const getTransactionsOfAllSharks = async (page, valueFilter = 0) => {
 
 	const transactions = await TransactionModel.aggregate([
 		{
-		
 			$project: {
 				_id: 0,
 				walletAddress: 1,
