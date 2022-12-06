@@ -319,6 +319,7 @@ const getTransactionsOfAllSharks = async (page, valueFilter = 0) => {
 		
 			$project: {
 				_id: 0,
+				walletAddress: 1,
 				timeStamp: 1,
 				sharkId: 1,
 				hash: 1,
