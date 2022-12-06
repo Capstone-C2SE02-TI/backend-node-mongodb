@@ -290,9 +290,14 @@ const getListOfSharkFollowed = async (userId) => {
 	if (!(await checkExistedUserId(userId)))
 		return { message: "user-notfound" };
 
-	const users = await InvestorModel.find({ followers: userId }).select(
-		"sharkId totalAssets percent24h transactionsHistory walletAddress -_id"
-	);
+	const projection = {
+		sharkId:1,
+		totalAssets:1,
+		percent24h:1, 
+		walletAddress:1,
+	}
+
+	const users = await InvestorModel.find({ followers: { $in: [userId] } }, projection);
 
 	return { message: "success", datas: users || [] };
 };
@@ -314,17 +319,17 @@ const getTransactionsLength = async (valueFilter = 0) => {
 
 		{ $match: { total: { $gte: valueFilter } } },
 		{ $count: "transactionsLength" }
-	]);
+	]); 
 };
 
-const getTransactionsOfAllSharks1 = async (page, valueFilter = 0) => {
+const getTransactionsOfAllSharks = async (page, valueFilter = 0) => {
 	let transactions = await InvestorModel.find({"transactionsHistory.500": { $exists: 0 }, isShark: 1}).select(
-		"sharkId transactionsHistory -_id"
+		"sharkId walletAddress transactionsHistory -_id"
 	);
 	transactions = transactions.reduce((curr, transaction) => {
 		transaction.transactionsHistory = transaction.transactionsHistory.map(
 			(trans) => {
-				return Object.assign({ sharkId: transaction.sharkId }, trans);
+				return Object.assign({ sharkId: transaction.sharkId, walletAddress: transaction.walletAddress }, trans);
 			}
 		);
 		return curr.concat(transaction.transactionsHistory);
@@ -338,7 +343,7 @@ const getTransactionsOfAllSharks1 = async (page, valueFilter = 0) => {
 	return transactions;
 };
 
-const getTransactionsOfAllSharks = async (page, valueFilter = 0) => {
+const getTransactionsOfAllSharks1 = async (page, valueFilter = 0) => {
 	if (page < 1 || page % 1 !== 0) return [];
 
 	const transactions = await TransactionModel.aggregate([

@@ -5,6 +5,10 @@ const TransactionSchema = new mongoose.Schema(
 		id: {
 			type: Number
 		},
+		walletAddress: {
+			type: String,
+			trim: true
+		},
 		transactionId: {
 			type: Number
 		},
