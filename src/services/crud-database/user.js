@@ -316,6 +316,7 @@ const getTransactionsOfAllSharks = async (page, valueFilter = 0) => {
 
 	const transactions = await TransactionModel.aggregate([
 		{
+		
 			$project: {
 				_id: 0,
 				timeStamp: 1,
@@ -323,6 +324,8 @@ const getTransactionsOfAllSharks = async (page, valueFilter = 0) => {
 				hash: 1,
 				from: 1,
 				to: 1,
+				tokenName: 1,
+				tokenSymbol: 1,
 				numberOfTokens: 1,
 				pastPrice: 1,
 				presentPrice: 1,
