@@ -457,14 +457,17 @@ const getGainLossOfCoins = async (isLoss) => {
 
 const addNewShark = async (walletAddress) => {
 	try {
+		const sharkExisted = await InvestorModel.findOne({walletAddress: walletAddress});
+
+		if(sharkExisted !== null)
+			return { message: "wallet-address-exists", isAdded: false };
+
 		const addedData = await InvestorModel.create({
 			walletAddress: walletAddress,
 			isShark: true
 		});
 
-		return addedData instanceof InvestorModel
-			? { message: "successfully", isAdded: true, data: addedData }
-			: { message: "wallet-address-exists", isAdded: false };
+		return { message: "successfully", isAdded: true, data: addedData }
 	} catch (error) {
 		return { message: "error", error: error };
 	}

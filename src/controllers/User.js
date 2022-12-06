@@ -289,7 +289,7 @@ function UserController() {
 
 	this.addNewShark = async (req, res, next) => {
 		const { walletAddress } = req.body;
-
+		
 		await addNewShark(walletAddress)
 			.then((data) => {
 				data.isAdded
