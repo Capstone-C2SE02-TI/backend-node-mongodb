@@ -455,8 +455,11 @@ const getGainLossOfCoins = async (isLoss) => {
 	return sharkGainLoss;
 };
 
-const addNewShark = async (walletAddress) => {
+const addNewShark = async (walletAddress, userId) => {
 	try {
+		if (!(await checkExistedUserId(userId)))
+			return { message: "user-notfound", isAdded: false };
+
 		const sharkExisted = await InvestorModel.findOne({walletAddress: walletAddress});
 
 		if(sharkExisted !== null)
@@ -467,20 +470,39 @@ const addNewShark = async (walletAddress) => {
 			isShark: true
 		});
 
-		return { message: "successfully", isAdded: true, data: addedData }
+		const user = await UserModel.findOneAndUpdate({userId: userId},
+			{$push:{addedSharks: walletAddress}}, {new: true});
+
+		let addedSharks = user.addedSharks;
+
+		return { message: "successfully", isAdded: true, data: addedData, sharkAdded: addedSharks }
 	} catch (error) {
 		return { message: "error", error: error };
 	}
 };
 
-const deleteSharkNotFound = async (walletAddress) => {
+const deleteSharkNotFound = async (walletAddress, userId) => {
 	try {
+
+		if (!(await checkExistedUserId(userId)))
+		return { message: "user-notfound", isDeleted: false };
+
+		const sharkExisted = await InvestorModel.findOne({walletAddress: walletAddress});
+
+		if(sharkExisted === null)
+			return { message: "wallet-address-not-exists", isAdded: false };
+
+		const user = await UserModel.findOneAndUpdate({userId: userId},
+			{$pull:{addedSharks: walletAddress}});
+
 		const deletedData = await InvestorModel.remove({
 			walletAddress: walletAddress
 		});
+
+
 		return deletedData.deletedCount > 0
-			? { message: "successfully", isDeleted: true }
-			: { message: "wallet-address-notfound", isDeleted: false };
+			? { message: "successfully", isDeleted: true, }
+			: { message: "wallet-address-notfound", isDeleted: false};
 	} catch (error) {
 		return { message: "error", error: error };
 	}
