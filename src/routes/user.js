@@ -238,11 +238,15 @@ module.exports = router;
  *             type: object
  *             required:
  *               - walletAddress
+ *               - userId
  *             properties:
  *               walletAddress:
  *                  type: string
+ *               userId:
+ *                  type: string
  *             example:
  *               walletAddress: "0x..."
+ *               userId: "40"
  *     responses:
  *       200:
  *         description: Add new user successfully
@@ -264,11 +268,15 @@ router.post("/add-new-shark", UserController.addNewShark);
  *             type: object
  *             required:
  *               - walletAddress
+ *               - userId
  *             properties:
  *               walletAddress:
  *                  type: string
+ *               userId:
+ *                  type: string
  *             example:
  *               walletAddress: "0x..."
+ *               userId: "40"
  *     responses:
  *       200:
  *         description: Delete shark successfully
