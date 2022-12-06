@@ -463,7 +463,7 @@ const addNewShark = async (walletAddress) => {
 		});
 
 		return addedData instanceof InvestorModel
-			? { message: "successfully", isAdded: true }
+			? { message: "successfully", isAdded: true, data: addedData }
 			: { message: "wallet-address-exists", isAdded: false };
 	} catch (error) {
 		return { message: "error", error: error };
