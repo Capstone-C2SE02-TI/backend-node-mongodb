@@ -334,7 +334,6 @@ function UserController() {
 				data.isDeleted
 					? res.status(200).json({
 							message: data.message,
-							sharkAdded: data.sharkAdded,
 							error: null
 					  })
 					: res.status(400).json({
