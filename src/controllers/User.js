@@ -20,6 +20,7 @@ const {
 	validateUpdateProfileBody,
 	validateChangePasswordBody
 } = require("../validators/user");
+const { lte } = require("lodash");
 
 function UserController() {
 	this.getUserProfile = async (req, res, next) => {
@@ -288,14 +289,21 @@ function UserController() {
 	};
 
 	this.addNewShark = async (req, res, next) => {
-		const { walletAddress } = req.body;
+		let { walletAddress, userId } = req.body;
 
-		await addNewShark(walletAddress)
+		if (!userId) userId = null;
+		else {
+			if (isNaN(userId)) userId = undefined;
+			else userId = Number(userId);
+		}
+
+		await addNewShark(walletAddress, userId)
 			.then((data) => {
 				data.isAdded
 					? res.status(200).json({
 							message: data.message,
 							data: data.data,
+							sharkAdded: data.sharkAdded,
 							error: null
 					  })
 					: res.status(400).json({
@@ -312,9 +320,16 @@ function UserController() {
 	};
 
 	this.deleteSharkNotFound = async (req, res, next) => {
-		const { walletAddress } = req.body;
 
-		await deleteSharkNotFound(walletAddress)
+		let { walletAddress, userId } = req.body;
+
+		if (!userId) userId = null;
+		else {
+			if (isNaN(userId)) userId = undefined;
+			else userId = Number(userId);
+		}
+
+		await deleteSharkNotFound(walletAddress, userId)
 			.then((data) => {
 				data.isDeleted
 					? res.status(200).json({

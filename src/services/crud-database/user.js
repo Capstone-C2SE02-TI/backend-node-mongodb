@@ -208,8 +208,16 @@ const followWalletOfShark = async (userId, sharkId) => {
 		if (!(await checkExistedSharkId(sharkId)))
 			return { message: "shark-notfound" };
 
-		const shark = await InvestorModel.findOne({ sharkId: sharkId }).select(
-			"sharkId walletAddress totalAssets percent24h followers -_id"
+		const projection = {
+			sharkId: 1,
+			walletAddress: 1,
+			totalAssets: 1,
+			percent24h: 1,
+			followers: 1
+		};
+		const shark = await InvestorModel.findOne(
+			{ sharkId: sharkId },
+			projection
 		);
 
 		const sharkFollowers = shark.followers;
@@ -217,25 +225,13 @@ const followWalletOfShark = async (userId, sharkId) => {
 		if (sharkFollowers && sharkFollowers.some((id) => id === userId))
 			return { message: "already-followed" };
 
-		sharkFollowers.push(userId);
+		shark.followers.push(userId);
+		shark.save();
 
-		await InvestorModel.findOneAndUpdate(
-			{ sharkId: sharkId },
-			{ followers: sharkFollowers },
-			{ new: true }
-		)
-			.then((data) => {
-				if (!data) throw new Error();
-			})
-			.catch((error) => {
-				throw new Error(error);
-			});
-
-		shark.followers = sharkFollowers;
-
-		const followInfo = { ...shark._doc, isFollowed: true };
-
-		return { message: "success", data: followInfo };
+		return {
+			message: "success",
+			data: { ...shark, isFollowed: true }
+		};
 	} catch (error) {
 		return { message: "error-follow-failed", error: error };
 	}
@@ -253,31 +249,30 @@ const unfollowWalletOfShark = async (userId, sharkId) => {
 		if (!(await checkExistedSharkId(sharkId)))
 			return { message: "shark-notfound" };
 
-		const shark = await InvestorModel.findOne({ sharkId: sharkId }).select(
-			"sharkId walletAddress totalAssets percent24h followers -_id"
+		const projection = {
+			sharkId: 1,
+			walletAddress: 1,
+			totalAssets: 1,
+			percent24h: 1,
+			followers: 1
+		};
+		const shark = await InvestorModel.findOne(
+			{ sharkId: sharkId },
+			projection
 		);
-		let sharkFollowers = shark.followers;
+
+		const sharkFollowers = shark.followers;
 
 		if (sharkFollowers && !sharkFollowers.some((id) => id === userId))
-			return { message: "not-followed-yet" };
+			return { message: "not-followed" };
 
-		// Remove object has key id === sharkId
-		sharkFollowers = sharkFollowers.filter((id) => id !== userId);
-		await InvestorModel.findOneAndUpdate(
-			{ sharkId: sharkId },
-			{ followers: sharkFollowers }
-		)
-			.then((data) => {
-				if (!data) throw new Error();
-			})
-			.catch((error) => {
-				throw new Error(error);
-			});
+		shark.followers.pull(userId);
+		shark.save();
 
-		shark.followers = sharkFollowers;
-		const infoUnfollow = { ...shark._doc, isFollowed: false };
-
-		return { message: "success", data: infoUnfollow };
+		return {
+			message: "success",
+			data: { ...shark, unfollowed: true }
+		};
 	} catch (error) {
 		return { message: "error-unfollow-failed", error: error };
 	}
@@ -289,8 +284,16 @@ const getListOfSharkFollowed = async (userId) => {
 	if (!(await checkExistedUserId(userId)))
 		return { message: "user-notfound" };
 
-	const users = await InvestorModel.find({ followers: userId }).select(
-		"sharkId totalAssets percent24h transactionsHistory walletAddress -_id"
+	const projection = {
+		sharkId: 1,
+		totalAssets: 1,
+		percent24h: 1,
+		walletAddress: 1
+	};
+
+	const users = await InvestorModel.find(
+		{ followers: { $in: [userId] } },
+		projection
 	);
 
 	return { message: "success", datas: users || [] };
@@ -323,11 +326,14 @@ const getTransactionsOfAllSharks = async (page, valueFilter = 0) => {
 		{
 			$project: {
 				_id: 0,
+				walletAddress: 1,
 				timeStamp: 1,
 				sharkId: 1,
 				hash: 1,
 				from: 1,
 				to: 1,
+				tokenName: 1,
+				tokenSymbol: 1,
 				numberOfTokens: 1,
 				pastPrice: 1,
 				presentPrice: 1,
@@ -455,26 +461,63 @@ const getGainLossOfCoins = async (isLoss) => {
 	return sharkGainLoss;
 };
 
-const addNewShark = async (walletAddress) => {
+const addNewShark = async (walletAddress, userId) => {
 	try {
+		if (!(await checkExistedUserId(userId)))
+			return { message: "user-notfound", isAdded: false };
+
+		const sharkExisted = await InvestorModel.findOne({
+			walletAddress: walletAddress
+		});
+
+		if (sharkExisted !== null)
+			return { message: "wallet-address-exists", isAdded: false };
+
 		const addedData = await InvestorModel.create({
 			walletAddress: walletAddress,
 			isShark: true
 		});
 
-		return addedData instanceof InvestorModel
-			? { message: "successfully", isAdded: true, data: addedData}
-			: { message: "wallet-address-exists", isAdded: false };
+		const user = await UserModel.findOneAndUpdate(
+			{ userId: userId },
+			{ $push: { addedSharks: walletAddress } },
+			{ new: true }
+		);
+
+		let addedSharks = user.addedSharks;
+
+		return {
+			message: "successfully",
+			isAdded: true,
+			data: addedData,
+			sharkAdded: addedSharks
+		};
 	} catch (error) {
 		return { message: "error", error: error };
 	}
 };
 
-const deleteSharkNotFound = async (walletAddress) => {
+const deleteSharkNotFound = async (walletAddress, userId) => {
 	try {
+		if (!(await checkExistedUserId(userId)))
+			return { message: "user-notfound", isDeleted: false };
+
+		const sharkExisted = await InvestorModel.findOne({
+			walletAddress: walletAddress
+		});
+
+		if (sharkExisted === null)
+			return { message: "wallet-address-not-exists", isAdded: false };
+
+		const user = await UserModel.findOneAndUpdate(
+			{ userId: userId },
+			{ $pull: { addedSharks: walletAddress } }
+		);
+
 		const deletedData = await InvestorModel.remove({
 			walletAddress: walletAddress
 		});
+
 		return deletedData.deletedCount > 0
 			? { message: "successfully", isDeleted: true }
 			: { message: "wallet-address-notfound", isDeleted: false };

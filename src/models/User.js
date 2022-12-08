@@ -59,6 +59,10 @@ const UserSchema = new mongoose.Schema(
 		sharksFollowed: {
 			type: Array,
 			default: []
+		},
+		addedSharks: {
+			type: Array,
+			default: []
 		}
 	},
 	{ timestamps: true, versionKey: false }
