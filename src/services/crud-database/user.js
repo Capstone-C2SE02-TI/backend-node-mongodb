@@ -287,7 +287,9 @@ const getListOfSharkFollowed = async (userId) => {
 		sharkId: 1,
 		totalAssets: 1,
 		percent24h: 1,
-		walletAddress: 1
+		walletAddress: 1,
+		totalValueIn: 1,
+		totalValueOut: 1
 	};
 
 	const users = await InvestorModel.find(
