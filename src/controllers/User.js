@@ -219,18 +219,17 @@ function UserController() {
 	this.unfollowSharkWallet = async (req, res, next) => {
 		let { userId, sharkId } = req.body;
 
-		if (!userId) userId = null;
+		if (!userId || _.isEmpty(userId)) userId = null;
 		else {
 			if (isNaN(userId)) userId = undefined;
 			else userId = Number(userId);
 		}
 
-		if (!sharkId) sharkId = null;
+		if (!sharkId || _.isEmpty(sharkId)) sharkId = null;
 		else {
 			if (isNaN(sharkId)) sharkId = undefined;
 			else sharkId = Number(sharkId);
 		}
-
 		await unfollowWalletOfShark(userId, sharkId)
 			.then((data) => {
 				if (data.message === "success")

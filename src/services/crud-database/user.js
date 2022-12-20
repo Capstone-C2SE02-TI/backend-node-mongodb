@@ -239,8 +239,8 @@ const followWalletOfShark = async (userId, sharkId) => {
 
 const unfollowWalletOfShark = async (userId, sharkId) => {
 	try {
-		if (userId === null) return "userid-required";
-		if (userId === undefined) return "userid-invalid";
+		if (userId === null) return { message: "userid-required"};
+		if (userId === undefined) return { message: "userid-invalid"};
 		if (sharkId === null) return { message: "sharkid-required" };
 		if (sharkId === undefined) return { message: "sharkid-invalid" };
 
@@ -271,7 +271,6 @@ const unfollowWalletOfShark = async (userId, sharkId) => {
 
 		return {
 			message: "success",
-			data: { ...shark, unfollowed: true }
 		};
 	} catch (error) {
 		return { message: "error-unfollow-failed", error: error };
@@ -288,7 +287,9 @@ const getListOfSharkFollowed = async (userId) => {
 		sharkId: 1,
 		totalAssets: 1,
 		percent24h: 1,
-		walletAddress: 1
+		walletAddress: 1,
+		totalValueIn: 1,
+		totalValueOut: 1
 	};
 
 	const users = await InvestorModel.find(
@@ -348,7 +349,7 @@ const getTransactionsOfAllSharks = async (page, valueFilter = 0) => {
 		.sort({ timeStamp: "desc" })
 		.skip((page - 1) * QUERY_LIMIT_ITEM)
 		.limit(QUERY_LIMIT_ITEM);
-
+ 
 	return transactions || [];
 };
 
