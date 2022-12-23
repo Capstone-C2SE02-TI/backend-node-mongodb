@@ -1,0 +1,4 @@
+{
+    "appService.defaultWebAppToDeploy": "/subscriptions/db5d361c-ae71-48db-8608-663b36fae335/AppServices/subscriptions/db5d361c-ae71-48db-8608-663b36fae335/resourceGroups/appsvc_linux_centralus/providers/Microsoft.Web/sites/trackscan-be",
+    "appService.deploySubpath": "."
+}

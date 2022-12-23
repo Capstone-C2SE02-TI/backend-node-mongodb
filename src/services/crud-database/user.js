@@ -239,8 +239,8 @@ const followWalletOfShark = async (userId, sharkId) => {
 
 const unfollowWalletOfShark = async (userId, sharkId) => {
 	try {
-		if (userId === null) return { message: "userid-required"};
-		if (userId === undefined) return { message: "userid-invalid"};
+		if (userId === null) return { message: "userid-required" };
+		if (userId === undefined) return { message: "userid-invalid" };
 		if (sharkId === null) return { message: "sharkid-required" };
 		if (sharkId === undefined) return { message: "sharkid-invalid" };
 
@@ -271,6 +271,7 @@ const unfollowWalletOfShark = async (userId, sharkId) => {
 
 		return {
 			message: "success",
+			data: { ...shark, isFollowed: false }
 		};
 	} catch (error) {
 		return { message: "error-unfollow-failed", error: error };
@@ -347,7 +348,7 @@ const getTransactionsOfAllSharks = async (page, valueFilter = 0) => {
 		.sort({ timeStamp: "desc" })
 		.skip((page - 1) * QUERY_LIMIT_ITEM)
 		.limit(QUERY_LIMIT_ITEM);
- 
+
 	return transactions || [];
 };
 
