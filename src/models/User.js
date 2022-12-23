@@ -36,6 +36,10 @@ const UserSchema = new mongoose.Schema(
 			trim: true,
 			default: ""
 		},
+		confirmationCode: {
+			type: String,
+			trim: true
+		},
 		avatar: {
 			type: String,
 			trim: true,
