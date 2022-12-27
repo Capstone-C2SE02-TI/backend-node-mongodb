@@ -157,7 +157,7 @@ function ForgotPasswordController() {
 			if (user) {
 				// Encode password & update in DB
 				cryptPassword(password, async (error, hashPassword) => {
-					await updateUserPassword(user.docId, hashPassword)
+					await updateUserPassword(user.userId, hashPassword)
 						.then(() =>
 							res.status(200).json({
 								message: "successfully",
