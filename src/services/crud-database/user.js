@@ -67,6 +67,25 @@ const updateUserConfirmationCode = async (userId, code) => {
 	}
 };
 
+const updateUserIsCodeConfirmed = async (userId, isCodeConfirmed) => {
+	try {
+		await UserModel.findOneAndUpdate(
+			{ userId: userId },
+			{ isCodeConfirmed: isCodeConfirmed }
+		)
+			.then((data) => {
+				if (!data) throw new Error();
+			})
+			.catch((error) => {
+				throw new Error(error);
+			});
+
+		return true;
+	} catch (error) {
+		return false;
+	}
+};
+
 const updateUserPassword = async (userId, password) => {
 	try {
 		await UserModel.findOneAndUpdate(
@@ -533,6 +552,7 @@ module.exports = {
 	getUsersLength,
 	createNewUser,
 	updateUserConfirmationCode,
+	updateUserIsCodeConfirmed,
 	updateUserPassword,
 	checkExistedUsername,
 	checkExistedEmail,
