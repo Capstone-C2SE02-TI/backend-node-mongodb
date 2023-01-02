@@ -33,7 +33,8 @@ const InvestorSchema = new mongoose.Schema(
 		},
 		walletAddress: {
 			type: String,
-			default: ""
+			default: "",
+			unique: true
 		},
 		cryptos: {
 			type: Array,

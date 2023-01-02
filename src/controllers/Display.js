@@ -10,10 +10,13 @@ const {
 	getListCryptosOfShark,
 	getTransactionsOfAllSharks,
 	getListTransactionsOfShark,
-	getTransactionsLength,
+	getTransactionsLengthForPage,
 	getGainLossOfSharks,
 	getGainLossOfCoins,
-	getTradeTransactionHistoryOfShark
+	getTradeTransactionHistoryOfShark,
+	getLengthOfSharksList,
+	getLengthOfUsersList,
+	getLengthOfTransactionsList,
 } = require("../services/crud-database/user");
 
 function DisplayController() {
@@ -256,14 +259,14 @@ function DisplayController() {
 			);
 	};
 
-	this.getListTransactionsLength = async (req, res, next) => {
+	this.getTransactionsLengthForPage = async (req, res, next) => {
 		let { valueFilter } = req.body;
 
 		valueFilter = _.toNumber(valueFilter);
 
 		if (_.isNaN(valueFilter) || valueFilter < 0) valueFilter = 0;
 
-		await getTransactionsLength(valueFilter)
+		await getTransactionsLengthForPage(valueFilter)
 			.then((data) =>
 				data === 0
 					? res.status(400).json({
@@ -449,6 +452,83 @@ function DisplayController() {
 				})
 			);
 	};
+
+	this.getLengthOfSharksList = async (req, res, next) => {
+		await getLengthOfSharksList()
+			.then((data) =>
+				data.message !== "success"
+					? res.status(400).json({
+							message: "failed-get-length",
+							error: data?.error,
+							data: 0
+					  })
+					: res.status(200).json({
+							message: "successfully",
+							error: null,
+							data: data?.length
+					  })
+			)
+			.catch((error) =>
+				res.status(400).json({
+					message: "failed",
+					error: error,
+					datasLength: 0,
+					datas: []
+				})
+			);
+	};
+
+	this.getLengthOfTransactionsList = async (req, res, next) => {
+		await getLengthOfTransactionsList()
+			.then((data) =>
+				data.message !== "success"
+					? res.status(400).json({
+							message: "failed-get-length",
+							error: data?.error,
+							data: 0
+					  })
+					: res.status(200).json({
+							message: "successfully",
+							error: null,
+							data: data?.length
+					  })
+			)
+			.catch((error) =>
+				res.status(400).json({
+					message: "failed",
+					error: error,
+					datasLength: 0,
+					datas: []
+				})
+			);
+	};
+
+	this.getLengthOfUsersList = async (req, res, next) => {
+		await getLengthOfUsersList()
+			.then((data) =>
+				data.message !== "success"
+					? res.status(400).json({
+							message: "failed-get-length",
+							error: data?.error,
+							data: 0
+					  })
+					: res.status(200).json({
+							message: "successfully",
+							error: null,
+							data: data?.length
+					  })
+			)
+			.catch((error) =>
+				res.status(400).json({
+					message: "failed",
+					error: error,
+					datasLength: 0,
+					datas: []
+				})
+			);
+	};
+
+
 }
 
 module.exports = new DisplayController();
