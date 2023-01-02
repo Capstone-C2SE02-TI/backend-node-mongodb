@@ -72,10 +72,14 @@ function ForgotPasswordController() {
 						html: `
 						<div>
 							<div>
-								<h4 style=font-size: 16px">Hi, I'm Hoang Dung from Tracking Investment's Support Team</h4>
+								<h4 style=font-size: 16px">Hi, I'm Supporter from Tracking Investment's Support Team</h4>
 								</br>
 								<h4 style=font-size: 16px">Your reset password code is:</h4>
 								<span style="color: black; font-size: 26px">${confirmationCode}</span>
+
+								</br>
+								<h4 style=font-size: 16px">Your username is:</h4>
+								<span style="color: black; font-size: 26px">${user.username}</span>
 							</div>
 						</div>
 					`
