@@ -67,6 +67,25 @@ const updateUserConfirmationCode = async (userId, code) => {
 	}
 };
 
+const updateUserIsCodeConfirmed = async (userId, isCodeConfirmed) => {
+	try {
+		await UserModel.findOneAndUpdate(
+			{ userId: userId },
+			{ isCodeConfirmed: isCodeConfirmed }
+		)
+			.then((data) => {
+				if (!data) throw new Error();
+			})
+			.catch((error) => {
+				throw new Error(error);
+			});
+
+		return true;
+	} catch (error) {
+		return false;
+	}
+};
+
 const updateUserPassword = async (userId, password) => {
 	try {
 		await UserModel.findOneAndUpdate(
@@ -288,7 +307,9 @@ const getListOfSharkFollowed = async (userId) => {
 		sharkId: 1,
 		totalAssets: 1,
 		percent24h: 1,
-		walletAddress: 1
+		walletAddress: 1,
+		totalValueIn: 1,
+		totalValueOut: 1
 	};
 
 	const users = await InvestorModel.find(
@@ -306,7 +327,7 @@ const getListCryptosOfShark = async (sharkId) => {
 	return shark?.cryptos || -1;
 };
 
-const getTransactionsLength = async (valueFilter = 0) => {
+const getTransactionsLengthForPage = async (valueFilter = 0) => {
 	return await TransactionModel.aggregate([
 		{
 			$project: {
@@ -343,8 +364,6 @@ const getTransactionsOfAllSharks = async (page, valueFilter = 0) => {
 
 		{ $match: { total: { $gte: valueFilter } } }
 	])
-		// .where("total")
-		// .gte(valueFilter)
 		.sort({ timeStamp: "desc" })
 		.skip((page - 1) * QUERY_LIMIT_ITEM)
 		.limit(QUERY_LIMIT_ITEM);
@@ -526,12 +545,40 @@ const deleteSharkNotFound = async (walletAddress, userId) => {
 	}
 };
 
+const getLengthOfSharksList = async () => {
+	try{
+		const length = await InvestorModel.count({isShark: true});
+		return {message: "success", length: length};
+	}catch(err){
+		return {message: "failed-get-length", error: err};
+	}
+}
+
+const getLengthOfUsersList = async () => {
+	try{
+		const length = await UserModel.count({});
+		return {message: "success", length: length};
+	}catch(err){
+		return {message: "failed-get-length", error: err};
+	}
+}
+
+const getLengthOfTransactionsList = async () => {
+	try{
+		const length = await TransactionModel.count({});
+		return {message: "success", length: length};
+	}catch(err){
+		return {message: "failed-get-length", error: err};
+	}
+}
+
 module.exports = {
 	getUserByUsername,
 	getUserByEmail,
 	getUsersLength,
 	createNewUser,
 	updateUserConfirmationCode,
+	updateUserIsCodeConfirmed,
 	updateUserPassword,
 	checkExistedUsername,
 	checkExistedEmail,
@@ -549,17 +596,20 @@ module.exports = {
 	getListTrendingCoins,
 	getListTrendingTokens,
 	getListCryptosOfShark,
-	getTransactionsLength,
+	getTransactionsLengthForPage,
 	getTransactionsOfAllSharks,
 	getListTransactionsOfShark,
 	getTradeTransactionHistoryOfShark,
 	getHoursPriceOfToken,
-	getTransactionsLength,
 	getGainLossOfSharks,
 	getGainLossOfCoins,
 	getListOfSharkFollowed,
 	followWalletOfShark,
 	unfollowWalletOfShark,
 	addNewShark,
-	deleteSharkNotFound
+	deleteSharkNotFound,
+	getLengthOfSharksList,
+	getLengthOfUsersList,
+	getLengthOfTransactionsList,
+
 };

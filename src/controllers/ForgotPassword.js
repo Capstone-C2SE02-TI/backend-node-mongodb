@@ -5,6 +5,7 @@ const { OAuth2Client } = require("google-auth-library");
 const {
 	getUserByEmail,
 	updateUserConfirmationCode,
+	updateUserIsCodeConfirmed,
 	updateUserPassword
 } = require("../services/crud-database/user");
 const {
@@ -86,6 +87,7 @@ function ForgotPasswordController() {
 						user.userId,
 						confirmationCode
 					);
+					await updateUserIsCodeConfirmed(user.userId, false);
 
 					return res.status(200).json({
 						message: "successfully",
@@ -121,14 +123,17 @@ function ForgotPasswordController() {
 				const user = await getUserByEmail(email);
 
 				if (user) {
-					return user.confirmationCode === code
-						? res
-								.status(200)
-								.json({ message: "successfully", error: null })
-						: res.status(400).json({
-								message: "wrong-code",
-								error: "wrong-code"
-						  });
+					if (user.confirmationCode === code) {
+						await updateUserIsCodeConfirmed(user.userId, true);
+
+						return res
+							.status(200)
+							.json({ message: "successfully", error: null });
+					} else
+						return res.status(400).json({
+							message: "wrong-code",
+							error: "wrong-code"
+						});
 				} else {
 					return res.status(400).json({
 						message: "user-notfound",
@@ -155,22 +160,30 @@ function ForgotPasswordController() {
 			const user = await getUserByEmail(email);
 
 			if (user) {
-				// Encode password & update in DB
-				cryptPassword(password, async (error, hashPassword) => {
-					await updateUserPassword(user.docId, hashPassword)
-						.then(() =>
-							res.status(200).json({
-								message: "successfully",
-								error: null
-							})
-						)
-						.catch((error) =>
-							res.status(400).json({
-								message: "failed",
-								error: error
-							})
-						);
-				});
+				// Check if code is confirmed?
+				if (user.isCodeConfirmed) {
+					// Encode password & update in DB
+					cryptPassword(password, async (error, hashPassword) => {
+						await updateUserPassword(user.userId, hashPassword)
+							.then(() =>
+								res.status(200).json({
+									message: "successfully",
+									error: null
+								})
+							)
+							.catch((error) =>
+								res.status(400).json({
+									message: "failed",
+									error: error
+								})
+							);
+					});
+				} else {
+					return res.status(400).json({
+						message: "not-confirm-code-yet",
+						error: "not-confirm-code-yet"
+					});
+				}
 			} else {
 				return res
 					.status(400)

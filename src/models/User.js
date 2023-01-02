@@ -36,6 +36,15 @@ const UserSchema = new mongoose.Schema(
 			trim: true,
 			default: ""
 		},
+		confirmationCode: {
+			type: String,
+			trim: true,
+			default: ""
+		},
+		isCodeConfirmed: {
+			type: Boolean,
+			default: false
+		},
 		avatar: {
 			type: String,
 			trim: true,

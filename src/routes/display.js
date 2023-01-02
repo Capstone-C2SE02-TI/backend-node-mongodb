@@ -101,7 +101,7 @@ router.get("/sharks", DisplayController.getSharks);
 
 /**
  * @swagger
- * /display/sharks/transaction-history/length:
+ * /display/sharks/transaction-history/page-length:
  *   post:
  *     description: Get the length of list transactions
  *     tags: [Shark]
@@ -124,8 +124,8 @@ router.get("/sharks", DisplayController.getSharks);
  *         description: Get the length of list transactions failed
  */
 router.post(
-	"/sharks/transaction-history/length",
-	DisplayController.getListTransactionsLength
+	"/sharks/transaction-history/page-length",
+	DisplayController.getTransactionsLengthForPage
 );
 
 /**
@@ -281,3 +281,45 @@ router.get("/coins/gain-loss", DisplayController.getGainLossOfCoins);
 router.get("/tags", DisplayController.getTags);
 
 module.exports = router;
+
+/**
+ * @swagger
+ * /display/sharks/length:
+ *   get:
+ *     description: Get length of sharks list 
+ *     tags: [Shark]
+ *     responses:
+ *       200:
+ *         description: Get length of sharks list successful
+ *       400:
+ *         description: Get length of sharks list failed
+ */
+router.get("/sharks/length", DisplayController.getLengthOfSharksList);
+
+/**
+ * @swagger
+ * /display/sharks/transaction-history/length:
+ *   get:
+ *     description: Get length of transactions list 
+ *     tags: [Shark]
+ *     responses:
+ *       200:
+ *         description: Get length of transactions list successful
+ *       400:
+ *         description: Get length of transactions list failed
+ */
+router.get("/sharks/transaction-history/length", DisplayController.getLengthOfTransactionsList);
+
+/**
+ * @swagger
+ * /display/users/length:
+ *   get:
+ *     description: Get length of users list 
+ *     tags: [User]
+ *     responses:
+ *       200:
+ *         description: Get length of users list successful
+ *       400:
+ *         description: Get length of users list failed
+ */
+router.get("/users/length", DisplayController.getLengthOfUsersList);
