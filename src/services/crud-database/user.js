@@ -289,7 +289,8 @@ const unfollowWalletOfShark = async (userId, sharkId) => {
 		shark.save();
 
 		return {
-			message: "success"
+			message: "success",
+			data: { ...shark, isFollowed: false }
 		};
 	} catch (error) {
 		return { message: "error-unfollow-failed", error: error };
