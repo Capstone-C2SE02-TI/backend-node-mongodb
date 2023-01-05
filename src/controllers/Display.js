@@ -16,7 +16,7 @@ const {
 	getTradeTransactionHistoryOfShark,
 	getLengthOfSharksList,
 	getLengthOfUsersList,
-	getLengthOfTransactionsList,
+	getLengthOfTransactionsList
 } = require("../services/crud-database/user");
 
 function DisplayController() {
@@ -527,8 +527,6 @@ function DisplayController() {
 				})
 			);
 	};
-
-
 }
 
 module.exports = new DisplayController();

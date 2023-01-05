@@ -4,7 +4,8 @@ const { checkExistedUserId } = require("./user");
 const getListOfAdmins = async () => {
 	return await AdminModel.find({})
 		.sort("id")
-		.select("id username email -_id");
+		.select("id username email -_id")
+		.lean();
 };
 
 const getListOfUsers = async () => {
@@ -12,15 +13,18 @@ const getListOfUsers = async () => {
 		.sort("id")
 		.select(
 			"userId username email phoneNumber fullName avatar website sharksFollowed updatedAt createdAt -_id"
-		);
+		)
+		.lean();
 };
 
 const getUserProfile = async (userId) => {
 	if (!userId) return {};
 	else {
-		const user = await UserModel.findOne({ userId: userId }).select(
-			"userId username email phoneNumber fullName avatar website sharksFollowed updatedAt createdAt -_id"
-		);
+		const user = await UserModel.findOne({ userId: userId })
+			.select(
+				"userId username email phoneNumber fullName avatar website sharksFollowed updatedAt createdAt -_id"
+			)
+			.lean();
 
 		if (!user) return {};
 		else return user;
@@ -28,14 +32,14 @@ const getUserProfile = async (userId) => {
 };
 
 const checkExistedUsernameForUpdateProfile = async (userId, username) => {
-	const user = await UserModel.findOne({ username: username });
+	const user = await UserModel.findOne({ username: username }).lean();
 
 	if (user && user.userId !== userId) return true;
 	else return false;
 };
 
 const checkExistedEmailForUpdateProfile = async (userId, email) => {
-	const user = await UserModel.findOne({ email: email });
+	const user = await UserModel.findOne({ email: email }).lean();
 
 	if (user && user.userId !== userId) return true;
 	else return false;
@@ -65,6 +69,7 @@ const updateUserProfile = async (userId, updateInfo) => {
 			};
 
 			await UserModel.findOneAndUpdate({ userId: userId }, newUpdateInfo)
+				.lean()
 				.then((data) => {
 					if (!data) throw new Error();
 				})
@@ -89,6 +94,7 @@ const upgradeUserPremiumAccount = async (userId) => {
 			{ userId: userId },
 			{ premiumAccount: true }
 		)
+			.lean()
 			.then((data) => {
 				if (!data) throw new Error();
 			})
@@ -103,26 +109,26 @@ const upgradeUserPremiumAccount = async (userId) => {
 };
 
 const checkExistedUsername = async (username) => {
-	const isExisted = await AdminModel.exists({ username: username });
+	const isExisted = await AdminModel.exists({ username: username }).lean();
 	return Boolean(isExisted);
 };
 
 const getPasswordByUsername = async (username) => {
-	const admin = await AdminModel.findOne({ username: username }).select(
-		"password -_id"
-	);
+	const admin = await AdminModel.findOne({ username: username })
+		.select("password -_id")
+		.lean();
 	return admin?.password || null;
 };
 
 const getAdminByUsername = async (username) => {
-	return await AdminModel.findOne({ username: username });
+	return await AdminModel.findOne({ username: username }).lean();
 };
 
 const deleteUsersByUserId = async (userIds) => {
 	try {
 		const deletedObj = await UserModel.remove({
 			userId: { $in: userIds }
-		});
+		}).lean();
 
 		return deletedObj.deletedCount > 0;
 	} catch (error) {
