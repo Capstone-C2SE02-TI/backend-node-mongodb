@@ -1,17 +1,16 @@
 {
 	"name": "backend-node-mongodb",
-	"version": "1.0.0",
-	"description": "Capstone Project 1 - Source Backend (NodeJS - MongoDB)",
+	"version": "2.0.0",
+	"description": "Capstone Project - Source Backend (NodeJS - MongoDB)",
 	"main": "src/index.js",
 	"scripts": {
 		"start": "nodemon src/index.js",
 		"test": "echo \"Error: no test specified\" && exit 1"
 	},
 	"keywords": [
+		"capstone-project",
 		"backend",
-		"backend-node-mongodb",
-		"capstone1-project",
-		"move-source"
+		"backend-node-mongodb"
 	],
 	"author": "huynhducthanhtuan huynhngochieu",
 	"license": "MIT",
