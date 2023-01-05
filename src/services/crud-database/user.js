@@ -11,15 +11,15 @@ const {
 } = require("../../constants");
 
 const getUserByUsername = async (username) => {
-	return await UserModel.findOne({ username: username });
+	return await UserModel.findOne({ username: username }).lean();
 };
 
 const getUserByEmail = async (email) => {
-	return await UserModel.findOne({ email: email });
+	return await UserModel.findOne({ email: email }).lean();
 };
 
 const getUsersLength = async () => {
-	return await UserModel.count({});
+	return await UserModel.count({}).lean();
 };
 
 const createNewUser = async ({
@@ -37,6 +37,7 @@ const createNewUser = async ({
 		};
 
 		await UserModel.create(newUserInfo)
+			.lean()
 			.then((data) => {})
 			.catch((error) => {
 				throw new Error(error);
@@ -54,6 +55,7 @@ const updateUserConfirmationCode = async (userId, code) => {
 			{ userId: userId },
 			{ confirmationCode: code }
 		)
+			.lean()
 			.then((data) => {
 				if (!data) throw new Error();
 			})
@@ -73,6 +75,7 @@ const updateUserIsCodeConfirmed = async (userId, isCodeConfirmed) => {
 			{ userId: userId },
 			{ isCodeConfirmed: isCodeConfirmed }
 		)
+			.lean()
 			.then((data) => {
 				if (!data) throw new Error();
 			})
@@ -92,6 +95,7 @@ const updateUserPassword = async (userId, password) => {
 			{ userId: userId },
 			{ password: password }
 		)
+			.lean()
 			.then((data) => {
 				if (!data) throw new Error();
 			})
@@ -106,36 +110,36 @@ const updateUserPassword = async (userId, password) => {
 };
 
 const checkExistedUsername = async (username) => {
-	const isExisted = await UserModel.exists({ username: username });
+	const isExisted = await UserModel.exists({ username: username }).lean();
 	return Boolean(isExisted);
 };
 
 const checkExistedEmail = async (email) => {
-	const isExisted = await UserModel.exists({ email: email });
+	const isExisted = await UserModel.exists({ email: email }).lean();
 	return Boolean(isExisted);
 };
 
 const checkExistedUserId = async (userId) => {
-	const isExisted = await UserModel.exists({ userId: userId });
+	const isExisted = await UserModel.exists({ userId: userId }).lean();
 	return Boolean(isExisted);
 };
 
 const checkExistedSharkId = async (sharkId) => {
-	const isExisted = await InvestorModel.exists({ sharkId: sharkId });
+	const isExisted = await InvestorModel.exists({ sharkId: sharkId }).lean();
 	return Boolean(isExisted);
 };
 
 const getPasswordByUsername = async (username) => {
-	const user = await UserModel.findOne({ username: username }).select(
-		"password -_id"
-	);
+	const user = await UserModel.findOne({ username: username })
+		.select("password -_id")
+		.lean();
 	return user?.password || null;
 };
 
 const getPasswordByEmail = async (email) => {
-	const user = await UserModel.findOne({ email: email }).select(
-		"password -_id"
-	);
+	const user = await UserModel.findOne({ email: email })
+		.select("password -_id")
+		.lean();
 	return user?.password || null;
 };
 
@@ -144,13 +148,14 @@ const getListOfCoinsAndTokens = async () => {
 		.select(
 			"coinId name type symbol iconURL tagNames cmcRank usd marketCap circulatingSupply pricesLast1Month -_id"
 		)
-		.sort("coinId");
+		.sort("coinId")
+		.lean();
 
 	return tokens || [];
 };
 
 const getCoinsAndTokensLength = async () => {
-	return await CoinModel.count({});
+	return await CoinModel.count({}).lean();
 };
 
 const getListReducingCoinsAndTokens = async () => {
@@ -159,7 +164,8 @@ const getListReducingCoinsAndTokens = async () => {
 		.limit(TRENDING_REDUCING_LIMIT_ITEM)
 		.select(
 			"coinId name type symbol iconURL tagNames usd pricesLast1Month -_id"
-		);
+		)
+		.lean();
 };
 
 const getListTrendingCoins = async () => {
@@ -168,7 +174,8 @@ const getListTrendingCoins = async () => {
 		.limit(TRENDING_REDUCING_LIMIT_ITEM)
 		.select(
 			"coinId name type symbol iconURL tagNames usd marketCap circulatingSupply -_id"
-		);
+		)
+		.lean();
 };
 
 const getListTrendingTokens = async () => {
@@ -177,25 +184,28 @@ const getListTrendingTokens = async () => {
 		.limit(TRENDING_REDUCING_LIMIT_ITEM)
 		.select(
 			"coinId name type symbol iconURL tagNames usd marketCap circulatingSupply -_id"
-		);
+		)
+		.lean();
 };
 
 const getCoinOrTokenDetails = async (coinSymbol) => {
 	const coinOrToken = await CoinModel.findOne({
 		symbol: coinSymbol.toLowerCase()
-	}).select(
-		"coinId ethId coingeckoId name type symbol iconURL cmcRank tagNames maxSupply totalSupply circulatingSupply contractAddress marketCap urls usd prices totalInvestment -_id"
-	);
+	})
+		.select(
+			"coinId ethId coingeckoId name type symbol iconURL cmcRank tagNames maxSupply totalSupply circulatingSupply contractAddress marketCap urls usd prices totalInvestment -_id"
+		)
+		.lean();
 
 	return coinOrToken || {};
 };
 
 const getListOfTags = async () => {
-	return await TagModel.find({}).sort("id").select("id name -_id");
+	return await TagModel.find({}).sort("id").select("id name -_id").lean();
 };
 
 const getSharksLength = async () => {
-	return await InvestorModel.count({});
+	return await InvestorModel.count({}).lean();
 };
 
 const getListOfSharks = async (userId) => {
@@ -203,7 +213,8 @@ const getListOfSharks = async (userId) => {
 		.sort("sharkId")
 		.select(
 			"sharkId walletAddress totalAssets percent24h followers isShark -_id"
-		);
+		)
+		.lean();
 
 	sharksList = sharks.map((shark) => {
 		const isFollowed = shark.followers.includes(userId);
@@ -315,15 +326,15 @@ const getListOfSharkFollowed = async (userId) => {
 	const users = await InvestorModel.find(
 		{ followers: { $in: [userId] } },
 		projection
-	);
+	).lean();
 
 	return { message: "success", datas: users || [] };
 };
 
 const getListCryptosOfShark = async (sharkId) => {
-	const shark = await InvestorModel.findOne({ sharkId: sharkId }).select(
-		"cryptos -_id"
-	);
+	const shark = await InvestorModel.findOne({ sharkId: sharkId })
+		.select("cryptos -_id")
+		.lean();
 	return shark?.cryptos || -1;
 };
 
@@ -372,9 +383,9 @@ const getTransactionsOfAllSharks = async (page, valueFilter = 0) => {
 };
 
 const getListTransactionsOfShark = async (sharkId) => {
-	const shark = await InvestorModel.findOne({ sharkId: sharkId }).select(
-		"transactionsHistory -_id"
-	);
+	const shark = await InvestorModel.findOne({ sharkId: sharkId })
+		.select("transactionsHistory -_id")
+		.lean();
 	return shark?.transactionsHistory || -1;
 };
 
@@ -392,15 +403,17 @@ const getTradeTransactionHistoryOfShark = async (sharkId, coinSymbol) => {
 		const { historyDatas, cryptos } = sharks;
 
 		// Need reset to toLowerCase()
-		const historyData = historyDatas.find(
-			(data) => data.coinSymbol === coinSymbol.toUpperCase()
-		);
+		const historyData = historyDatas
+			.find((data) => data.coinSymbol === coinSymbol.toUpperCase())
+			.lean();
 
 		const coinInfo = await CoinModel.findOne({
 			symbol: coinSymbol.toLowerCase()
-		}).select(
-			"coinId name symbol iconURL cmcRank maxSupply totalSupply circulatingSupply marketCap contractAddress prices -_id"
-		);
+		})
+			.select(
+				"coinId name symbol iconURL cmcRank maxSupply totalSupply circulatingSupply marketCap contractAddress prices -_id"
+			)
+			.lean();
 
 		// Need reset to toLowerCase()
 		if (!historyData) {
@@ -437,13 +450,16 @@ const getTradeTransactionHistoryOfShark = async (sharkId, coinSymbol) => {
 const getHoursPriceOfToken = async (tokenSymbol) => {
 	const token = await CoinModel.findOne({
 		symbol: tokenSymbol.toLowerCase()
-	}).select("originalPrices -_id");
+	})
+		.select("originalPrices -_id")
+		.lean();
 
 	return token?.originalPrices?.hourly || {};
 };
 
 const getGainLossOfSharks = async (isLoss) => {
 	const sortType = isLoss ? "asc" : "desc";
+
 	const sharkGainLoss = isLoss
 		? await InvestorModel.find({})
 				.select("sharkId totalAssets percent24h -_id")
@@ -451,18 +467,21 @@ const getGainLossOfSharks = async (isLoss) => {
 				.lt(0)
 				.sort({ percent24h: sortType })
 				.limit(20)
+				.lean()
 		: await InvestorModel.find({})
 				.select("sharkId totalAssets percent24h -_id")
 				.where("percent24h")
 				.gte(0)
 				.sort({ percent24h: sortType })
-				.limit(20);
+				.limit(20)
+				.lean();
 
 	return sharkGainLoss;
 };
 
 const getGainLossOfCoins = async (isLoss) => {
 	const sortType = isLoss ? "asc" : "desc";
+
 	const sharkGainLoss = isLoss
 		? await CoinModel.find({})
 				.select("symbol usd.price usd.percentChange24h -_id")
@@ -470,12 +489,14 @@ const getGainLossOfCoins = async (isLoss) => {
 				.lt(0)
 				.sort({ "usd.percentChange24h": sortType })
 				.limit(20)
+				.lean()
 		: await CoinModel.find({})
 				.select("symbol usd.price usd.percentChange24h -_id")
 				.where("usd.percentChange24h")
 				.gte(0)
 				.sort({ "usd.percentChange24h": sortType })
-				.limit(20);
+				.limit(20)
+				.lean();
 
 	return sharkGainLoss;
 };
@@ -487,7 +508,7 @@ const addNewShark = async (walletAddress, userId) => {
 
 		const sharkExisted = await InvestorModel.findOne({
 			walletAddress: walletAddress
-		});
+		}).lean();
 
 		if (sharkExisted !== null)
 			return { message: "wallet-address-exists", isAdded: false };
@@ -495,13 +516,13 @@ const addNewShark = async (walletAddress, userId) => {
 		const addedData = await InvestorModel.create({
 			walletAddress: walletAddress,
 			isShark: true
-		});
+		}).lean();
 
 		const user = await UserModel.findOneAndUpdate(
 			{ userId: userId },
 			{ $push: { addedSharks: walletAddress } },
 			{ new: true }
-		);
+		).lean();
 
 		let addedSharks = user.addedSharks;
 
@@ -523,19 +544,20 @@ const deleteSharkNotFound = async (walletAddress, userId) => {
 
 		const sharkExisted = await InvestorModel.findOne({
 			walletAddress: walletAddress
-		});
+		}).lean();
 
 		if (sharkExisted === null)
 			return { message: "wallet-address-not-exists", isAdded: false };
 
+		// Tuan's comment
 		const user = await UserModel.findOneAndUpdate(
 			{ userId: userId },
 			{ $pull: { addedSharks: walletAddress } }
-		);
+		).lean();
 
 		const deletedData = await InvestorModel.remove({
 			walletAddress: walletAddress
-		});
+		}).lean();
 
 		return deletedData.deletedCount > 0
 			? { message: "successfully", isDeleted: true }
@@ -546,31 +568,34 @@ const deleteSharkNotFound = async (walletAddress, userId) => {
 };
 
 const getLengthOfSharksList = async () => {
-	try{
-		const length = await InvestorModel.count({isShark: true});
-		return {message: "success", length: length};
-	}catch(err){
-		return {message: "failed-get-length", error: err};
+	try {
+		const length = await InvestorModel.count({ isShark: true }).lean();
+
+		return { message: "success", length: length };
+	} catch (err) {
+		return { message: "failed-get-length", error: err };
 	}
-}
+};
 
 const getLengthOfUsersList = async () => {
-	try{
-		const length = await UserModel.count({});
-		return {message: "success", length: length};
-	}catch(err){
-		return {message: "failed-get-length", error: err};
+	try {
+		const length = await UserModel.count({}).lean();
+
+		return { message: "success", length: length };
+	} catch (err) {
+		return { message: "failed-get-length", error: err };
 	}
-}
+};
 
 const getLengthOfTransactionsList = async () => {
-	try{
-		const length = await TransactionModel.count({});
-		return {message: "success", length: length};
-	}catch(err){
-		return {message: "failed-get-length", error: err};
+	try {
+		const length = await TransactionModel.count({}).lean();
+
+		return { message: "success", length: length };
+	} catch (err) {
+		return { message: "failed-get-length", error: err };
 	}
-}
+};
 
 module.exports = {
 	getUserByUsername,
@@ -610,6 +635,5 @@ module.exports = {
 	deleteSharkNotFound,
 	getLengthOfSharksList,
 	getLengthOfUsersList,
-	getLengthOfTransactionsList,
-
+	getLengthOfTransactionsList
 };
