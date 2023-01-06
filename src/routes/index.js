@@ -26,6 +26,14 @@ function routing(app) {
 
 	/* Admin routes */
 	app.use("/admin", adminRouter);
+
+	/* Notfound routes */
+	app.use("*", (req, res) => {
+		res.status(404).json({
+			message: "not-found",
+			error: "not-found"
+		});
+	});
 }
 
 module.exports = routing;
