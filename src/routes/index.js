@@ -5,19 +5,6 @@ const displayRouter = require("./display");
 const adminRouter = require("./admin");
 
 function routing(app) {
-	/**
-	 * @swagger
-	 * tags:
-	 *   name: Authentiation
-	 *   name: Forgot Password
-	 *   name: Coin - Token
-	 *   name: Shark
-	 *   name: Gain and Loss
-	 *   name: User
-	 *   name: Admin
-	 *   name: Others
-	 */
-
 	/* User routes */
 	app.use("/auth", authRouter);
 	app.use("/forgot-password", forgotPasswordRouter);
