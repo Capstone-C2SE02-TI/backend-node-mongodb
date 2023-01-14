@@ -60,7 +60,7 @@
         
 /user/change-password:
   post:
-    summary: Change Password
+    summary: Change password
     tags:
       - User
     requestBody:

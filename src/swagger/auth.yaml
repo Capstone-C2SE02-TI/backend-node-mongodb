@@ -1,6 +1,6 @@
 /auth/signup:
   post:
-    summary: Sign Up
+    summary: Sign up
     tags: 
       - Authentication
     requestBody:
@@ -39,7 +39,7 @@
 
 /auth/signin:
   post:
-    summary: Sign In
+    summary: Sign in
     tags: 
       - Authentication
     requestBody:
@@ -68,7 +68,7 @@
 
 /auth/signout:
   post:
-    summary: Sign Out
+    summary: Sign out
     tags: 
       - Authentication
     responses:

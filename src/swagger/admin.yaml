@@ -1,6 +1,6 @@
 /admin/signin:
   post:
-    summary: Sign In
+    summary: Sign in
     tags: 
       - Admin
     requestBody:
@@ -27,7 +27,7 @@
 
 /admin/signout:
   post:
-    summary: Sign Out
+    summary: Sign out
     tags: 
       - Admin
     responses:
@@ -49,7 +49,7 @@
 
 /admin/delete-users:
   post:
-    summary: Delete user
+    summary: Delete users
     tags: 
       - Admin
     requestBody:

@@ -2,51 +2,47 @@
 	get:
 		summary: Get top 10 reducing coins and tokens
 		tags: 
-			- Coin-Token
+			- Coin - Token
 		responses:
 			200:
 				description: Get top 10 reducing coins and tokens successfully
-			400:
-				description: Get top 10 reducing coins and tokens failed
+			# 400: description: Get top 10 reducing coins and tokens failed
 
 /display/coins-and-tokens/all:
 	get:
 		summary: Get list of coins
 		tags: 
-			- Coin-Token
+			- Coin - Token
 		responses:
 			200:
 				description: Get list of coins successfully
-			400:
-				description: Get list of coins failed
+			# 400: description: Get list of coins failed
 
 /display/coins/trending:
 	get:
 		summary: Get top 10 trending coins
 		tags: 
-			- Coin-Token
+			- Coin - Token
 		responses:
 			200:
 				description: Get top 10 trending coins successfully
-			400:
-				description: Get top 10 trending coins failed
+			# 400: description: Get top 10 trending coins failed
 
 /display/tokens/trending:
 	get:
 		summary: Get top 10 trending tokens
 		tags: 
-			- Coin-Token
+			- Coin - Token
 		responses:
 			200:
 				description: Get top 10 trending tokens successfully
-			400:
-				description: Get top 10 trending tokens failed
+			# 400: description: Get top 10 trending tokens failed
 
 /display/coin/details:
 	get:
 		summary: Get coin or token details
 		tags: 
-			- Coin-Token
+			- Coin - Token
 		parameters:
 		- in: query
 			name: symbol
@@ -55,8 +51,7 @@
 		responses:
 			200:
 				description: Get coin or token details successfully
-			400:
-				description: Get coin or token details failed
+			# 400: description: Get coin or token details failed
 
 /display/sharks:
 	get:
@@ -71,12 +66,11 @@
 		responses:
 			200:
 				description: Get list of sharks successfully
-			400:
-				description: Get list of sharks failed
+			# 400: description: Get list of sharks failed
 
 /display/sharks/transaction-history/page-length:
 	post:
-		summary: Get the length of list transactions
+		summary: Get length of list transactions
 		tags: 
 			- Shark
 		requestBody:
@@ -93,9 +87,8 @@
 							valueFilter: "10"
 		responses:
 			200:
-				description: Get the length of list transactions successfully
-			400:
-				description: Get the length of list transactions failed
+				description: Get length of list transactions successfully
+			# 400: description: Get length of list transactions failed
 
 /display/sharks/transaction-history:
 	post:
@@ -121,8 +114,7 @@
 		responses:
 			200:
 				description: Get list transactions history of all sharks successfully
-			400:
-				description: Get list transactions history of all sharks failed
+			# 400: description: Get list transactions history of all sharks failed
 
 /display/shark/crypto:
 	get:
@@ -137,12 +129,11 @@
 		responses:
 			200:
 				description: Get list of coin and token of shark successful
-			400:
-				description: Get list of coin and token of shark failed
+			# 400: description: Get list of coin and token of shark failed
 
 /display/shark/transaction-history:
 	get:
-		summary: Get the transaction history of shark
+		summary: Get transaction history of shark
 		tags: 
 			- Shark
 		parameters:
@@ -153,8 +144,7 @@
 		responses:
 			200:
 				description: Get transaction history of shark successful
-			400:
-				description: Get transaction history of shark failed
+			# 400: description: Get transaction history of shark failed
 
 /display/shark/trade-transaction-history:
 	get:
@@ -173,8 +163,7 @@
 		responses:
 			200:
 				description: Get trade coin transaction history successful
-			400:
-				description: Get trade coin transaction history failed
+			# 400: description: Get trade coin transaction history failed
 
 /display/sharks/length:
 	get:
@@ -184,8 +173,7 @@
 		responses:
 			200:
 				description: Get length of sharks list successful
-			400:
-				description: Get length of sharks list failed
+			# 400: description: Get length of sharks list failed
 
 /display/sharks/transaction-history/length:
 	get:
@@ -195,14 +183,13 @@
 		responses:
 			200:
 				description: Get length of transactions list successful
-			400:
-				description: Get length of transactions list failed
+			# 400: description: Get length of transactions list failed
 
 /display/sharks/gain-loss:
 	get:
 		summary: Get list gain and loss of sharks
 		tags: 
-			- GainAndLoss
+			- Gain - Loss
 		parameters:
 		- in: query
 			name: isLoss
@@ -211,14 +198,13 @@
 		responses:
 			200:
 				description: Get list gain and loss of sharks successfully
-			400:
-				description: Get list gain and loss of sharks failed
+			# 400: description: Get list gain and loss of sharks failed
 
 /display/coins/gain-loss:
 	get:
 		summary: Get list gain and loss of coins
 		tags: 
-			- GainAndLoss
+			- Gain - Loss
 		parameters:
 		- in: query
 			name: isLoss
@@ -227,8 +213,7 @@
 		responses:
 			200:
 				description: Get list gain and loss of coins successfully
-			400:
-				description: Get list gain and loss of coins failed
+			# 400: description: Get list gain and loss of coins failed
 
 /display/users/length:
 	get:
@@ -238,8 +223,7 @@
 		responses:
 			200:
 				description: Get length of users list successful
-			400:
-				description: Get length of users list failed
+			# 400: description: Get length of users list failed
 
 /display/tags:
 	get:
@@ -249,5 +233,4 @@
 		responses:
 			200:
 				description: Get list of tags successfully
-			400:
-				description: Get list of tags failed
+			# 400: description: Get list of tags failed
