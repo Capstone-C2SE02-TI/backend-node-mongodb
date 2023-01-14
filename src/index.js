@@ -24,7 +24,7 @@ const swaggerOptions = {
 		servers: [
 			{
 				url: "http://localhost:4000/",
-				description: "Localhost"
+				description: "Development"
 			},
 			{
 				url: "https://trackscan.azurewebsites.net/",
