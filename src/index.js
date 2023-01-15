@@ -23,17 +23,16 @@ const swaggerOptions = {
 		},
 		servers: [
 			{
-				url: "http://localhost:4000/"
+				url: "http://localhost:4000/",
+				description: "Development"
+			},
+			{
+				url: "https://trackscan.azurewebsites.net/",
+				description: "Production"
 			}
 		]
 	},
-	apis: [
-		"src/routes/auth.js",
-		"src/routes/forgotPassword.js",
-		"src/routes/display.js",
-		"src/routes/user.js",
-		"src/routes/admin.js"
-	]
+	apis: ["**/*.yaml"]
 };
 const swaggerSpecs = swaggerJsDoc(swaggerOptions);
 app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(swaggerSpecs));

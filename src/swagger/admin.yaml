@@ -1,0 +1,100 @@
+# Online Swagger yaml file formatter: https://editor.swagger.io/
+
+/admin/signin:
+    post:
+        summary: Sign in
+        tags:
+            - Admin
+        requestBody:
+            content:
+                application/json:
+                    schema:
+                        type: object
+                        required:
+                            - username
+                            - password
+                        properties:
+                            username:
+                                type: string
+                            password:
+                                type: string
+                        example:
+                            username: "hieuhn"
+                            password: "12345678"
+        responses:
+            200:
+                description: Sign in successfully
+            400:
+                description: Sign in failed
+
+/admin/signout:
+    post:
+        summary: Sign out
+        tags:
+            - Admin
+        responses:
+            200:
+                description: Sign out successfully
+            400:
+                description: Sign out failed
+
+/admin/list:
+    get:
+        summary: Get list of admins
+        tags:
+            - Admin
+        responses:
+            200:
+                description: Get list of admins successfully
+            400:
+                description: Get list of admins failed
+
+/admin/delete-users:
+    post:
+        summary: Delete users
+        tags:
+            - Admin
+        requestBody:
+            content:
+                application/json:
+                    schema:
+                        type: object
+                        required:
+                            - ids
+                        properties:
+                            ids:
+                                type: array
+                        example:
+                            ids: [1, 2, 3]
+        responses:
+            200:
+                description: Delete users successfully
+            400:
+                description: Delete users failed
+
+/admin/user/list:
+    get:
+        summary: Get list of users
+        tags:
+            - Admin
+        responses:
+            200:
+                description: Get list of users successfully
+            400:
+                description: Get list of users failed
+
+/admin/user/details:
+    get:
+        summary: Get detail user
+        tags:
+            - Admin
+        parameters:
+            - in: query
+              name: userId
+              schema:
+                  type: string
+        responses:
+            200:
+                description: Get detail user successfully
+            400:
+                description: Get detail user failed
