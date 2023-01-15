@@ -7,9 +7,9 @@
             - Coin - Token
         responses:
             200:
-                description: Get top 10 reducing coins and tokens successfully
+                description: Successfully
             400:
-                description: Get top 10 reducing coins and tokens failed
+                description: Failed
 
 /display/coins-and-tokens/all:
     get:
@@ -18,9 +18,9 @@
             - Coin - Token
         responses:
             200:
-                description: Get list of coins and tokens successfully
+                description: Successfully
             400:
-                description: Get list of coins and tokens failed
+                description: Failed
 
 /display/coins/trending:
     get:
@@ -29,9 +29,9 @@
             - Coin - Token
         responses:
             200:
-                description: Get top 10 trending coins successfully
+                description: Successfully
             400:
-                description: Get top 10 trending coins failed
+                description: Failed
 
 /display/tokens/trending:
     get:
@@ -40,9 +40,9 @@
             - Coin - Token
         responses:
             200:
-                description: Get top 10 trending tokens successfully
+                description: Successfully
             400:
-                description: Get top 10 trending tokens failed
+                description: Failed
 
 /display/coin/details:
     get:
@@ -56,9 +56,9 @@
                   type: string
         responses:
             200:
-                description: Get coin or token details successfully
+                description: Successfully
             400:
-                description: Get coin or token details failed
+                description: Failed
 
 /display/sharks:
     get:
@@ -72,9 +72,9 @@
               type: string
         responses:
             200:
-                description: Get list of sharks successfully
+                description: Successfully
             400:
-                description: Get list of sharks failed
+                description: Failed
 
 /display/sharks/transaction-history/page-length:
     post:
@@ -95,9 +95,9 @@
                             valueFilter: "10"
         responses:
             200:
-                description: Get length of list transactions successfully
+                description: Successfully
             400:
-                description: Get length of list transactions failed
+                description: Failed
 
 /display/sharks/transaction-history:
     post:
@@ -122,9 +122,9 @@
                             valueFilter: "10"
         responses:
             200:
-                description: Get list transactions history of all sharks successfully
+                description: Successfully
             400:
-                description: Get list transactions history of all sharks failed
+                description: Failed
 
 /display/shark/crypto:
     get:
@@ -138,9 +138,9 @@
                   type: string
         responses:
             200:
-                description: Get list of coin and token of shark successful
+                description: Successfully
             400:
-                description: Get list of coin and token of shark failed
+                description: Failed
 
 /display/shark/transaction-history:
     get:
@@ -154,9 +154,9 @@
                   type: string
         responses:
             200:
-                description: Get transaction history of shark successful
+                description: Successfully
             400:
-                description: Get transaction history of shark failed
+                description: Failed
 
 /display/shark/trade-transaction-history:
     get:
@@ -174,9 +174,9 @@
                   type: string
         responses:
             200:
-                description: Get trade coin transaction history successful
+                description: Successfully
             400:
-                description: Get trade coin transaction history failed
+                description: Failed
 
 /display/sharks/length:
     get:
@@ -185,9 +185,9 @@
             - Shark
         responses:
             200:
-                description: Get length of sharks list and tokens successfully
+                description: Successfully
             400:
-                description: Get length of sharks list and tokens failed
+                description: Failed
 
 /display/sharks/transaction-history/length:
     get:
@@ -196,9 +196,9 @@
             - Coin - Token
         responses:
             200:
-                description: Get length of transactions list successfully
+                description: Successfully
             400:
-                description: Get length of transactions list failed
+                description: Failed
 
 /display/sharks/gain-loss:
     get:
@@ -212,9 +212,9 @@
                   type: string
         responses:
             200:
-                description: Get list gain and loss of sharks successfully
+                description: Successfully
             400:
-                description: Get list gain and loss of sharks failed
+                description: Failed
 
 /display/coins/gain-loss:
     get:
@@ -228,9 +228,9 @@
                   type: string
         responses:
             200:
-                description: Get list gain and loss of coins successfully
+                description: Successfully
             400:
-                description: Get list gain and loss of coins failed
+                description: Failed
 
 /display/users/length:
     get:
@@ -239,9 +239,9 @@
             - User
         responses:
             200:
-                description: Get length of users list successfully
+                description: Successfully
             400:
-                description: Get length of users list failed
+                description: Failed
 
 /display/tags:
     get:
@@ -250,6 +250,6 @@
             - Others
         responses:
             200:
-                description: Get list of tags successfully
+                description: Successfully
             400:
-                description: Get list of tags failed
+                description: Failed

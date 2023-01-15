@@ -40,9 +40,9 @@
                             avatar: "https://res.cloudinary.com/dhzbsq7fj/image/upload/v1643101647/avatardefault_92824_aifry9.png"
         responses:
             200:
-                description: Update user profile successfully
+                description: Successfully
             400:
-                description: Update user profile failed
+                description: Failed
 
 /user/profile:
     get:
@@ -56,9 +56,9 @@
                   type: string
         responses:
             200:
-                description: Get user profile successfully
+                description: Successfully
             400:
-                description: Get user profile failed
+                description: Failed
 
 /user/change-password:
     post:
@@ -91,9 +91,9 @@
                             newConfirmPassword: "12345678910"
         responses:
             200:
-                description: Change password successfully
+                description: Successfully
             400:
-                description: Change password failed
+                description: Failed
 
 /user/upgrade-premium-account:
     post:
@@ -114,9 +114,9 @@
                             userId: "1"
         responses:
             200:
-                description: Upgrade premium account successfully
+                description: Successfully
             400:
-                description: Upgrade premium account failed
+                description: Failed
 
 /user/follow-shark-wallet:
     post:
@@ -141,9 +141,9 @@
                             sharkId: "1"
         responses:
             200:
-                description: Follow shark wallet successfully
+                description: Successfully
             400:
-                description: Follow shark wallet failed
+                description: Failed
 
 /user/unfollow-shark-wallet:
     post:
@@ -168,9 +168,9 @@
                             sharkId: "1"
         responses:
             200:
-                description: Unfollow shark wallet successfully
+                description: Successfully
             400:
-                description: Unfollow shark wallet failed
+                description: Failed
 
 /user/list-followed-shark:
     get:
@@ -184,9 +184,9 @@
                   type: string
         responses:
             200:
-                description: Get list of shark followers successfully
+                description: Successfully
             400:
-                description: Get list of shark followers failed
+                description: Failed
 
 /user/add-new-shark:
     post:
@@ -211,9 +211,9 @@
                             userId: "40"
         responses:
             200:
-                description: Add new user successfully
+                description: Successfully
             400:
-                description: Add new user failed
+                description: Failed
 
 /user/delete-shark-not-found:
     delete:
@@ -238,6 +238,6 @@
                             userId: "40"
         responses:
             200:
-                description: Delete shark successfully
+                description: Successfully
             400:
-                description: Delete shark failed
+                description: Failed

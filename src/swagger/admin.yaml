@@ -23,9 +23,11 @@
                             password: "12345678"
         responses:
             200:
-                description: Sign in successfully
+                description: Successfully
             400:
-                description: Sign in failed
+                description: Failed
+            404:
+                description: Not found
 
 /admin/signout:
     post:
@@ -34,9 +36,9 @@
             - Admin
         responses:
             200:
-                description: Sign out successfully
+                description: Successfully
             400:
-                description: Sign out failed
+                description: Failed
 
 /admin/list:
     get:
@@ -45,9 +47,9 @@
             - Admin
         responses:
             200:
-                description: Get list of admins successfully
+                description: Successfully
             400:
-                description: Get list of admins failed
+                description: Failed
 
 /admin/delete-users:
     post:
@@ -68,9 +70,9 @@
                             ids: [1, 2, 3]
         responses:
             200:
-                description: Delete users successfully
+                description: Successfully
             400:
-                description: Delete users failed
+                description: Failed
 
 /admin/user/list:
     get:
@@ -79,9 +81,9 @@
             - Admin
         responses:
             200:
-                description: Get list of users successfully
+                description: Successfully
             400:
-                description: Get list of users failed
+                description: Failed
 
 /admin/user/details:
     get:
@@ -95,6 +97,6 @@
                   type: string
         responses:
             200:
-                description: Get detail user successfully
+                description: Successfully
             400:
-                description: Get detail user failed
+                description: Failed

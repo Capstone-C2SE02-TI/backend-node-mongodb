@@ -35,9 +35,9 @@
                             confirmPassword: "12345678"
         responses:
             200:
-                description: Sign up successfully
+                description: Successfully
             400:
-                description: Sign up failed
+                description: Failed
 
 /auth/signin:
     post:
@@ -62,9 +62,11 @@
                             password: "12345678"
         responses:
             200:
-                description: Sign in successfully
+                description: Successfully
             400:
-                description: Sign in failed
+                description: Failed
+            401:
+                description: Unauthorized
             404:
                 description: Not found
 
@@ -75,6 +77,6 @@
             - Authentication
         responses:
             200:
-                description: Sign out successfully
+                description: Successfully
             400:
-                description: Sign out failed
+                description: Failed
