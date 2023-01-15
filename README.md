@@ -2,7 +2,7 @@
 
 ### Capstone Project - Source Backend (NodeJS - MongoDB)
 
-### How to run this project?
+### Installation Guide
 
 #### 1. Clone project
 

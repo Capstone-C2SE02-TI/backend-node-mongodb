@@ -1,2 +1,2 @@
-# Ignore all yaml files:
-*.yaml
+# Ignore all yaml files (Disabled):
+# *.yaml
