@@ -13,14 +13,14 @@
 
 /display/coins-and-tokens/all:
     get:
-        summary: Get list of coins
+        summary: Get list of coins and tokens
         tags:
             - Coin - Token
         responses:
             200:
-                description: Get list of coins successfully
+                description: Get list of coins and tokens successfully
             400:
-                description: Get list of coins failed
+                description: Get list of coins and tokens failed
 
 /display/coins/trending:
     get:
@@ -49,6 +49,11 @@
         summary: Get coin or token details
         tags:
             - Coin - Token
+        parameters:
+            - in: query
+              name: symbol
+              schema:
+                  type: string
         responses:
             200:
                 description: Get coin or token details successfully

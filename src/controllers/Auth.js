@@ -36,13 +36,15 @@ function AuthController() {
 				.status(400)
 				.json({ message: "email-existed", error: "email-existed" });
 
-		cryptPassword(password, async (error, hashPassword) =>
-			(await createNewUser({
+		cryptPassword(password, async (error, hashPassword) => {
+			const isCreated = await createNewUser({
 				username,
 				email,
 				phoneNumber,
 				hashPassword
-			})) == true
+			});
+
+			isCreated
 				? res.status(200).json({
 						message: "successfully",
 						error: null
@@ -50,8 +52,8 @@ function AuthController() {
 				: res.status(400).json({
 						message: "failed",
 						error: error
-				  })
-		);
+				  });
+		});
 	};
 
 	this.signin = async (req, res, next) => {

@@ -37,7 +37,6 @@ const createNewUser = async ({
 		};
 
 		await UserModel.create(newUserInfo)
-			.lean()
 			.then((data) => {})
 			.catch((error) => {
 				throw new Error(error);
@@ -516,7 +515,7 @@ const addNewShark = async (walletAddress, userId) => {
 		const addedData = await InvestorModel.create({
 			walletAddress: walletAddress,
 			isShark: true
-		}).lean();
+		});
 
 		const user = await UserModel.findOneAndUpdate(
 			{ userId: userId },
