@@ -11,7 +11,7 @@ const {
 	checkExistedEmail,
 	getPasswordByUsername,
 	getUserByUsername
-} = require("../services/crud-database/user");
+} = require("../services/crudDatabase/user");
 const { cryptPassword, comparePassword } = require("../helpers");
 const { isAuthed, generateAccessToken } = require("../services/authentication");
 

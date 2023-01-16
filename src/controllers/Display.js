@@ -17,7 +17,7 @@ const {
 	getLengthOfSharksList,
 	getLengthOfUsersList,
 	getLengthOfTransactionsList
-} = require("../services/crud-database/user");
+} = require("../services/crudDatabase/user");
 
 function DisplayController() {
 	this.getCoinsAndTokens = async (req, res, next) => {

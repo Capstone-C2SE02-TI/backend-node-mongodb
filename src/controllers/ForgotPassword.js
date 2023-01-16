@@ -7,7 +7,7 @@ const {
 	updateUserConfirmationCode,
 	updateUserIsCodeConfirmed,
 	updateUserPassword
-} = require("../services/crud-database/user");
+} = require("../services/crudDatabase/user");
 const {
 	validateSubmitEmailBody,
 	validateSubmitCodeBody,

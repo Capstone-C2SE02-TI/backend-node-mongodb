@@ -7,7 +7,7 @@ const {
 	deleteUsersByUserId,
 	getListOfUsers,
 	getUserProfile
-} = require("../services/crud-database/admin");
+} = require("../services/crudDatabase/admin");
 const { comparePassword } = require("../helpers");
 const { validateSignInBody } = require("../validators/admin");
 

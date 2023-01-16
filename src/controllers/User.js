@@ -10,12 +10,12 @@ const {
 	getListOfSharkFollowed,
 	addNewShark,
 	deleteSharkNotFound
-} = require("../services/crud-database/user");
+} = require("../services/crudDatabase/user");
 const {
 	getUserProfile,
 	updateUserProfile,
 	upgradeUserPremiumAccount
-} = require("../services/crud-database/admin");
+} = require("../services/crudDatabase/admin");
 const {
 	validateUpdateProfileBody,
 	validateChangePasswordBody
@@ -319,7 +319,6 @@ function UserController() {
 	};
 
 	this.deleteSharkNotFound = async (req, res, next) => {
-
 		let { walletAddress, userId } = req.body;
 
 		if (!userId) userId = null;
