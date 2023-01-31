@@ -1,6 +1,6 @@
 import express from "express";
 const router = express.Router();
-import ForgotPasswordController from "../controllers/ForgotPassword";
+import ForgotPasswordController from "../controllers/ForgotPassword.js";
 
 router.post("/submit-email", ForgotPasswordController.submitEmail);
 router.post("/submit-code", ForgotPasswordController.submitCode);

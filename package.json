@@ -5,7 +5,7 @@
 	"main": "src/index.js",
 	"type": "module",
 	"scripts": {
-		"start": "nodemon –experimental-modules src/index.js",
+		"start": "nodemon src/index.js",
 		"update-deps": "npx npm-check-updates -u && npm install"
 	},
 	"keywords": [

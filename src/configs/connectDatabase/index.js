@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
-require("dotenv").config();
+import dotenv from "dotenv";
+dotenv.config();
 
 mongoose.set("strictQuery", false);
 const MONGODB_URI = process.env.MONGODB_URI;
@@ -22,4 +23,4 @@ const connectDatabase = () => {
 	}
 };
 
-export { connectDatabase };
+export default connectDatabase;

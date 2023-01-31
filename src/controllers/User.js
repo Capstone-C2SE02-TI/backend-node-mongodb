@@ -1,6 +1,4 @@
 import _ from "lodash";
-import { cryptPassword, comparePassword } from "../helpers";
-
 import {
 	getUserByEmail,
 	updateUserPassword,
@@ -10,17 +8,17 @@ import {
 	getListOfSharkFollowed,
 	addNewShark,
 	deleteSharkNotFound
-} from "../services/crudDatabase/user";
+} from "../services/crudDatabase/user.js";
 import {
 	getUserProfile,
 	updateUserProfile,
 	upgradeUserPremiumAccount
-} from "../services/crudDatabase/admin";
+} from "../services/crudDatabase/admin.js";
 import {
 	validateUpdateProfileBody,
 	validateChangePasswordBody
-} from "../validators/user";
-import { lte } from "lodash";
+} from "../validators/user.js";
+import { cryptPassword, comparePassword } from "../helpers/index.js";
 
 function UserController() {
 	this.getUserProfile = async (req, res, next) => {

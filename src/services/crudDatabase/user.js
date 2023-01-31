@@ -4,11 +4,11 @@ import {
 	InvestorModel,
 	TagModel,
 	TransactionModel
-} from "../../models";
+} from "../../models/index.js";
 import {
 	QUERY_LIMIT_ITEM,
 	TRENDING_REDUCING_LIMIT_ITEM
-} from "../../constants";
+} from "../../constants/index.js";
 
 const getUserByUsername = async (username) => {
 	return await UserModel.findOne({ username: username }).lean();

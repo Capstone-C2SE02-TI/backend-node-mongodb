@@ -1,28 +1,28 @@
+import dotenv from "dotenv";
+dotenv.config();
 import nodemailer from "nodemailer";
 import { OAuth2Client } from "google-auth-library";
-import dotenv from "dotenv"
-dotenv.config();
 
 import {
 	getUserByEmail,
 	updateUserConfirmationCode,
 	updateUserIsCodeConfirmed,
 	updateUserPassword
-} from "../services/crudDatabase/user";
+} from "../services/crudDatabase/user.js";
 import {
 	validateSubmitEmailBody,
 	validateSubmitCodeBody,
 	validateCreateNewPasswordBody
-} from "../validators/user";
-import { randomConfirmationCode, cryptPassword } from "../helpers";
+} from "../validators/user.js";
+import { randomConfirmationCode, cryptPassword } from "../helpers/index.js";
 
-import {
+const {
 	GOOGLE_MAILER_CLIENT_ID,
 	GOOGLE_MAILER_CLIENT_SECRET,
 	GOOGLE_MAILER_REFRESH_TOKEN,
 	ADMIN_EMAIL_ADDRESS,
 	ADMIN_EMAIL_PASSWORD
-} from process.env;
+} = process.env;
 
 const myOAuth2Client = new OAuth2Client(
 	GOOGLE_MAILER_CLIENT_ID,

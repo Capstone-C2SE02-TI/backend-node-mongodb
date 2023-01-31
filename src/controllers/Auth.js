@@ -7,10 +7,13 @@ import {
 	checkExistedEmail,
 	getPasswordByUsername,
 	getUserByUsername
-} from "../services/crudDatabase/user";
-import { cryptPassword, comparePassword } from "../helpers";
-import { isAuthed, generateAccessToken } from "../services/authentication";
-import { validateSignUpBody, validateSignInBody } from "../validators/user";
+} from "../services/crudDatabase/user.js";
+import {
+	isAuthed,
+	generateAccessToken
+} from "../services/authentication/index.js";
+import { cryptPassword, comparePassword } from "../helpers/index.js";
+import { validateSignUpBody, validateSignInBody } from "../validators/user.js";
 
 const TI_AUTH_COOKIE = process.env.TI_AUTH_COOKIE;
 

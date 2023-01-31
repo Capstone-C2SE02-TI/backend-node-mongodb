@@ -6,9 +6,8 @@ import { promisify } from "util";
 const sign = promisify(jwt.sign).bind(jwt);
 const verify = promisify(jwt.verify).bind(jwt);
 
-import {ACCESS_TOKEN_SECRET,
-REFRESH_ACCESS_TOKEN_SECRET,
-ENCODE_ALGORITHM} from process.env
+const { ACCESS_TOKEN_SECRET, REFRESH_ACCESS_TOKEN_SECRET, ENCODE_ALGORITHM } =
+	process.env;
 
 const generateAccessToken = async (payloadData) => {
 	try {
@@ -98,7 +97,7 @@ const isAuthed = async (req, res, next) => {
 	return true;
 };
 
-module.exports = {
+export {
 	generateAccessToken,
 	generateRefreshAccessToken,
 	refreshAccessToken,

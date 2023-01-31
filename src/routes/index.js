@@ -1,8 +1,8 @@
-import authRouter from "./auth";
-import forgotPasswordRouter from "./forgotPassword";
-import userRouter from "./user";
-import displayRouter from "./display";
-import adminRouter from "./admin";
+import authRouter from "./auth.js";
+import forgotPasswordRouter from "./forgotPassword.js";
+import userRouter from "./user.js";
+import displayRouter from "./display.js";
+import adminRouter from "./admin.js";
 
 function routing(app) {
 	/* User routes */
@@ -15,7 +15,7 @@ function routing(app) {
 	app.use("/admin", adminRouter);
 
 	/* Notfound routes */
-	app.use("*", (req, res) => {
+	app.use("*", (req, res, next) => {
 		res.status(404).json({
 			message: "not-found",
 			error: "not-found"

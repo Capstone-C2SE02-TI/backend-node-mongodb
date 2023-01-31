@@ -1,9 +1,8 @@
 import dotenv from "dotenv";
 dotenv.config();
+import { isAuthed } from "../../services/authentication/index.js";
 
-import { isAuthed } from "../../services/authentication";
-
-// Tạm comment
+// Comment tạm thời
 const isAuth = async (req, res, next) => {
 	// try {
 	// 	if (!(await isAuthed(req, res, next))) {

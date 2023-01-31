@@ -7,9 +7,9 @@ import {
 	deleteUsersByUserId,
 	getListOfUsers,
 	getUserProfile
-} from "../services/crudDatabase/admin";
-import { comparePassword } from "../helpers";
-import { validateSignInBody } from "../validators/admin";
+} from "../services/crudDatabase/admin.js";
+import { comparePassword } from "../helpers/index.js";
+import { validateSignInBody } from "../validators/admin.js";
 
 function AdminController() {
 	this.signin = async (req, res, next) => {

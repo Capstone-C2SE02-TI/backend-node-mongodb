@@ -1,9 +1,9 @@
-import UserModel from "./User";
-import AdminModel from "./Admin";
-import InvestorModel from "./Investor";
-import CoinModel from "./Coin";
-import TagModel from "./Tag";
-import TransactionModel from "./Transaction";
+import UserModel from "./User.js";
+import AdminModel from "./Admin.js";
+import InvestorModel from "./Investor.js";
+import CoinModel from "./Coin.js";
+import TagModel from "./Tag.js";
+import TransactionModel from "./Transaction.js";
 
 export {
 	UserModel,

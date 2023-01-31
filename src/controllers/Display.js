@@ -17,7 +17,7 @@ import {
 	getLengthOfSharksList,
 	getLengthOfUsersList,
 	getLengthOfTransactionsList
-} from "../services/crudDatabase/user";
+} from "../services/crudDatabase/user.js";
 
 function DisplayController() {
 	this.getCoinsAndTokens = async (req, res, next) => {

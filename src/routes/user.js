@@ -1,7 +1,7 @@
 import express from "express";
 const router = express.Router();
-import UserController from "../controllers/User";
-import { isAuth } from "../middlewares/authentication";
+import UserController from "../controllers/User.js";
+import { isAuth } from "../middlewares/authentication/index.js";
 
 router.post("/profile/update", isAuth, UserController.updateUserProfile);
 router.get("/profile", isAuth, UserController.getUserProfile);

@@ -1,5 +1,5 @@
-import { AdminModel, UserModel } from "../../models";
-import { checkExistedUserId } from "./user";
+import { AdminModel, UserModel } from "../../models/index.js";
+import { checkExistedUserId } from "./user.js";
 
 const getListOfAdmins = async () => {
 	return await AdminModel.find({})

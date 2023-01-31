@@ -5,8 +5,8 @@ import dotenv from "dotenv";
 import swaggerUI from "swagger-ui-express";
 import swaggerJsDoc from "swagger-jsdoc";
 import cookieParse from "cookie-parser";
-import routing from "./routes";
-import { connectDatabase } from "./configs/connectDatabase";
+import routing from "./routes/index.js";
+import connectDatabase from "./configs/connectDatabase/index.js";
 
 const PORT = process.env.PORT || 4000;
 const app = express();
