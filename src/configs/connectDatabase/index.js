@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 require("dotenv").config();
 
 mongoose.set("strictQuery", false);
@@ -22,4 +22,4 @@ const connectDatabase = () => {
 	}
 };
 
-module.exports = { connectDatabase };
+export { connectDatabase };

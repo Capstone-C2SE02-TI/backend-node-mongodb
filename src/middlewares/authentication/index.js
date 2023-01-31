@@ -1,7 +1,7 @@
-const dotenv = require("dotenv");
+import dotenv from "dotenv";
 dotenv.config();
 
-const { isAuthed } = require("../../services/authentication");
+import { isAuthed } from "../../services/authentication";
 
 // Tạm comment
 const isAuth = async (req, res, next) => {
@@ -40,7 +40,4 @@ const isAdmin = async (req, res, next) => {
 	// }
 };
 
-module.exports = {
-	isAuth,
-	isAdmin
-};
+export { isAuth, isAdmin };

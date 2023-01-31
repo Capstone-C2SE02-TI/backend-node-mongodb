@@ -1,27 +1,28 @@
-require("dotenv").config();
-const nodemailer = require("nodemailer");
-const { OAuth2Client } = require("google-auth-library");
+import nodemailer from "nodemailer";
+import { OAuth2Client } from "google-auth-library";
+import dotenv from "dotenv"
+dotenv.config();
 
-const {
+import {
 	getUserByEmail,
 	updateUserConfirmationCode,
 	updateUserIsCodeConfirmed,
 	updateUserPassword
-} = require("../services/crudDatabase/user");
-const {
+} from "../services/crudDatabase/user";
+import {
 	validateSubmitEmailBody,
 	validateSubmitCodeBody,
 	validateCreateNewPasswordBody
-} = require("../validators/user");
-const { randomConfirmationCode, cryptPassword } = require("../helpers");
+} from "../validators/user";
+import { randomConfirmationCode, cryptPassword } from "../helpers";
 
-const {
+import {
 	GOOGLE_MAILER_CLIENT_ID,
 	GOOGLE_MAILER_CLIENT_SECRET,
 	GOOGLE_MAILER_REFRESH_TOKEN,
 	ADMIN_EMAIL_ADDRESS,
 	ADMIN_EMAIL_PASSWORD
-} = process.env;
+} from process.env;
 
 const myOAuth2Client = new OAuth2Client(
 	GOOGLE_MAILER_CLIENT_ID,
@@ -197,4 +198,4 @@ function ForgotPasswordController() {
 	};
 }
 
-module.exports = new ForgotPasswordController();
+export default new ForgotPasswordController();

@@ -47,4 +47,4 @@ router.get("/users/length", DisplayController.getLengthOfUsersList);
 /* Others */
 router.get("/tags", DisplayController.getTags);
 
-module.exports = router;
+export default router;

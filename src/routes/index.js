@@ -1,8 +1,8 @@
-const authRouter = require("./auth");
-const forgotPasswordRouter = require("./forgotPassword");
-const userRouter = require("./user");
-const displayRouter = require("./display");
-const adminRouter = require("./admin");
+import authRouter from "./auth";
+import forgotPasswordRouter from "./forgotPassword";
+import userRouter from "./user";
+import displayRouter from "./display";
+import adminRouter from "./admin";
 
 function routing(app) {
 	/* User routes */
@@ -23,4 +23,4 @@ function routing(app) {
 	});
 }
 
-module.exports = routing;
+export default routing;

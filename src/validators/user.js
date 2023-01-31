@@ -1,4 +1,4 @@
-const {
+import {
 	validateUsername,
 	validateEmail,
 	validateEmailOptional,
@@ -14,7 +14,7 @@ const {
 	validateWebsiteOptional,
 	validateAvatarOptional,
 	returnValidationResult
-} = require("./index.js");
+} from "./index.js";
 
 const validateSignUpBody = async (req, res, next) => {
 	await validateUsername(req);
@@ -66,7 +66,7 @@ const validateUpdateProfileBody = async (req, res, next) => {
 	return returnValidationResult(req);
 };
 
-module.exports = {
+export {
 	validateSignUpBody,
 	validateSignInBody,
 	validateSubmitEmailBody,

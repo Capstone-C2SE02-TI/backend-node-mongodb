@@ -1,7 +1,7 @@
-const express = require("express");
+import express from "express";
 const router = express.Router();
-const UserController = require("../controllers/User");
-const { isAuth } = require("../middlewares/authentication");
+import UserController from "../controllers/User";
+import { isAuth } from "../middlewares/authentication";
 
 router.post("/profile/update", isAuth, UserController.updateUserProfile);
 router.get("/profile", isAuth, UserController.getUserProfile);
@@ -23,4 +23,4 @@ router.get("/list-followed-shark", isAuth, UserController.getSharkFollowed);
 router.post("/add-new-shark", UserController.addNewShark);
 router.delete("/delete-shark-not-found", UserController.deleteSharkNotFound);
 
-module.exports = router;
+export default router;

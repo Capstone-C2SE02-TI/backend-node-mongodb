@@ -1,5 +1,5 @@
-const _ = require("lodash");
-const {
+import _ from "lodash";
+import {
 	checkExistedUsername,
 	getPasswordByUsername,
 	getAdminByUsername,
@@ -7,9 +7,9 @@ const {
 	deleteUsersByUserId,
 	getListOfUsers,
 	getUserProfile
-} = require("../services/crudDatabase/admin");
-const { comparePassword } = require("../helpers");
-const { validateSignInBody } = require("../validators/admin");
+} from "../services/crudDatabase/admin";
+import { comparePassword } from "../helpers";
+import { validateSignInBody } from "../validators/admin";
 
 function AdminController() {
 	this.signin = async (req, res, next) => {
@@ -188,4 +188,4 @@ function AdminController() {
 	};
 }
 
-module.exports = new AdminController();
+export default new AdminController();

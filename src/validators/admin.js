@@ -1,8 +1,8 @@
-const {
+import {
 	validateUsername,
 	validatePassword,
 	returnValidationResult
-} = require("./index.js");
+} from "./index.js";
 
 const validateSignInBody = async (req, res, next) => {
 	await validateUsername(req);
@@ -10,6 +10,4 @@ const validateSignInBody = async (req, res, next) => {
 	return returnValidationResult(req);
 };
 
-module.exports = {
-	validateSignInBody
-};
+export { validateSignInBody };
