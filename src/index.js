@@ -1,14 +1,14 @@
-const express = require("express");
-const cors = require("cors");
-const morgan = require("morgan");
-const dotenv = require("dotenv");
-const swaggerUI = require("swagger-ui-express");
-const swaggerJsDoc = require("swagger-jsdoc");
-const cookieParse = require("cookie-parser");
-const routing = require("./routes");
-const { connectDatabase } = require("./configs/connectDatabase");
-const PORT = process.env.PORT || 4000;
+import express from "express";
+import cors from "cors";
+import morgan from "morgan";
+import dotenv from "dotenv";
+import swaggerUI from "swagger-ui-express";
+import swaggerJsDoc from "swagger-jsdoc";
+import cookieParse from "cookie-parser";
+import routing from "./routes/index.js";
+import connectDatabase from "./configs/connectDatabase/index.js";
 
+const PORT = process.env.PORT || 4000;
 const app = express();
 dotenv.config();
 

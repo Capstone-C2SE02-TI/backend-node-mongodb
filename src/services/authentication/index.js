@@ -1,14 +1,13 @@
-const dotenv = require("dotenv");
+import dotenv from "dotenv";
 dotenv.config();
 
-const jwt = require("jsonwebtoken");
-const promisify = require("util").promisify;
+import jwt from "jsonwebtoken";
+import { promisify } from "util";
 const sign = promisify(jwt.sign).bind(jwt);
 const verify = promisify(jwt.verify).bind(jwt);
 
-const ACCESS_TOKEN_SECRET = process.env.ACCESS_TOKEN_SECRET;
-const REFRESH_ACCESS_TOKEN_SECRET = process.env.REFRESH_ACCESS_TOKEN_SECRET;
-const ENCODE_ALGORITHM = process.env.ENCODE_ALGORITHM;
+const { ACCESS_TOKEN_SECRET, REFRESH_ACCESS_TOKEN_SECRET, ENCODE_ALGORITHM } =
+	process.env;
 
 const generateAccessToken = async (payloadData) => {
 	try {
@@ -98,7 +97,7 @@ const isAuthed = async (req, res, next) => {
 	return true;
 };
 
-module.exports = {
+export {
 	generateAccessToken,
 	generateRefreshAccessToken,
 	refreshAccessToken,

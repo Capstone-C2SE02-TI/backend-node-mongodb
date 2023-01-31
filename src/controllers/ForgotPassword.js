@@ -1,19 +1,20 @@
-require("dotenv").config();
-const nodemailer = require("nodemailer");
-const { OAuth2Client } = require("google-auth-library");
+import dotenv from "dotenv";
+dotenv.config();
+import nodemailer from "nodemailer";
+import { OAuth2Client } from "google-auth-library";
 
-const {
+import {
 	getUserByEmail,
 	updateUserConfirmationCode,
 	updateUserIsCodeConfirmed,
 	updateUserPassword
-} = require("../services/crudDatabase/user");
-const {
+} from "../services/crudDatabase/user.js";
+import {
 	validateSubmitEmailBody,
 	validateSubmitCodeBody,
 	validateCreateNewPasswordBody
-} = require("../validators/user");
-const { randomConfirmationCode, cryptPassword } = require("../helpers");
+} from "../validators/user.js";
+import { randomConfirmationCode, cryptPassword } from "../helpers/index.js";
 
 const {
 	GOOGLE_MAILER_CLIENT_ID,
@@ -197,4 +198,4 @@ function ForgotPasswordController() {
 	};
 }
 
-module.exports = new ForgotPasswordController();
+export default new ForgotPasswordController();

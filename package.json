@@ -3,13 +3,13 @@
 	"version": "2.0.0",
 	"description": "Capstone Project - Source Backend (NodeJS - MongoDB)",
 	"main": "src/index.js",
+	"type": "module",
 	"scripts": {
 		"start": "nodemon src/index.js",
 		"update-deps": "npx npm-check-updates -u && npm install"
 	},
 	"keywords": [
 		"capstone-project",
-		"backend",
 		"backend-node-mongodb"
 	],
 	"author": "huynhducthanhtuan huynhngochieu",

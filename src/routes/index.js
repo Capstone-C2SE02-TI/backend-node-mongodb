@@ -1,8 +1,8 @@
-const authRouter = require("./auth");
-const forgotPasswordRouter = require("./forgotPassword");
-const userRouter = require("./user");
-const displayRouter = require("./display");
-const adminRouter = require("./admin");
+import authRouter from "./auth.js";
+import forgotPasswordRouter from "./forgotPassword.js";
+import userRouter from "./user.js";
+import displayRouter from "./display.js";
+import adminRouter from "./admin.js";
 
 function routing(app) {
 	/* User routes */
@@ -15,7 +15,7 @@ function routing(app) {
 	app.use("/admin", adminRouter);
 
 	/* Notfound routes */
-	app.use("*", (req, res) => {
+	app.use("*", (req, res, next) => {
 		res.status(404).json({
 			message: "not-found",
 			error: "not-found"
@@ -23,4 +23,4 @@ function routing(app) {
 	});
 }
 
-module.exports = routing;
+export default routing;

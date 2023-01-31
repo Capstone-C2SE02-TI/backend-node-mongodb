@@ -1,8 +1,8 @@
-const express = require("express");
+import express from "express";
 const router = express.Router();
-const DisplayController = require("../controllers/Display");
+import DisplayController from "../controllers/Display.js";
 
-/* Coins And Tokens */
+/* Coins - Tokens */
 router.get(
 	"/coins-and-tokens/reducing",
 	DisplayController.getReducingCoinsAndTokens
@@ -37,7 +37,7 @@ router.get(
 	DisplayController.getLengthOfTransactionsList
 );
 
-/* Gain And Loss */
+/* Gain - Loss */
 router.get("/sharks/gain-loss", DisplayController.getGainLossOfSharks);
 router.get("/coins/gain-loss", DisplayController.getGainLossOfCoins);
 
@@ -47,4 +47,4 @@ router.get("/users/length", DisplayController.getLengthOfUsersList);
 /* Others */
 router.get("/tags", DisplayController.getTags);
 
-module.exports = router;
+export default router;

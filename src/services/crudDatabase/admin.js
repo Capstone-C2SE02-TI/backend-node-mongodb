@@ -1,5 +1,5 @@
-const { AdminModel, UserModel } = require("../../models");
-const { checkExistedUserId } = require("./user");
+import { AdminModel, UserModel } from "../../models/index.js";
+import { checkExistedUserId } from "./user.js";
 
 const getListOfAdmins = async () => {
 	return await AdminModel.find({})
@@ -136,7 +136,7 @@ const deleteUsersByUserId = async (userIds) => {
 	}
 };
 
-module.exports = {
+export {
 	getListOfAdmins,
 	getListOfUsers,
 	getUserProfile,

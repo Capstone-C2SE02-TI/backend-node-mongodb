@@ -1,4 +1,4 @@
-const { body, validationResult } = require("express-validator");
+import { body, validationResult } from "express-validator";
 
 const validateUsername = async (req) => {
 	await body("username")
@@ -171,7 +171,7 @@ const returnValidationResult = (req) => {
 	};
 };
 
-module.exports = {
+export {
 	validateUsername,
 	validateEmail,
 	validateEmailOptional,

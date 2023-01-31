@@ -1,7 +1,5 @@
-const _ = require("lodash");
-const { cryptPassword, comparePassword } = require("../helpers");
-
-const {
+import _ from "lodash";
+import {
 	getUserByEmail,
 	updateUserPassword,
 	getPasswordByEmail,
@@ -10,17 +8,17 @@ const {
 	getListOfSharkFollowed,
 	addNewShark,
 	deleteSharkNotFound
-} = require("../services/crudDatabase/user");
-const {
+} from "../services/crudDatabase/user.js";
+import {
 	getUserProfile,
 	updateUserProfile,
 	upgradeUserPremiumAccount
-} = require("../services/crudDatabase/admin");
-const {
+} from "../services/crudDatabase/admin.js";
+import {
 	validateUpdateProfileBody,
 	validateChangePasswordBody
-} = require("../validators/user");
-const { lte } = require("lodash");
+} from "../validators/user.js";
+import { cryptPassword, comparePassword } from "../helpers/index.js";
 
 function UserController() {
 	this.getUserProfile = async (req, res, next) => {
@@ -348,4 +346,4 @@ function UserController() {
 	};
 }
 
-module.exports = new UserController();
+export default new UserController();

@@ -1,5 +1,5 @@
-const _ = require("lodash");
-const bcrypt = require("bcrypt");
+import _ from "lodash";
+import bcrypt from "bcrypt";
 
 const randomConfirmationCode = () => {
 	const code = Math.floor(100000 + Math.random() * 900000);
@@ -54,7 +54,7 @@ function convertUnixTimestampToNumber(unixTimestamp) {
 	return formattedTimeNumber;
 }
 
-module.exports = {
+export {
 	randomConfirmationCode,
 	cryptPassword,
 	comparePassword,

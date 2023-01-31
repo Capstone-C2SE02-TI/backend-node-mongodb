@@ -1,11 +1,11 @@
-const UserModel = require("./User");
-const AdminModel = require("./Admin");
-const InvestorModel = require("./Investor");
-const CoinModel = require("./Coin");
-const TagModel = require("./Tag");
-const TransactionModel = require("./Transaction");
+import UserModel from "./User.js";
+import AdminModel from "./Admin.js";
+import InvestorModel from "./Investor.js";
+import CoinModel from "./Coin.js";
+import TagModel from "./Tag.js";
+import TransactionModel from "./Transaction.js";
 
-module.exports = {
+export {
 	UserModel,
 	AdminModel,
 	InvestorModel,

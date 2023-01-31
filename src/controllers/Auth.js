@@ -1,19 +1,19 @@
-const dotenv = require("dotenv");
+import dotenv from "dotenv";
 dotenv.config();
 
-const {
-	validateSignUpBody,
-	validateSignInBody
-} = require("../validators/user");
-const {
+import {
 	createNewUser,
 	checkExistedUsername,
 	checkExistedEmail,
 	getPasswordByUsername,
 	getUserByUsername
-} = require("../services/crudDatabase/user");
-const { cryptPassword, comparePassword } = require("../helpers");
-const { isAuthed, generateAccessToken } = require("../services/authentication");
+} from "../services/crudDatabase/user.js";
+import {
+	isAuthed,
+	generateAccessToken
+} from "../services/authentication/index.js";
+import { cryptPassword, comparePassword } from "../helpers/index.js";
+import { validateSignUpBody, validateSignInBody } from "../validators/user.js";
 
 const TI_AUTH_COOKIE = process.env.TI_AUTH_COOKIE;
 
@@ -149,4 +149,4 @@ function AuthController() {
 	};
 }
 
-module.exports = new AuthController();
+export default new AuthController();

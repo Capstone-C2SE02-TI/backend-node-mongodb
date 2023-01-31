@@ -1,5 +1,5 @@
-const _ = require("lodash");
-const {
+import _ from "lodash";
+import {
 	getListOfCoinsAndTokens,
 	getListOfSharks,
 	getListOfTags,
@@ -17,7 +17,7 @@ const {
 	getLengthOfSharksList,
 	getLengthOfUsersList,
 	getLengthOfTransactionsList
-} = require("../services/crudDatabase/user");
+} from "../services/crudDatabase/user.js";
 
 function DisplayController() {
 	this.getCoinsAndTokens = async (req, res, next) => {
@@ -529,4 +529,4 @@ function DisplayController() {
 	};
 }
 
-module.exports = new DisplayController();
+export default new DisplayController();

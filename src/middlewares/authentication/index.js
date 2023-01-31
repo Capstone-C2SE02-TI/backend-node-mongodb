@@ -1,9 +1,8 @@
-const dotenv = require("dotenv");
+import dotenv from "dotenv";
 dotenv.config();
+import { isAuthed } from "../../services/authentication/index.js";
 
-const { isAuthed } = require("../../services/authentication");
-
-// Tạm comment
+// Comment tạm thời
 const isAuth = async (req, res, next) => {
 	// try {
 	// 	if (!(await isAuthed(req, res, next))) {
@@ -40,7 +39,4 @@ const isAdmin = async (req, res, next) => {
 	// }
 };
 
-module.exports = {
-	isAuth,
-	isAdmin
-};
+export { isAuth, isAdmin };

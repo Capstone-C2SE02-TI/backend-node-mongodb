@@ -1,14 +1,14 @@
-const {
+import {
 	UserModel,
 	CoinModel,
 	InvestorModel,
 	TagModel,
 	TransactionModel
-} = require("../../models");
-const {
+} from "../../models/index.js";
+import {
 	QUERY_LIMIT_ITEM,
 	TRENDING_REDUCING_LIMIT_ITEM
-} = require("../../constants");
+} from "../../constants/index.js";
 
 const getUserByUsername = async (username) => {
 	return await UserModel.findOne({ username: username }).lean();
@@ -596,7 +596,7 @@ const getLengthOfTransactionsList = async () => {
 	}
 };
 
-module.exports = {
+export {
 	getUserByUsername,
 	getUserByEmail,
 	getUsersLength,
