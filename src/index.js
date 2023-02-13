@@ -7,6 +7,7 @@ import swaggerJsDoc from "swagger-jsdoc";
 import cookieParse from "cookie-parser";
 import routing from "./routes/index.js";
 import connectDatabase from "./configs/connectDatabase/index.js";
+import { DEVELOPMENT_URL, PRODUCTION_URL } from "./constants/index.js";
 
 const PORT = process.env.PORT || 4000;
 const app = express();
@@ -23,11 +24,11 @@ const swaggerOptions = {
 		},
 		servers: [
 			{
-				url: "http://localhost:4000/",
+				url: DEVELOPMENT_URL,
 				description: "Development"
 			},
 			{
-				url: "https://trackscan.azurewebsites.net/",
+				url: PRODUCTION_URL,
 				description: "Production"
 			}
 		]

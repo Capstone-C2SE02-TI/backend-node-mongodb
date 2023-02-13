@@ -33,8 +33,5 @@
 		"swagger-jsdoc": "^6.2.7",
 		"swagger-ui-express": "^4.6.0",
 		"util": "^0.12.5"
-	},
-	"engines": {
-		"node": "v18.12.1"
 	}
 }
