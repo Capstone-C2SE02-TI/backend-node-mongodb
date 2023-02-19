@@ -7,9 +7,13 @@ import swaggerJsDoc from "swagger-jsdoc";
 import cookieParse from "cookie-parser";
 import routing from "./routes/index.js";
 import connectDatabase from "./configs/connectDatabase/index.js";
-import { DEVELOPMENT_URL, PRODUCTION_URL } from "./constants/index.js";
+import {
+	PORT,
+	DEVELOPMENT_URL,
+	PRODUCTION_URL,
+	SWAGGER_URL
+} from "./constants/index.js";
 
-const PORT = process.env.PORT || 4000;
 const app = express();
 dotenv.config();
 
@@ -50,6 +54,6 @@ connectDatabase();
 routing(app);
 
 app.listen(PORT, () => {
-	console.log(`Server is listening at http://localhost:${PORT}/`);
-	console.log(`API Documentation: http://localhost:${PORT}/api-docs/`);
+	console.log(`Server is listening at ${DEVELOPMENT_URL}`);
+	console.log(`API Documentation: ${SWAGGER_URL}`);
 });
