@@ -4,9 +4,8 @@ import {
 	returnValidationResult
 } from "./index.js";
 
-const validateSignInBody = async (req, res, next) => {
-	await validateUsername(req);
-	await validatePassword(req);
+const validateSignInBody = async (req) => {
+	await Promise.all([validateUsername(req), validatePassword(req)]);
 	return returnValidationResult(req);
 };
 
