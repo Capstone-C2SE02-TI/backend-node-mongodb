@@ -27,5 +27,3 @@ $ npm install
 ```bash
 $ npm start
 ```
-
-### API Documentation: http://localhost:4000/api-docs
