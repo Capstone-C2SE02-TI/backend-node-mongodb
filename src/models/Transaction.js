@@ -108,5 +108,4 @@ const TransactionSchema = new mongoose.Schema(
 );
 
 const TransactionModel = mongoose.model("Transaction", TransactionSchema);
-
 export default TransactionModel;

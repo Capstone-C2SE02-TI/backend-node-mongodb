@@ -64,11 +64,7 @@ function UserController() {
 			else userId = Number(userIdCheck);
 		}
 
-		const { status, error } = await validateUpdateProfileBody(
-			req,
-			res,
-			next
-		);
+		const { status, error } = await validateUpdateProfileBody(req, res, next);
 
 		if (status === "failed")
 			return res.status(400).json({ message: error, error: error });
@@ -96,11 +92,7 @@ function UserController() {
 	};
 
 	this.changePassword = async (req, res, next) => {
-		const { status, error } = await validateChangePasswordBody(
-			req,
-			res,
-			next
-		);
+		const { status, error } = await validateChangePasswordBody(req, res, next);
 
 		if (status === "failed")
 			return res.status(400).json({ message: error, error: error });
@@ -111,35 +103,26 @@ function UserController() {
 			if (user) {
 				// Check correct old password
 				const password = await getPasswordByEmail(email);
-				comparePassword(
-					oldPassword,
-					password,
-					(error, isPasswordMatch) => {
-						if (isPasswordMatch) {
-							cryptPassword(
-								newPassword,
-								async (error, hashPassword) =>
-									(await updateUserPassword(
-										user.userId,
-										hashPassword
-									)) === true
-										? res.status(200).json({
-												message: "successfully",
-												error: null
-										  })
-										: res.status(400).json({
-												message: "failed",
-												error: error
-										  })
-							);
-						} else {
-							return res.status(400).json({
-								message: "incorrect-oldpassword",
-								error: "incorrect-oldpassword"
-							});
-						}
+				comparePassword(oldPassword, password, (error, isPasswordMatch) => {
+					if (isPasswordMatch) {
+						cryptPassword(newPassword, async (error, hashPassword) =>
+							(await updateUserPassword(user.userId, hashPassword)) === true
+								? res.status(200).json({
+										message: "successfully",
+										error: null
+								  })
+								: res.status(400).json({
+										message: "failed",
+										error: error
+								  })
+						);
+					} else {
+						return res.status(400).json({
+							message: "incorrect-oldpassword",
+							error: "incorrect-oldpassword"
+						});
 					}
-				);
+				});
 			} else {
 				return res
 					.status(400)

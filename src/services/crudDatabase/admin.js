@@ -1,14 +1,14 @@
 import { AdminModel, UserModel } from "../../models/index.js";
 import { checkExistedUserId } from "./user.js";
 
-const getListOfAdmins = async () => {
+export const getListOfAdmins = async () => {
 	return await AdminModel.find({})
 		.sort("id")
 		.select("id username email -_id")
 		.lean();
 };
 
-const getListOfUsers = async () => {
+export const getListOfUsers = async () => {
 	return await UserModel.find({})
 		.sort("id")
 		.select(
@@ -17,7 +17,7 @@ const getListOfUsers = async () => {
 		.lean();
 };
 
-const getUserProfile = async (userId) => {
+export const getUserProfile = async (userId) => {
 	if (!userId) return {};
 	else {
 		const user = await UserModel.findOne({ userId: userId })
@@ -31,33 +31,32 @@ const getUserProfile = async (userId) => {
 	}
 };
 
-const checkExistedUsernameForUpdateProfile = async (userId, username) => {
+export const checkExistedUsernameForUpdateProfile = async (
+	userId,
+	username
+) => {
 	const user = await UserModel.findOne({ username: username }).lean();
 
 	if (user && user.userId !== userId) return true;
 	else return false;
 };
 
-const checkExistedEmailForUpdateProfile = async (userId, email) => {
+export const checkExistedEmailForUpdateProfile = async (userId, email) => {
 	const user = await UserModel.findOne({ email: email }).lean();
 
 	if (user && user.userId !== userId) return true;
 	else return false;
 };
 
-const updateUserProfile = async (userId, updateInfo) => {
+export const updateUserProfile = async (userId, updateInfo) => {
 	try {
 		if (!userId) return "userid-required";
 		else {
-			const { fullName, email, phoneNumber, website, avatar } =
-				updateInfo;
+			const { fullName, email, phoneNumber, website, avatar } = updateInfo;
 
 			if (!(await checkExistedUserId(userId))) return "user-notfound";
 
-			if (
-				email &&
-				(await checkExistedEmailForUpdateProfile(userId, email))
-			)
+			if (email && (await checkExistedEmailForUpdateProfile(userId, email)))
 				return "email-existed";
 
 			const newUpdateInfo = {
@@ -84,7 +83,7 @@ const updateUserProfile = async (userId, updateInfo) => {
 	}
 };
 
-const upgradeUserPremiumAccount = async (userId) => {
+export const upgradeUserPremiumAccount = async (userId) => {
 	try {
 		if (userId === null) return "userid-required";
 		if (userId === undefined) return "userid-invalid";
@@ -108,23 +107,23 @@ const upgradeUserPremiumAccount = async (userId) => {
 	}
 };
 
-const checkExistedUsername = async (username) => {
+export const checkExistedUsername = async (username) => {
 	const isExisted = await AdminModel.exists({ username: username }).lean();
 	return Boolean(isExisted);
 };
 
-const getPasswordByUsername = async (username) => {
+export const getPasswordByUsername = async (username) => {
 	const admin = await AdminModel.findOne({ username: username })
 		.select("password -_id")
 		.lean();
 	return admin?.password || null;
 };
 
-const getAdminByUsername = async (username) => {
+export const getAdminByUsername = async (username) => {
 	return await AdminModel.findOne({ username: username }).lean();
 };
 
-const deleteUsersByUserId = async (userIds) => {
+export const deleteUsersByUserId = async (userIds) => {
 	try {
 		const deletedObj = await UserModel.remove({
 			userId: { $in: userIds }
@@ -134,18 +133,4 @@ const deleteUsersByUserId = async (userIds) => {
 	} catch (error) {
 		return false;
 	}
-};
-
-export {
-	getListOfAdmins,
-	getListOfUsers,
-	getUserProfile,
-	checkExistedUsername,
-	checkExistedUsernameForUpdateProfile,
-	checkExistedEmailForUpdateProfile,
-	updateUserProfile,
-	upgradeUserPremiumAccount,
-	getPasswordByUsername,
-	getAdminByUsername,
-	deleteUsersByUserId
 };

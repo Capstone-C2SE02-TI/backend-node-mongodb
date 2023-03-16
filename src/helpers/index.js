@@ -1,12 +1,12 @@
 import _ from "lodash";
 import bcrypt from "bcrypt";
 
-const randomConfirmationCode = () => {
+export const randomConfirmationCode = () => {
 	const code = Math.floor(100000 + Math.random() * 900000);
 	return code.toString();
 };
 
-const cryptPassword = (password, callback) => {
+export const cryptPassword = (password, callback) => {
 	bcrypt.genSalt(10, (error, salt) => {
 		if (error) return callback(error);
 
@@ -16,15 +16,13 @@ const cryptPassword = (password, callback) => {
 	});
 };
 
-const comparePassword = (plainPassword, hashPassword, callback) => {
+export const comparePassword = (plainPassword, hashPassword, callback) => {
 	bcrypt.compare(plainPassword, hashPassword, (error, isPasswordMatch) => {
-		return error == null
-			? callback(null, isPasswordMatch)
-			: callback(error);
+		return error == null ? callback(null, isPasswordMatch) : callback(error);
 	});
 };
 
-function convertUnixTimestampToNumber(unixTimestamp) {
+export const convertUnixTimestampToNumber = (unixTimestamp) => {
 	const date = new Date(unixTimestamp * 1000);
 
 	const year =
@@ -35,28 +33,16 @@ function convertUnixTimestampToNumber(unixTimestamp) {
 		date.getMonth() + 1 < 10
 			? "0" + (date.getMonth() + 1)
 			: "" + (date.getMonth() + 1);
-	const day =
-		date.getDate() < 10 ? "0" + date.getDate() : "" + date.getDate();
+	const day = date.getDate() < 10 ? "0" + date.getDate() : "" + date.getDate();
 	const hour =
 		date.getHours() < 10 ? "0" + date.getHours() : "" + date.getHours();
 	const minute =
-		date.getMinutes() < 10
-			? "0" + date.getMinutes()
-			: "" + date.getMinutes();
+		date.getMinutes() < 10 ? "0" + date.getMinutes() : "" + date.getMinutes();
 	const second =
-		date.getSeconds() < 10
-			? "0" + date.getSeconds()
-			: "" + date.getSeconds();
+		date.getSeconds() < 10 ? "0" + date.getSeconds() : "" + date.getSeconds();
 
 	const formattedTimeStr = `${year}${month}${day}${hour}${minute}${second}`;
 	const formattedTimeNumber = Number(formattedTimeStr);
 
 	return formattedTimeNumber;
-}
-
-export {
-	randomConfirmationCode,
-	cryptPassword,
-	comparePassword,
-	convertUnixTimestampToNumber
 };

@@ -1,9 +1,9 @@
+import { isAuthed } from "../../services/authentication/index.js";
 import dotenv from "dotenv";
 dotenv.config();
-import { isAuthed } from "../../services/authentication/index.js";
 
 // Comment tạm thời
-const isAuth = async (req, res, next) => {
+export const isAuth = async (req, res, next) => {
 	// try {
 	// 	if (!(await isAuthed(req, res, next))) {
 	// 		return res.status(403).json({
@@ -21,7 +21,7 @@ const isAuth = async (req, res, next) => {
 	// }
 };
 
-const isAdmin = async (req, res, next) => {
+export const isAdmin = async (req, res, next) => {
 	// try {
 	// 	if (req.user.role !== "admin") {
 	// 		return res.status(403).json({
@@ -38,5 +38,3 @@ const isAdmin = async (req, res, next) => {
 	// 	});
 	// }
 };
-
-export { isAuth, isAdmin };

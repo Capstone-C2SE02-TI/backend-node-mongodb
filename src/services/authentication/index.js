@@ -1,15 +1,14 @@
 import dotenv from "dotenv";
-dotenv.config();
-
 import jwt from "jsonwebtoken";
 import { promisify } from "util";
 const sign = promisify(jwt.sign).bind(jwt);
 const verify = promisify(jwt.verify).bind(jwt);
+dotenv.config();
 
 const { ACCESS_TOKEN_SECRET, REFRESH_ACCESS_TOKEN_SECRET, ENCODE_ALGORITHM } =
 	process.env;
 
-const generateAccessToken = async (payloadData) => {
+export const generateAccessToken = async (payloadData) => {
 	try {
 		const accessToken = await sign(payloadData, ACCESS_TOKEN_SECRET, {
 			algorithm: ENCODE_ALGORITHM,
@@ -22,7 +21,7 @@ const generateAccessToken = async (payloadData) => {
 	}
 };
 
-const generateRefreshAccessToken = async (payloadData) => {
+export const generateRefreshAccessToken = async (payloadData) => {
 	try {
 		const refreshAccessToken = await sign(
 			payloadData,
@@ -39,7 +38,7 @@ const generateRefreshAccessToken = async (payloadData) => {
 	}
 };
 
-const refreshAccessToken = async (refreshToken, userId) => {
+export const refreshAccessToken = async (refreshToken, userId) => {
 	try {
 		const refreshAccessToken = await decodeToken(
 			refreshToken,
@@ -58,9 +57,7 @@ const refreshAccessToken = async (refreshToken, userId) => {
 			username: user.username
 		};
 		const newAccessToken = await generateAccessToken(payloadData);
-		const newRefreshAccessToken = await generateRefreshAccessToken(
-			payloadData
-		);
+		const newRefreshAccessToken = await generateRefreshAccessToken(payloadData);
 
 		return { newAccessToken, newRefreshAccessToken };
 	} catch (error) {
@@ -68,7 +65,7 @@ const refreshAccessToken = async (refreshToken, userId) => {
 	}
 };
 
-const decodeToken = async (token, secretKey) => {
+export const decodeToken = async (token, secretKey) => {
 	try {
 		return await verify(token, secretKey, {
 			ignoreExpiration: true
@@ -78,7 +75,7 @@ const decodeToken = async (token, secretKey) => {
 	}
 };
 
-const isAuthed = async (req, res, next) => {
+export const isAuthed = async (req, res, next) => {
 	const accessTokenHeader = req.headers.authorization;
 	if (!accessTokenHeader) return false;
 
@@ -95,12 +92,4 @@ const isAuthed = async (req, res, next) => {
 	if (decodeValue1.username !== decodeValue2.username) return false;
 
 	return true;
-};
-
-export {
-	generateAccessToken,
-	generateRefreshAccessToken,
-	refreshAccessToken,
-	decodeToken,
-	isAuthed
 };

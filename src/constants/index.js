@@ -1,20 +1,14 @@
 import dotenv from "dotenv";
 dotenv.config();
 
-const PORT = process.env.PORT || 4000;
-const DEVELOPMENT_URL = process.env.DEVELOPMENT_URL || "http://localhost:4000/";
-const PRODUCTION_URL = process.env.PRODUCTION_URL;
-const SWAGGER_URL =
-	process.env.SWAGGER_URL || "http://localhost:4000/api-docs/";
+export const MONGODB_URI = process.env.MONGODB_URI;
+export const PORT = process.env.PORT || 4001;
+export const NODE_ENV = process.env.NODE_ENV;
+export const DEVELOPMENT_URL = `http://localhost:${PORT}`;
+export const PRODUCTION_URL = process.env.PRODUCTION_URL;
+export const HOST_URL =
+	NODE_ENV === "development" ? DEVELOPMENT_URL : PRODUCTION_URL;
+export const SWAGGER_URL = `${HOST_URL}/api-docs/`;
 
-const QUERY_LIMIT_ITEM = 20;
-const TRENDING_REDUCING_LIMIT_ITEM = 10;
-
-export {
-	PORT,
-	DEVELOPMENT_URL,
-	PRODUCTION_URL,
-	SWAGGER_URL,
-	QUERY_LIMIT_ITEM,
-	TRENDING_REDUCING_LIMIT_ITEM
-};
+export const QUERY_LIMIT_ITEM = 20;
+export const TRENDING_REDUCING_LIMIT_ITEM = 10;

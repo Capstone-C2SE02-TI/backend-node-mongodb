@@ -56,5 +56,4 @@ const InvestorSchema = new mongoose.Schema(
 InvestorSchema.plugin(AutoIncrement, { inc_field: "sharkId" });
 
 const InvestorModel = mongoose.model("Investor", InvestorSchema);
-
 export default InvestorModel;

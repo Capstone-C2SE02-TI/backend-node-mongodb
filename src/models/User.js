@@ -81,5 +81,4 @@ const UserSchema = new mongoose.Schema(
 UserSchema.plugin(AutoIncrement, { inc_field: "userId" });
 
 const UserModel = mongoose.model("User", UserSchema);
-
 export default UserModel;

@@ -95,5 +95,4 @@ const CoinSchema = new mongoose.Schema(
 );
 
 const CoinModel = mongoose.model("Coin", CoinSchema);
-
 export default CoinModel;

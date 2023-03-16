@@ -140,9 +140,7 @@ function AuthController() {
 			req.user = null;
 			req.session = null;
 
-			return res
-				.status(200)
-				.json({ message: "successfully", error: null });
+			return res.status(200).json({ message: "successfully", error: null });
 		} catch (error) {
 			return res.status(400).json({ message: "failed", error: error });
 		}

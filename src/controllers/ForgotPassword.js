@@ -45,8 +45,7 @@ function ForgotPasswordController() {
 
 			if (user) {
 				try {
-					const myAccessTokenObject =
-						await myOAuth2Client.getAccessToken();
+					const myAccessTokenObject = await myOAuth2Client.getAccessToken();
 					const myAccessToken = myAccessTokenObject?.token;
 
 					const transport = nodemailer.createTransport({
@@ -88,10 +87,7 @@ function ForgotPasswordController() {
 
 					await transport.sendMail(mailOptions);
 
-					await updateUserConfirmationCode(
-						user.userId,
-						confirmationCode
-					);
+					await updateUserConfirmationCode(user.userId, confirmationCode);
 					await updateUserIsCodeConfirmed(user.userId, false);
 
 					return res.status(200).json({
@@ -115,11 +111,7 @@ function ForgotPasswordController() {
 
 	this.submitCode = async (req, res, next) => {
 		try {
-			const { status, error } = await validateSubmitCodeBody(
-				req,
-				res,
-				next
-			);
+			const { status, error } = await validateSubmitCodeBody(req, res, next);
 
 			if (status === "failed")
 				return res.status(400).json({ message: error, error: error });

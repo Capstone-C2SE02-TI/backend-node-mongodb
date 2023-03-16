@@ -1,6 +1,6 @@
 import { body, validationResult } from "express-validator";
 
-const validateUsername = async (req) => {
+export const validateUsername = async (req) => {
 	await body("username")
 		.trim()
 		.notEmpty()
@@ -12,7 +12,7 @@ const validateUsername = async (req) => {
 		.run(req);
 };
 
-const validateEmail = async (req) => {
+export const validateEmail = async (req) => {
 	await body("email")
 		.trim()
 		.notEmpty()
@@ -24,7 +24,7 @@ const validateEmail = async (req) => {
 		.run(req);
 };
 
-const validateEmailOptional = async (req) => {
+export const validateEmailOptional = async (req) => {
 	await body("email")
 		.optional({ checkFalsy: true, nullable: true })
 		.trim()
@@ -35,7 +35,7 @@ const validateEmailOptional = async (req) => {
 		.run(req);
 };
 
-const validatePhoneNumber = async (req) => {
+export const validatePhoneNumber = async (req) => {
 	await body("phoneNumber")
 		.trim()
 		.notEmpty()
@@ -45,7 +45,7 @@ const validatePhoneNumber = async (req) => {
 		.run(req);
 };
 
-const validatePhoneNumberOptional = async (req) => {
+export const validatePhoneNumberOptional = async (req) => {
 	await body("phoneNumber")
 		.optional({ checkFalsy: true, nullable: true })
 		.trim()
@@ -54,7 +54,7 @@ const validatePhoneNumberOptional = async (req) => {
 		.run(req);
 };
 
-const validatePassword = async (req) => {
+export const validatePassword = async (req) => {
 	await body("password")
 		.trim()
 		.notEmpty()
@@ -64,7 +64,7 @@ const validatePassword = async (req) => {
 		.run(req);
 };
 
-const validateConfirmPassword = async (req) => {
+export const validateConfirmPassword = async (req) => {
 	await body("confirmPassword")
 		.trim()
 		.notEmpty()
@@ -81,7 +81,7 @@ const validateConfirmPassword = async (req) => {
 		.run(req);
 };
 
-const validateCode = async (req) => {
+export const validateCode = async (req) => {
 	await body("code")
 		.trim()
 		.notEmpty()
@@ -91,7 +91,7 @@ const validateCode = async (req) => {
 		.run(req);
 };
 
-const validateOldPassword = async (req) => {
+export const validateOldPassword = async (req) => {
 	await body("oldPassword")
 		.trim()
 		.notEmpty()
@@ -101,7 +101,7 @@ const validateOldPassword = async (req) => {
 		.run(req);
 };
 
-const validateNewPassword = async (req) => {
+export const validateNewPassword = async (req) => {
 	await body("newPassword")
 		.trim()
 		.notEmpty()
@@ -111,7 +111,7 @@ const validateNewPassword = async (req) => {
 		.run(req);
 };
 
-const validateNewConfirmPassword = async (req) => {
+export const validateNewConfirmPassword = async (req) => {
 	await body("newConfirmPassword")
 		.trim()
 		.notEmpty()
@@ -128,7 +128,7 @@ const validateNewConfirmPassword = async (req) => {
 		.run(req);
 };
 
-const validateFullNameOptional = async (req) => {
+export const validateFullNameOptional = async (req) => {
 	await body("fullName")
 		.optional({ checkFalsy: true, nullable: true })
 		.trim()
@@ -141,7 +141,7 @@ const validateFullNameOptional = async (req) => {
 		.run(req);
 };
 
-const validateWebsiteOptional = async (req) => {
+export const validateWebsiteOptional = async (req) => {
 	await body("website")
 		.optional({ checkFalsy: true, nullable: true })
 		.trim()
@@ -152,7 +152,7 @@ const validateWebsiteOptional = async (req) => {
 		.run(req);
 };
 
-const validateAvatarOptional = async (req) => {
+export const validateAvatarOptional = async (req) => {
 	await body("avatar")
 		.optional({ checkFalsy: true, nullable: true })
 		.trim()
@@ -163,28 +163,10 @@ const validateAvatarOptional = async (req) => {
 		.run(req);
 };
 
-const returnValidationResult = (req) => {
+export const returnValidationResult = (req) => {
 	const errors = validationResult(req);
 	return {
 		status: errors.isEmpty() ? "successfully" : "failed",
 		error: errors.array()[0]?.msg
 	};
-};
-
-export {
-	validateUsername,
-	validateEmail,
-	validateEmailOptional,
-	validatePhoneNumber,
-	validatePhoneNumberOptional,
-	validatePassword,
-	validateConfirmPassword,
-	validateCode,
-	validateOldPassword,
-	validateNewPassword,
-	validateNewConfirmPassword,
-	validateFullNameOptional,
-	validateWebsiteOptional,
-	validateAvatarOptional,
-	returnValidationResult
 };
