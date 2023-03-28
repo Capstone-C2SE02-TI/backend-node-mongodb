@@ -1,7 +1,7 @@
 {
 	"name": "backend-node-mongodb",
 	"version": "2.0.0",
-	"description": "Capstone Project - Source Backend (NodeJS - MongoDB)",
+	"description": "Capstone Project - Backend API",
 	"main": "src/index.js",
 	"type": "module",
 	"scripts": {
@@ -14,7 +14,7 @@
 	],
 	"author": "huynhducthanhtuan huynhngochieu",
 	"license": "MIT",
-	"homepage": "https://github.com/Capstone-C1SE04-TI/backend-node-mongodb#readme",
+	"homepage": "https://github.com/Capstone-C2SE02-TI/backend-node-mongodb#readme",
 	"dependencies": {
 		"bcrypt": "^5.1.0",
 		"cookie-parser": "^1.4.6",

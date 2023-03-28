@@ -1,13 +1,11 @@
 ## Cryptocurrency Tracking And Analysis System
 
-### Capstone Project - Source Backend (NodeJS - MongoDB)
-
-### Installation Guide
+### Capstone Project - Backend API
 
 #### 1. Clone project
 
 ```bash
-$ git clone https://github.com/Capstone-C1SE04-TI/backend-node-mongodb.git
+$ git clone https://github.com/Capstone-C2SE02-TI/backend-node-mongodb.git
 ```
 
 #### 2. Change directory to folder backend-node-mongodb
