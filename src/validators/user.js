@@ -10,7 +10,6 @@ import {
 	validateOldPassword,
 	validateNewPassword,
 	validateNewConfirmPassword,
-	validateFullNameOptional,
 	validateWebsiteOptional,
 	validateAvatarOptional,
 	returnValidationResult
@@ -63,7 +62,6 @@ export const validateChangePasswordBody = async (req) => {
 
 export const validateUpdateProfileBody = async (req) => {
 	await Promise.all([
-		// validateFullNameOptional(req),
 		validateEmailOptional(req),
 		validatePhoneNumberOptional(req),
 		validateWebsiteOptional(req),

@@ -1,12 +1,5 @@
-import { AdminModel, UserModel } from "../../models/index.js";
+import { UserModel } from "../../models/index.js";
 import { checkExistedUserId } from "./user.js";
-
-export const getListOfAdmins = async () => {
-	return await AdminModel.find({})
-		.sort("id")
-		.select("id username email -_id")
-		.lean();
-};
 
 export const getListOfUsers = async () => {
 	return await UserModel.find({})
