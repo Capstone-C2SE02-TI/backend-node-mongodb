@@ -6,6 +6,7 @@
 	"type": "module",
 	"scripts": {
 		"start": "nodemon src/index.js",
+		"build": "npm run lint",
 		"update-deps": "npx npm-check-updates -u && npm install"
 	},
 	"keywords": [
