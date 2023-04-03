@@ -6,6 +6,23 @@ export const randomConfirmationCode = () => {
 	return code.toString();
 };
 
+export const cryptWalletAddress = (walletAddress, callback) => {
+	bcrypt.genSalt(10, (error, salt) => {
+		if (error) return callback(error);
+
+		bcrypt.hash(walletAddress, salt, (error, hashAddress) => {
+			console.log(hashAddress);
+			return callback(error, hashAddress);
+		});
+	});
+};
+
+export const compareWalletAddress = (plainAddress, hashAddress, callback) => {
+	bcrypt.compare(plainAddress, hashAddress, (error, isAddressMatch) => {
+		return error == null ? callback(null, isAddressMatch) : callback(error);
+	});
+};
+
 export const cryptPassword = (password, callback) => {
 	bcrypt.genSalt(10, (error, salt) => {
 		if (error) return callback(error);

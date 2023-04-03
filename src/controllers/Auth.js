@@ -6,52 +6,38 @@ import {
 	checkExistedUsername,
 	checkExistedEmail,
 	getPasswordByUsername,
-	getUserByUsername
+	getUserByUsername,
+	checkExistedWalletAddress
 } from "../services/crudDatabase/user.js";
 import {
 	isAuthed,
 	generateAccessToken
 } from "../services/authentication/index.js";
-import { cryptPassword, comparePassword } from "../helpers/index.js";
+import {
+	cryptWalletAddress,
+	cryptPassword,
+	comparePassword
+} from "../helpers/index.js";
 import { validateSignUpBody, validateSignInBody } from "../validators/user.js";
 
 const TI_AUTH_COOKIE = process.env.TI_AUTH_COOKIE;
 
 function AuthController() {
 	this.signup = async (req, res, next) => {
-		const { username, email, phoneNumber, password } = req.body;
-		const { status, error } = await validateSignUpBody(req, res, next);
+		const { walletAddress } = req.body;
 
-		if (status === "failed")
-			return res.status(400).json({ message: error, error: error });
-
-		if (await checkExistedUsername(username))
-			return res.status(400).json({
-				message: "username-existed",
-				error: "username-existed"
+		cryptWalletAddress(walletAddress, async (error, hashAddress) => {
+			const detailCreated = await createNewUser({
+				walletAddress: hashAddress
 			});
-
-		if (await checkExistedEmail(email))
-			return res
-				.status(400)
-				.json({ message: "email-existed", error: "email-existed" });
-
-		cryptPassword(password, async (error, hashPassword) => {
-			const isCreated = await createNewUser({
-				username,
-				email,
-				phoneNumber,
-				hashPassword
-			});
-
-			isCreated
+			detailCreated.created
 				? res.status(200).json({
-						message: "successfully",
+						message: detailCreated.message,
 						error: null
 				  })
 				: res.status(400).json({
-						message: "failed",
-						error: error
+						message: detailCreated.message,
+						error: detailCreated.error,
 				  });
 		});
 	};

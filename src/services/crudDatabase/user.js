@@ -22,29 +22,45 @@ export const getUsersLength = async () => {
 	return await UserModel.count({}).lean();
 };
 
-export const createNewUser = async ({
-	username,
-	email,
-	phoneNumber,
-	hashPassword
-}) => {
+export const checkExistedWalletAddress = async (walletAddress) => {
+	const isExisted = await UserModel.exists({
+		walletAddress: walletAddress
+	});
+
+	console.log(isExisted, Boolean(isExisted));
+	return false;
+};
+
+export const createNewUser = async ({ walletAddress }) => {
 	try {
+
 		const newUserInfo = {
-			username: username,
-			email: email,
-			phoneNumber: phoneNumber,
-			password: hashPassword
+			walletAddress: walletAddress
 		};
 
 		await UserModel.create(newUserInfo)
-			.then((data) => {})
+			.then((data) => {
+				return {
+					created: true,
+					message: "create user successfully",
+					error: null
+				};
+			})
 			.catch((error) => {
-				throw new Error(error);
+				throw error;
 			});
 
-		return true;
+		return {
+			created: true,
+			message: "create user successfully",
+			error: null
+		};
 	} catch (error) {
-		return false;
+		return {
+			created: false,
+			message: "create user failed",
+			error: error
+		};
 	}
 };
 

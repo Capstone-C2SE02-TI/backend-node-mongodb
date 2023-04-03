@@ -7,21 +7,13 @@ const UserSchema = new mongoose.Schema(
 		walletAddress: {
 			type: String,
 			trim: true,
-			default: null
+			required: true,
+			unique: true
 		},
 		fullName: {
 			type: String,
 			trim: true,
 			default: ""
-		},
-		confirmationCode: {
-			type: String,
-			trim: true,
-			default: ""
-		},
-		isCodeConfirmed: {
-			type: Boolean,
-			default: false
 		},
 		avatar: {
 			type: String,
@@ -49,8 +41,6 @@ const UserSchema = new mongoose.Schema(
 	},
 	{ timestamps: true, versionKey: false }
 );
-
-UserSchema.plugin(AutoIncrement, { inc_field: "userId" });
 
 const UserModel = mongoose.model("User", UserSchema);
 export default UserModel;
