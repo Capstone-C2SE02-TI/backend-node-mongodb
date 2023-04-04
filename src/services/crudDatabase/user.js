@@ -9,6 +9,7 @@ import {
 	QUERY_LIMIT_ITEM,
 	TRENDING_REDUCING_LIMIT_ITEM
 } from "../../constants/index.js";
+import { cryptWalletAddress } from "../../helpers/index.js";
 
 export const getUserByUsername = async (username) => {
 	return await UserModel.findOne({ username: username }).lean();
@@ -23,17 +24,19 @@ export const getUsersLength = async () => {
 };
 
 export const checkExistedWalletAddress = async (walletAddress) => {
-	const isExisted = await UserModel.exists({
-		walletAddress: walletAddress
+	cryptWalletAddress(walletAddress, async (error, hashAddress) => {
+		const isExisted = await UserModel.exists({
+			walletAddress: hashAddress
+		});
+
+		return Boolean(isExisted);
 	});
 
-	console.log(isExisted, Boolean(isExisted));
-	return false;
+	return false; 
 };
 
-export const createNewUser = async ({ walletAddress }) => {
+export const createNewUser = async ( walletAddress ) => {
 	try {
-
 		const newUserInfo = {
 			walletAddress: walletAddress
 		};
@@ -121,38 +124,14 @@ export const updateUserPassword = async (userId, password) => {
 	}
 };
 
-export const checkExistedUsername = async (username) => {
-	const isExisted = await UserModel.exists({ username: username }).lean();
-	return Boolean(isExisted);
-};
-
 export const checkExistedEmail = async (email) => {
 	const isExisted = await UserModel.exists({ email: email }).lean();
-	return Boolean(isExisted);
-};
-
-export const checkExistedUserId = async (userId) => {
-	const isExisted = await UserModel.exists({ userId: userId }).lean();
 	return Boolean(isExisted);
 };
 
 export const checkExistedSharkId = async (sharkId) => {
 	const isExisted = await InvestorModel.exists({ sharkId: sharkId }).lean();
 	return Boolean(isExisted);
-};
-
-export const getPasswordByUsername = async (username) => {
-	const user = await UserModel.findOne({ username: username })
-		.select("password -_id")
-		.lean();
-	return user?.password || null;
-};
-
-export const getPasswordByEmail = async (email) => {
-	const user = await UserModel.findOne({ email: email })
-		.select("password -_id")
-		.lean();
-	return user?.password || null;
 };
 
 export const getListOfCoinsAndTokens = async () => {
@@ -524,11 +503,11 @@ export const addNewShark = async (walletAddress, userId) => {
 			isShark: true
 		});
 
-		const user = await UserModel.findOneAndUpdate(
-			{ userId: userId },
-			{ $push: { addedSharks: walletAddress } },
-			{ new: true }
-		).lean();
+		// const user = await UserModel.findOneAndUpdate(
+		// 	{ userId: userId },
+		// 	{ $push: { addedSharks: walletAddress } },
+		// 	{ new: true }
+		// ).lean();
 
 		let addedSharks = user.addedSharks;
 

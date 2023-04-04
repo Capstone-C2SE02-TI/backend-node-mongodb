@@ -1,27 +1,41 @@
+import { cryptWalletAddress } from "../../helpers/index.js";
 import { UserModel } from "../../models/index.js";
-import { checkExistedUserId } from "./user.js";
+import { checkExistedWalletAddress } from "./user.js";
 
 export const getListOfUsers = async () => {
-	return await UserModel.find({})
-		.sort("id")
-		.select(
-			"userId username email phoneNumber fullName avatar website sharksFollowed updatedAt createdAt -_id"
-		)
-		.lean();
+	const projection = {
+		fullName: 1,
+		avatar: 1,
+		website: 1,
+		premiumAccount: 1,
+		sharksFollowed: 1,
+		addedSharks: 1,
+		createdAt: 1
+	};
+
+	return await UserModel.find({}, projection).sort("id").lean();
 };
 
-export const getUserProfile = async (userId) => {
-	if (!userId) return {};
-	else {
-		const user = await UserModel.findOne({ userId: userId })
-			.select(
-				"userId username email phoneNumber fullName avatar website sharksFollowed updatedAt createdAt -_id"
-			)
-			.lean();
+export const getUserProfile = async (walletAddress) => {
+	if (walletAddress) {
+			const projection = {
+				fullName: 1,
+				avatar: 1,
+				website: 1,
+				premiumAccount: 1,
+				sharksFollowed: 1,
+				addedSharks: 1,
+				createdAt: 1
+			};
+			const user = await UserModel.findOne(
+				{ walletAddress: hashAddress },
+				projection
+			).lean();
 
-		if (!user) return {};
-		else return user;
+			if (!user) return {};
+			else return user;
 	}
+	return {};
 };
 
 export const checkExistedUsernameForUpdateProfile = async (
@@ -41,16 +55,14 @@ export const checkExistedEmailForUpdateProfile = async (userId, email) => {
 	else return false;
 };
 
-export const updateUserProfile = async (userId, updateInfo) => {
+export const updateUserProfile = async (walletAddress, updateInfo) => {
 	try {
-		if (!userId) return "userid-required";
+		if (!walletAddress) return "wallet-address-required";
 		else {
 			const { fullName, email, phoneNumber, website, avatar } = updateInfo;
 
-			if (!(await checkExistedUserId(userId))) return "user-notfound";
-
-			if (email && (await checkExistedEmailForUpdateProfile(userId, email)))
-				return "email-existed";
+			if (!(await checkExistedWalletAddress(walletAddress)))
+				return "user-notfound";
 
 			const newUpdateInfo = {
 				fullName: fullName === "" ? undefined : fullName,
@@ -60,7 +72,10 @@ export const updateUserProfile = async (userId, updateInfo) => {
 				avatar: avatar === "" ? undefined : avatar
 			};
 
-			await UserModel.findOneAndUpdate({ userId: userId }, newUpdateInfo)
+			await UserModel.findOneAndUpdate(
+				{ walletAddress: walletAddress },
+				newUpdateInfo
+			)
 				.lean()
 				.then((data) => {
 					if (!data) throw new Error();
@@ -76,14 +91,15 @@ export const updateUserProfile = async (userId, updateInfo) => {
 	}
 };
 
-export const upgradeUserPremiumAccount = async (userId) => {
+export const upgradeUserPremiumAccount = async (walletAddress) => {
 	try {
-		if (userId === null) return "userid-required";
-		if (userId === undefined) return "userid-invalid";
-		if (!(await checkExistedUserId(userId))) return "user-notfound";
+		if (walletAddress === null) return "wallet-address-required";
+		if (walletAddress === undefined) return "wallet-address-invalid";
+		if (!(await checkExistedWalletAddress(walletAddress)))
+			return "user-notfound";
 
 		await UserModel.findOneAndUpdate(
-			{ userId: userId },
+			{ walletAddress: walletAddress },
 			{ premiumAccount: true }
 		)
 			.lean()

@@ -1,8 +1,5 @@
 import _ from "lodash";
 import {
-	getUserByEmail,
-	updateUserPassword,
-	getPasswordByEmail,
 	followWalletOfShark,
 	unfollowWalletOfShark,
 	getListOfSharkFollowed,
@@ -16,28 +13,25 @@ import {
 } from "../services/crudDatabase/admin.js";
 import {
 	validateUpdateProfileBody,
-	validateChangePasswordBody
 } from "../validators/user.js";
-import { cryptPassword, comparePassword } from "../helpers/index.js";
 
 function UserController() {
 	this.getUserProfile = async (req, res, next) => {
-		let userId = req.query.userId;
+		let walletAddress = req.query.walletAddress;
 
-		if (!userId) userId = null;
+		if (!walletAddress) walletAddress = null;
 		else {
-			const userIdCheck = _.toString(userId);
-			if (_.isNaN(userIdCheck)) userId = undefined;
-			else userId = Number(userIdCheck);
+			const walletAddressCheck = _.toString(walletAddress);
+			if (_.isNaN(walletAddressCheck)) walletAddress = undefined;
 		}
 
-		await getUserProfile(userId)
+		await getUserProfile(walletAddress)
 			.then((data) =>
 				Object.entries(data).length === 0
 					? res.status(400).json({
-							message: "failed-userid-invalid",
-							error: "userid-invalid",
-							data: {}
+							message: "failed-wallet-address-invalid",
+							error: "wallet-address-invalid",
+							data: data
 					  })
 					: res.status(200).json({
 							message: "successfully",
@@ -91,48 +85,8 @@ function UserController() {
 		}
 	};
 
-	this.changePassword = async (req, res, next) => {
-		const { status, error } = await validateChangePasswordBody(req, res, next);
-
-		if (status === "failed")
-			return res.status(400).json({ message: error, error: error });
-		else {
-			const { email, oldPassword, newPassword } = req.body;
-			const user = await getUserByEmail(email);
-
-			if (user) {
-				// Check correct old password
-				const password = await getPasswordByEmail(email);
-				comparePassword(oldPassword, password, (error, isPasswordMatch) => {
-					if (isPasswordMatch) {
-						cryptPassword(newPassword, async (error, hashPassword) =>
-							(await updateUserPassword(user.userId, hashPassword)) === true
-								? res.status(200).json({
-										message: "successfully",
-										error: null
-								  })
-								: res.status(400).json({
-										message: "failed",
-										error: error
-								  })
-						);
-					} else {
-						return res.status(400).json({
-							message: "incorrect-oldpassword",
-							error: "incorrect-oldpassword"
-						});
-					}
-				});
-			} else {
-				return res
-					.status(400)
-					.json({ message: "user-notfound", error: "user-notfound" });
-			}
-		}
-	};
-
 	this.upgradePremiumAccount = async (req, res, next) => {
-		let userId = req.body.userId;
+		let userId = req.body.userId; 
 
 		if (!userId) userId = null;
 		else {

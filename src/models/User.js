@@ -1,6 +1,4 @@
 import mongoose from "mongoose";
-import Inc from "mongoose-sequence";
-const AutoIncrement = Inc(mongoose);
 
 const UserSchema = new mongoose.Schema(
 	{
@@ -41,6 +39,7 @@ const UserSchema = new mongoose.Schema(
 	},
 	{ timestamps: true, versionKey: false }
 );
+
 
 const UserModel = mongoose.model("User", UserSchema);
 export default UserModel;
