@@ -11,70 +11,12 @@
                     schema:
                         type: object
                         required:
-                            - username
-                            - email
-                            - phoneNumber
-                            - password
-                            - confirmPassword
+                            - walletAddress
                         properties:
-                            username:
-                                type: string
-                            email:
-                                type: string
-                            phoneNumber:
-                                type: string
-                            password:
-                                type: string
-                            confirmPassword:
+                            walletAddress:
                                 type: string
                         example:
-                            username: "hieuhn"
-                            email: "hieuhn@gmail.com"
-                            phoneNumber: "0366871673"
-                            password: "12345678"
-                            confirmPassword: "12345678"
-        responses:
-            200:
-                description: Successfully
-            400:
-                description: Failed
-
-/auth/signin:
-    post:
-        summary: Sign in
-        tags:
-            - Authentication
-        requestBody:
-            content:
-                application/json:
-                    schema:
-                        type: object
-                        required:
-                            - username
-                            - password
-                        properties:
-                            username:
-                                type: string
-                            password:
-                                type: string
-                        example:
-                            username: "hieuhn"
-                            password: "12345678"
-        responses:
-            200:
-                description: Successfully
-            400:
-                description: Failed
-            401:
-                description: Unauthorized
-            404:
-                description: Not found
-
-/auth/signout:
-    post:
-        summary: Sign out
-        tags:
-            - Authentication
+                            walletAddress: "0x1Da...."
         responses:
             200:
                 description: Successfully

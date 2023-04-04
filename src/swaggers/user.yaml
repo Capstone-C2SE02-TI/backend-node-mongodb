@@ -51,44 +51,9 @@
             - User
         parameters:
             - in: query
-              name: userId
+              name: walletAddress
               schema:
                   type: string
-        responses:
-            200:
-                description: Successfully
-            400:
-                description: Failed
-
-/user/change-password:
-    post:
-        summary: Change password
-        tags:
-            - User
-        requestBody:
-            content:
-                application/json:
-                    schema:
-                        type: object
-                        required:
-                            - email
-                            - oldPassword
-                            - newPassword
-                            - newConfirmPassword
-                        properties:
-                            email:
-                                type: string
-                            oldPassword:
-                                type: string
-                            newPassword:
-                                type: string
-                            newConfirmPassword:
-                                type: string
-                        example:
-                            email: "hieuhn@gmail.com"
-                            oldPassword: "12345678"
-                            newPassword: "12345678910"
-                            newConfirmPassword: "12345678910"
         responses:
             200:
                 description: Successfully

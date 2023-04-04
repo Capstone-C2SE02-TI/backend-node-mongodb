@@ -5,7 +5,6 @@ import { isAuth } from "../middlewares/authentication/index.js";
 
 router.post("/profile/update", isAuth, UserController.updateUserProfile);
 router.get("/profile", isAuth, UserController.getUserProfile);
-router.post("/change-password", isAuth, UserController.changePassword);
 router.post(
 	"/upgrade-premium-account",
 	isAuth,
