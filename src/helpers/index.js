@@ -24,7 +24,11 @@ export const decryptWalletAddress = (encryptedData) => {
 	const ivDecrypt = Buffer.from(iv.toString("hex"), "hex");
 	const encryptedText = Buffer.from(encryptedData, "hex");
 
-	const decipher = crypto.createDecipheriv(algorithm, Buffer.from(key), ivDecrypt);
+	const decipher = crypto.createDecipheriv(
+		algorithm,
+		Buffer.from(key),
+		ivDecrypt
+	);
 
 	let decrypted = decipher.update(encryptedText);
 	decrypted = Buffer.concat([decrypted, decipher.final()]);

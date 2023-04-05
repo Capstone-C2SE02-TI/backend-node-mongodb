@@ -7,7 +7,7 @@
             - User
         parameters:
             - in: query
-              name: userId
+              name: walletAddress
               schema:
                   type: string
         requestBody:
@@ -71,12 +71,12 @@
                     schema:
                         type: object
                         required:
-                            - userId
+                            - walletAddress
                         properties:
-                            userId:
+                            walletAddress:
                                 type: string
                         example:
-                            userId: "1"
+                            walletAddress: "0x...."
         responses:
             200:
                 description: Successfully
@@ -94,15 +94,15 @@
                     schema:
                         type: object
                         required:
-                            - userId
+                            - walletAddress
                             - sharkId
                         properties:
-                            userId:
+                            walletAddress:
                                 type: string
                             sharkId:
                                 type: string
                         example:
-                            userId: "1"
+                            walletAddress: "0x..."
                             sharkId: "1"
         responses:
             200:
@@ -121,15 +121,15 @@
                     schema:
                         type: object
                         required:
-                            - userId
+                            - walletAddress
                             - sharkId
                         properties:
-                            userId:
+                            walletAddress:
                                 type: string
                             sharkId:
                                 type: string
                         example:
-                            userId: "1"
+                            walletAddress: "0x..."
                             sharkId: "1"
         responses:
             200:
@@ -144,7 +144,7 @@
             - User
         parameters:
             - in: query
-              name: userId
+              name: walletAddress
               schema:
                   type: string
         responses:
@@ -165,15 +165,15 @@
                         type: object
                         required:
                             - walletAddress
-                            - userId
+                            - sharkWalletAddress
                         properties:
                             walletAddress:
                                 type: string
-                            userId:
+                            sharkWalletAddress:
                                 type: string
                         example:
                             walletAddress: "0x..."
-                            userId: "40"
+                            sharkWalletAddress: "0x..."
         responses:
             200:
                 description: Successfully

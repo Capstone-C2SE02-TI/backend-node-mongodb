@@ -1,6 +1,4 @@
 import mongoose from "mongoose";
-import Inc from "mongoose-sequence";
-const AutoIncrement = Inc(mongoose);
 
 const InvestorSchema = new mongoose.Schema(
 	{
@@ -52,8 +50,6 @@ const InvestorSchema = new mongoose.Schema(
 	},
 	{ versionKey: false }
 );
-
-InvestorSchema.plugin(AutoIncrement, { inc_field: "sharkId" });
 
 const InvestorModel = mongoose.model("Investor", InvestorSchema);
 export default InvestorModel;
