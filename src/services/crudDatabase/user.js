@@ -3,7 +3,7 @@ import {
 	CoinModel,
 	InvestorModel,
 	TagModel,
-	TransactionModel,
+	TransactionModel
 } from "../../models/index.js";
 import {
 	QUERY_LIMIT_ITEM,
@@ -193,17 +193,24 @@ export const getSharksLength = async () => {
 	return await InvestorModel.count({}).lean();
 };
 
-export const getListOfSharks = async (userId) => {
-	const sharks = await InvestorModel.find({ isShark: true })
+export const getListOfSharks = async (walletAddress) => {
+	const projection = {
+		sharkId: 1,
+		walletAddress: 1,
+		totalAssets: 1,
+		percent24h: 1,
+		followers: 1,
+		isShark: 1
+	};
+	const sharks = await InvestorModel.find({ isShark: true }, projection, {
+		new: true
+	})
 		.sort("sharkId")
-		.select(
-			"sharkId walletAddress totalAssets percent24h followers isShark -_id"
-		)
 		.lean();
 
-	sharksList = sharks.map((shark) => {
-		const isFollowed = shark.followers.includes(userId);
-		let objShark = { ...shark._doc, isFollowed: isFollowed };
+	const sharksList = sharks.map((shark) => {
+		const isFollowed = shark.followers.includes(walletAddress);
+		let objShark = { ...shark, isFollowed: isFollowed };
 		return objShark;
 	});
 
@@ -212,8 +219,9 @@ export const getListOfSharks = async (userId) => {
 
 export const followWalletOfShark = async (walletAddress, sharkId) => {
 	try {
-		if (walletAddress === null) return "wallet-address-required";
-		if (walletAddress === undefined) return "wallet-address-invalid";
+		if (walletAddress === null) return { message: "wallet-address-required" };
+		if (walletAddress === undefined)
+			return { message: "wallet-address-invalid" };
 
 		if (sharkId === null) return { message: "sharkid-required" };
 		if (sharkId === undefined) return { message: "sharkid-invalid" };
@@ -252,7 +260,8 @@ export const followWalletOfShark = async (walletAddress, sharkId) => {
 export const unfollowWalletOfShark = async (walletAddress, sharkId) => {
 	try {
 		if (walletAddress === null) return { message: "wallet-address-required" };
-		if (walletAddress === undefined) return { message: "wallet-address-invalid" };
+		if (walletAddress === undefined)
+			return { message: "wallet-address-invalid" };
 		if (sharkId === null) return { message: "sharkid-required" };
 		if (sharkId === undefined) return { message: "sharkid-invalid" };
 
@@ -290,7 +299,8 @@ export const unfollowWalletOfShark = async (walletAddress, sharkId) => {
 export const getListOfSharkFollowed = async (walletAddress) => {
 	if (walletAddress === null) return { message: "wallet-address-required" };
 	if (walletAddress === undefined) return { message: "wallet-address-invalid" };
-	if (!(await checkExistedWalletAddress(walletAddress))) return { message: "user-notfound" };
+	if (!(await checkExistedWalletAddress(walletAddress)))
+		return { message: "user-notfound" };
 
 	const projection = {
 		sharkId: 1,
