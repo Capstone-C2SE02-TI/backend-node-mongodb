@@ -3,6 +3,7 @@ import { checkExistedWalletAddress } from "./user.js";
 
 export const getListOfUsers = async () => {
 	const projection = {
+		walletAddress: 1,
 		fullName: 1,
 		avatar: 1,
 		website: 1,

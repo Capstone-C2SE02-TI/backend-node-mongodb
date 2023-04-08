@@ -10,10 +10,6 @@ import {
 	TRENDING_REDUCING_LIMIT_ITEM
 } from "../../constants/index.js";
 
-export const getUserByUsername = async (username) => {
-	return await UserModel.findOne({ username: username }).lean();
-};
-
 export const getUserByEmail = async (email) => {
 	return await UserModel.findOne({ email: email }).lean();
 };
