@@ -31,6 +31,13 @@ export const checkExistedWalletAddress = async (walletAddress) => {
 
 export const createNewUser = async (walletAddress) => {
 	try {
+		const isExistedWallet = await checkExistedWalletAddress(walletAddress);
+		if (isExistedWallet)
+			return {
+				created: false,
+				message: "wallet-address-existed",
+				error: null
+			};
 		const newUserInfo = {
 			walletAddress: walletAddress
 		};
@@ -39,7 +46,7 @@ export const createNewUser = async (walletAddress) => {
 			.then((data) => {
 				return {
 					created: true,
-					message: "create user successfully",
+					message: "create-user-successfully",
 					error: null
 				};
 			})
@@ -49,13 +56,13 @@ export const createNewUser = async (walletAddress) => {
 
 		return {
 			created: true,
-			message: "create user successfully",
+			message: "create-user-successfully",
 			error: null
 		};
 	} catch (error) {
 		return {
 			created: false,
-			message: "create user failed",
+			message: "create-user-failed",
 			error: error
 		};
 	}
@@ -230,7 +237,6 @@ export const followWalletOfShark = async (walletAddress, sharkId) => {
 			return { message: "user-notfound" };
 		if (!(await checkExistedSharkId(sharkId)))
 			return { message: "shark-notfound" };
-		console.log("run");
 		const projection = {
 			sharkId: 1,
 			walletAddress: 1,

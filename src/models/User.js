@@ -2,10 +2,6 @@ import mongoose from "mongoose";
 
 const UserSchema = new mongoose.Schema(
 	{
-		userId: {
-			type: Number,
-			unique: true
-		},
 		walletAddress: {
 			type: String,
 			trim: true,
@@ -13,6 +9,11 @@ const UserSchema = new mongoose.Schema(
 			unique: true
 		},
 		fullName: {
+			type: String,
+			trim: true,
+			default: ""
+		},
+		email: {
 			type: String,
 			trim: true,
 			default: ""
