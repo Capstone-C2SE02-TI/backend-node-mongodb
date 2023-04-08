@@ -232,6 +232,17 @@
             400:
                 description: Failed
 
+/display/users:
+    get:
+        summary: Get list users
+        tags:
+            - User
+        responses:
+            200:
+                description: Successfully
+            400:
+                description: Failed
+
 /display/users/length:
     get:
         summary: Get length of users list

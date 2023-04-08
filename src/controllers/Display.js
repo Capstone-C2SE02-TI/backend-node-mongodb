@@ -18,6 +18,7 @@ import {
 	getLengthOfUsersList,
 	getLengthOfTransactionsList
 } from "../services/crudDatabase/user.js";
+import { getListOfUsers } from "../services/crudDatabase/admin.js";
 
 function DisplayController() {
 	this.getCoinsAndTokens = async (req, res, next) => {
@@ -499,6 +500,33 @@ function DisplayController() {
 					error: error,
 					datasLength: 0,
 					datas: []
+				})
+			);
+	};
+
+	this.getUsers = async (req, res, next) => {
+		await getListOfUsers()
+			.then((data) => {
+				data.length === 0
+					? res.status(400).json({
+							message: "failed-empty-data",
+							error: "empty-data",
+							dataLength: 0,
+							data: []
+					  })
+					: res.status(200).json({
+							message: "successfully",
+							error: null,
+							dataLength: data.length,
+							data: data
+					  });
+			})
+			.catch((error) =>
+				res.status(400).json({
+					message: "failed",
+					error: error,
+					dataLength: 0,
+					data: []
 				})
 			);
 	};

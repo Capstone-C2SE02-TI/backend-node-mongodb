@@ -42,6 +42,7 @@ router.get("/sharks/gain-loss", DisplayController.getGainLossOfSharks);
 router.get("/coins/gain-loss", DisplayController.getGainLossOfCoins);
 
 /* User */
+router.get("/users", DisplayController.getUsers);
 router.get("/users/length", DisplayController.getLengthOfUsersList);
 
 /* Others */
