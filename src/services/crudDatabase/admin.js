@@ -1,4 +1,3 @@
-import { cryptWalletAddress } from "../../helpers/index.js";
 import { UserModel } from "../../models/index.js";
 import { checkExistedWalletAddress } from "./user.js";
 
@@ -18,34 +17,25 @@ export const getListOfUsers = async () => {
 
 export const getUserProfile = async (walletAddress) => {
 	if (walletAddress) {
-			const projection = {
-				fullName: 1,
-				avatar: 1,
-				website: 1,
-				premiumAccount: 1,
-				sharksFollowed: 1,
-				addedSharks: 1,
-				createdAt: 1
-			};
-			const user = await UserModel.findOne(
-				{ walletAddress: hashAddress },
-				projection
-			).lean();
 
-			if (!user) return {};
-			else return user;
+		const projection = {
+			fullName: 1,
+			avatar: 1,
+			website: 1,
+			premiumAccount: 1,
+			sharksFollowed: 1,
+			addedSharks: 1,
+			createdAt: 1
+		};
+		const user = await UserModel.findOne(
+			{ walletAddress: walletAddress },
+			projection
+		).lean();
+
+		if (!user) return {};
+		else return user;
 	}
 	return {};
-};
-
-export const checkExistedUsernameForUpdateProfile = async (
-	userId,
-	username
-) => {
-	const user = await UserModel.findOne({ username: username }).lean();
-
-	if (user && user.userId !== userId) return true;
-	else return false;
 };
 
 export const checkExistedEmailForUpdateProfile = async (userId, email) => {
@@ -71,6 +61,7 @@ export const updateUserProfile = async (walletAddress, updateInfo) => {
 				website: website === "" ? undefined : website,
 				avatar: avatar === "" ? undefined : avatar
 			};
+
 
 			await UserModel.findOneAndUpdate(
 				{ walletAddress: walletAddress },
@@ -114,18 +105,6 @@ export const upgradeUserPremiumAccount = async (walletAddress) => {
 	} catch (error) {
 		return "error";
 	}
-};
-
-export const checkExistedUsername = async (username) => {
-	const isExisted = await AdminModel.exists({ username: username }).lean();
-	return Boolean(isExisted);
-};
-
-export const getPasswordByUsername = async (username) => {
-	const admin = await AdminModel.findOne({ username: username })
-		.select("password -_id")
-		.lean();
-	return admin?.password || null;
 };
 
 export const getAdminByUsername = async (username) => {

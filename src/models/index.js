@@ -9,5 +9,5 @@ export {
 	InvestorModel,
 	CoinModel,
 	TagModel,
-	TransactionModel
+	TransactionModel,
 };

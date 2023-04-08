@@ -18,6 +18,7 @@
 	"license": "MIT",
 	"homepage": "https://github.com/Capstone-C2SE02-TI/backend-node-mongodb#readme",
 	"dependencies": {
+		"@matg97/mongoose-plugin-autoinc": "^1.1.10",
 		"and": "^0.0.3",
 		"bcrypt": "^5.1.0",
 		"build": "^0.1.4",

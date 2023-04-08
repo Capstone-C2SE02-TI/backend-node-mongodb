@@ -49,13 +49,12 @@ function UserController() {
 	};
 
 	this.updateUserProfile = async (req, res, next) => {
-		let userId = req.query.userId;
+		let walletAddress = req.query.walletAddress;
 
-		if (!userId) userId = null;
+		if (!walletAddress) walletAddress = null;
 		else {
-			const userIdCheck = _.toString(userId);
-			if (_.isNaN(userIdCheck)) userId = undefined;
-			else userId = Number(userIdCheck);
+			const walletAddressCheck = _.toString(walletAddress);
+			if (_.isNaN(walletAddressCheck)) walletAddress = undefined;
 		}
 
 		const { status, error } = await validateUpdateProfileBody(req, res, next);
@@ -64,7 +63,7 @@ function UserController() {
 			return res.status(400).json({ message: error, error: error });
 		else {
 			const updateInfo = req.body;
-			await updateUserProfile(userId, updateInfo)
+			await updateUserProfile(walletAddress, updateInfo)
 				.then((data) =>
 					data === "success"
 						? res.status(200).json({
@@ -86,15 +85,14 @@ function UserController() {
 	};
 
 	this.upgradePremiumAccount = async (req, res, next) => {
-		let userId = req.body.userId; 
+		let walletAddress = req.body.walletAddress; 
 
-		if (!userId) userId = null;
+		if (!walletAddress) walletAddress = null;
 		else {
-			if (isNaN(userId)) userId = undefined;
-			else userId = Number(userId);
+			if (isNaN(walletAddress)) walletAddress = undefined;
 		}
 
-		await upgradeUserPremiumAccount(userId)
+		await upgradeUserPremiumAccount(walletAddress)
 			.then((data) =>
 				data === "success"
 					? res.status(200).json({
@@ -115,12 +113,11 @@ function UserController() {
 	};
 
 	this.followSharkWallet = async (req, res, next) => {
-		let { userId, sharkId } = req.body;
+		let { walletAddress, sharkId } = req.body;
 
-		if (!userId) userId = null;
+		if (!walletAddress) walletAddress = null;
 		else {
-			if (isNaN(userId)) userId = undefined;
-			else userId = Number(userId);
+			if (isNaN(walletAddress)) walletAddress = undefined;
 		}
 
 		if (!sharkId) sharkId = null;
@@ -129,7 +126,7 @@ function UserController() {
 			else sharkId = Number(sharkId);
 		}
 
-		await followWalletOfShark(userId, sharkId)
+		await followWalletOfShark(walletAddress, sharkId)
 			.then((data) => {
 				if (data.message === "success")
 					return res.status(200).json({
@@ -152,12 +149,11 @@ function UserController() {
 	};
 
 	this.unfollowSharkWallet = async (req, res, next) => {
-		let { userId, sharkId } = req.body;
+		let { walletAddress, sharkId } = req.body;
 
-		if (!userId) userId = null;
+		if (!walletAddress) walletAddress = null;
 		else {
-			if (isNaN(userId)) userId = undefined;
-			else userId = Number(userId);
+			if (isNaN(walletAddress)) walletAddress = undefined;
 		}
 
 		if (!sharkId) sharkId = null;
@@ -165,7 +161,7 @@ function UserController() {
 			if (isNaN(sharkId)) sharkId = undefined;
 			else sharkId = Number(sharkId);
 		}
-		await unfollowWalletOfShark(userId, sharkId)
+		await unfollowWalletOfShark(walletAddress, sharkId)
 			.then((data) => {
 				if (data.message === "success")
 					return res.status(200).json({
@@ -188,15 +184,14 @@ function UserController() {
 	};
 
 	this.getSharkFollowed = async (req, res, next) => {
-		let userId = req.query.userId;
+		let walletAddress = req.query.userId;
 
-		if (!userId) userId = null;
+		if (!walletAddress) walletAddress = null;
 		else {
-			if (isNaN(userId)) userId = undefined;
-			else userId = Number(userId);
+			if (isNaN(walletAddress)) walletAddress = undefined;
 		}
 
-		await getListOfSharkFollowed(userId)
+		await getListOfSharkFollowed(walletAddress)
 			.then((data) => {
 				data.message === "success"
 					? res.status(200).json({
@@ -223,15 +218,19 @@ function UserController() {
 	};
 
 	this.addNewShark = async (req, res, next) => {
-		let { walletAddress, userId } = req.body;
+		let { walletAddress, sharkWalletAddress } = req.body;
 
-		if (!userId) userId = null;
+		if (!walletAddress) walletAddress = null;
 		else {
-			if (isNaN(userId)) userId = undefined;
-			else userId = Number(userId);
+			if (isNaN(walletAddress)) walletAddress = undefined;
 		}
 
-		await addNewShark(walletAddress, userId)
+		if (!sharkWalletAddress) sharkWalletAddress = null;
+		else {
+			if (isNaN(sharkWalletAddress)) sharkWalletAddress = undefined;
+		}
+
+		await addNewShark(walletAddress, sharkWalletAddress)
 			.then((data) => {
 				data.isAdded
 					? res.status(200).json({

@@ -67,7 +67,7 @@
             - Shark
         parameters:
             - in: query
-              name: userId
+              name: walletAddress
               schema:
               type: string
         responses:
