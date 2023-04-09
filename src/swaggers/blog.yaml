@@ -2,7 +2,7 @@
 
 /blog/crawl:
   post:
-    summary: Crawl Blogs
+    summary: Crawl blogs
     tags:
       - Blogs
     responses:
@@ -13,7 +13,7 @@
 
 /blog/create:
   post:
-    summary: Create New Blog
+    summary: Create new blog
     tags:
       - Blogs
     requestBody:
@@ -31,6 +31,40 @@
             example:
               blogAPI: "https://example.com/"
               type: "bao-cao"
+    responses:
+      200:
+        description: Successfully
+      400:
+        description: Failed
+
+/blog/all:
+  get:
+    summary: Get all blogs (or by type)
+    tags:
+      - Blogs
+    parameters:
+      - in: query
+        name: type
+        schema:
+          type: string
+          required: false
+    responses:
+      200:
+        description: Successfully
+      400:
+        description: Failed
+
+/blog/detail/{blogId}:
+  get:
+    summary: Get detail blog by ID
+    tags:
+      - Blogs
+    parameters:
+      - in: path
+        name: blogId
+        schema:
+          type: string
+          required: true
     responses:
       200:
         description: Successfully

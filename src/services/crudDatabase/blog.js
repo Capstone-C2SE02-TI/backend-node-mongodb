@@ -1,4 +1,5 @@
 import axios from "axios";
+import { ObjectId } from "../../constants/index.js";
 import { BlogModel } from "../../models/index.js";
 import { convertUnixTimestampToNumber } from "../../helpers/index.js";
 
@@ -53,4 +54,16 @@ export const createNewBlog = async (blogAPI, type) => {
 
 	const createdBlog = await BlogModel.create(newBlog);
 	return createdBlog;
+};
+
+export const getBlogs = async () => {
+	return await BlogModel.find({});
+};
+
+export const getBlogsByType = async (type) => {
+	return await BlogModel.find({ type: type });
+};
+
+export const getDetailBlog = async (blogId) => {
+	return await BlogModel.findOne({ _id: new ObjectId(blogId) });
 };
