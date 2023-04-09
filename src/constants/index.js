@@ -1,5 +1,8 @@
 import dotenv from "dotenv";
+import mongoose from "mongoose";
 dotenv.config();
+
+export const ObjectId = mongoose.Types.ObjectId;
 
 export const MONGODB_URI = process.env.MONGODB_URI;
 export const PORT = process.env.PORT || 4001;

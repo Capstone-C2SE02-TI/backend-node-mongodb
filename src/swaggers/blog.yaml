@@ -1,1 +1,72 @@
 # Online Swagger yaml file formatter: https://editor.swagger.io/
+
+/blog/crawl:
+  post:
+    summary: Crawl blogs
+    tags:
+      - Blogs
+    responses:
+      200:
+        description: Successfully
+      400:
+        description: Failed
+
+/blog/create:
+  post:
+    summary: Create new blog
+    tags:
+      - Blogs
+    requestBody:
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              blogAPI:
+                type: String
+                required: true
+              type:
+                type: string
+                required: true
+            example:
+              blogAPI: "https://example.com/"
+              type: "bao-cao"
+    responses:
+      200:
+        description: Successfully
+      400:
+        description: Failed
+
+/blog/all:
+  get:
+    summary: Get all blogs (or by type)
+    tags:
+      - Blogs
+    parameters:
+      - in: query
+        name: type
+        schema:
+          type: string
+          required: false
+    responses:
+      200:
+        description: Successfully
+      400:
+        description: Failed
+
+/blog/detail/{blogId}:
+  get:
+    summary: Get detail blog by ID
+    tags:
+      - Blogs
+    parameters:
+      - in: path
+        name: blogId
+        schema:
+          type: string
+          required: true
+    responses:
+      200:
+        description: Successfully
+      400:
+        description: Failed

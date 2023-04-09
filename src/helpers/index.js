@@ -69,7 +69,10 @@ export const comparePassword = (plainPassword, hashPassword, callback) => {
 };
 
 export const convertUnixTimestampToNumber = (unixTimestamp) => {
-	const date = new Date(unixTimestamp * 1000);
+	const date =
+		String(unixTimestamp).length === 10
+			? new Date(unixTimestamp * 1000)
+			: new Date(unixTimestamp);
 
 	const year =
 		date.getFullYear() < 10

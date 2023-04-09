@@ -20,6 +20,7 @@
 	"dependencies": {
 		"@matg97/mongoose-plugin-autoinc": "^1.1.10",
 		"and": "^0.0.3",
+		"axios": "^1.3.5",
 		"bcrypt": "^5.1.0",
 		"build": "^0.1.4",
 		"cookie-parser": "^1.4.6",
