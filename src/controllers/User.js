@@ -24,7 +24,6 @@ function UserController() {
 			const walletAddressCheck = _.toString(walletAddress);
 			if (_.isNaN(walletAddressCheck)) walletAddress = undefined;
 		}
-
 		await getUserProfile(walletAddress)
 			.then((data) =>
 				Object.entries(data).length === 0
@@ -184,7 +183,7 @@ function UserController() {
 	};
 
 	this.getSharkFollowed = async (req, res, next) => {
-		let walletAddress = req.query.userId;
+		let walletAddress = req.query.walletAddress;
 
 		if (!walletAddress) walletAddress = null;
 		else {
@@ -253,15 +252,14 @@ function UserController() {
 	};
 
 	this.deleteSharkNotFound = async (req, res, next) => {
-		let { walletAddress, userId } = req.body;
+		let { walletAddress, addedSharkAddress } = req.body;
 
-		if (!userId) userId = null;
+		if (!walletAddress) walletAddress = null;
 		else {
-			if (isNaN(userId)) userId = undefined;
-			else userId = Number(userId);
+			if (isNaN(walletAddress)) walletAddress = undefined;
 		}
 
-		await deleteSharkNotFound(walletAddress, userId)
+		await deleteSharkNotFound(walletAddress, addedSharkAddress)
 			.then((data) => {
 				data.isDeleted
 					? res.status(200).json({
