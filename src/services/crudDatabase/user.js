@@ -528,13 +528,13 @@ export const addNewShark = async (walletAddress, sharkWalletAddress) => {
 	}
 };
 
-export const deleteSharkNotFound = async (walletAddress, userId) => {
+export const deleteSharkNotFound = async (walletAddress, addedSharkAddress) => {
 	try {
-		if (!(await checkExistedUserId(userId)))
+		if (!(await checkExistedWalletAddress(walletAddress)))
 			return { message: "user-notfound", isDeleted: false };
 
 		const sharkExisted = await InvestorModel.findOne({
-			walletAddress: walletAddress
+			walletAddress: addedSharkAddress
 		}).lean();
 
 		if (sharkExisted === null)
@@ -543,11 +543,11 @@ export const deleteSharkNotFound = async (walletAddress, userId) => {
 		// Tuan's comment
 		const user = await UserModel.findOneAndUpdate(
 			{ userId: userId },
-			{ $pull: { addedSharks: walletAddress } }
+			{ $pull: { addedSharks: addedSharkAddress } }
 		).lean();
 
 		const deletedData = await InvestorModel.remove({
-			walletAddress: walletAddress
+			walletAddress: addedSharkAddress
 		}).lean();
 
 		return deletedData.deletedCount > 0

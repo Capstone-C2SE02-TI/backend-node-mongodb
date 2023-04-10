@@ -192,15 +192,15 @@
                         type: object
                         required:
                             - walletAddress
-                            - userId
+                            - addedSharkAddress
                         properties:
                             walletAddress:
                                 type: string
-                            userId:
+                            addedSharkAddress:
                                 type: string
                         example:
                             walletAddress: "0x..."
-                            userId: "40"
+                            addedSharkAddress: "0x..."
         responses:
             200:
                 description: Successfully
