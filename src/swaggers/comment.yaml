@@ -1,1 +1,48 @@
 # Online Swagger yaml file formatter: https://editor.swagger.io/
+
+/comment/list:
+  get:
+    summary: Get all comments of a blog
+    tags:
+      - Comments
+    parameters:
+      - in: query
+        name: blogId
+        schema:
+          type: string
+          required: true
+    responses:
+      200:
+        description: Successfully
+      400:
+        description: Failed
+
+/comment/create:
+  post:
+    summary: Create new comment
+    tags:
+      - Comments
+    requestBody:
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              blogId:
+                type: String
+                required: true
+              userId:
+                type: String
+                required: true
+              content:
+                type: string
+                required: true
+            example:
+              blogId: "64325f973f4e558a06a58e26"
+              userId: "0x...."
+              content: "Bài viết quá hay !!"
+    responses:
+      200:
+        description: Successfully
+      400:
+        description: Failed
