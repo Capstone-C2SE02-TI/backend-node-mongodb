@@ -5,7 +5,8 @@ import {
 
 function CommentController() {
 	this.getCommentList = async (req, res, next) => {
-		const commentList = await getCommentList();
+		const blogId = req.query.blogId;
+		const commentList = await getCommentList(blogId);
 		commentList
 			? res.status(200).json({
 					message: "Successfully",

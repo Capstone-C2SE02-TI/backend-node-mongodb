@@ -2,9 +2,15 @@
 
 /comment/list:
   get:
-    summary: Get all comments
+    summary: Get all comments of a blog
     tags:
       - Comments
+    parameters:
+      - in: query
+        name: blogId
+        schema:
+          type: string
+          required: true
     responses:
       200:
         description: Successfully
