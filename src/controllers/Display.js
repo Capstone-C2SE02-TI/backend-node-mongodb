@@ -130,6 +130,7 @@ function DisplayController() {
 	};
 
 	this.getCoinOrTokenDetails = async (req, res, next) => {
+		let symbol;
 		if (!req.query.symbol) symbol = null;
 		else {
 			const symbolCheck = _.toString(req.query.symbol).toLowerCase();
