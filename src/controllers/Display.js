@@ -559,7 +559,9 @@ function DisplayController() {
 	};
 
 	this.getIndicators = async (req, res, next) => {
-		const data = await getIndicatorsData();
+		const {symbol, interval} = req.query
+		console.log(symbol, interval);
+		const data = await getIndicatorsData(`https://api3.binance.com/api/v3/klines?symbol=${symbol}&interval=${interval}`);
 		return res.status(200).json({
 			message: "successfully",
 			error: null,

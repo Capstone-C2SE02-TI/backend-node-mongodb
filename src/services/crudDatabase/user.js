@@ -590,10 +590,8 @@ export const getLengthOfTransactionsList = async () => {
 	}
 };
 
-export const getIndicatorsData = async () => {
-	const resp = await got(
-		`https://api.binance.com/api/v3/klines?symbol=BTCUSDT&interval=1d`
-	);
+export const getIndicatorsData = async (urlApis) => {
+	const resp = await got(urlApis);
 	const data = JSON.parse(resp.body);
     let klinedata = data.map((d) => ({
       time: d[0] / 1000,
