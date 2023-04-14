@@ -11,6 +11,11 @@ const CommentSchema = new mongoose.Schema(
 			trim: true,
 			required: true
 		},
+		userWalletAddress: {
+			type: String,
+			trim: true,
+			required: true
+		},
 		userFullName: {
 			type: String,
 			trim: true,
@@ -18,9 +23,7 @@ const CommentSchema = new mongoose.Schema(
 		},
 		userAvatar: {
 			type: String,
-			trim: true,
-			default:
-				"https://res.cloudinary.com/dhzbsq7fj/image/upload/v1643101647/avatardefault_92824_aifry9.png"
+			trim: true
 		},
 		content: {
 			type: String,

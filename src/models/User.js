@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { DEFAULT_USER_AVATARS } from "../constants/index.js";
 
 const UserSchema = new mongoose.Schema(
 	{
@@ -22,7 +23,9 @@ const UserSchema = new mongoose.Schema(
 			type: String,
 			trim: true,
 			default:
-				"https://res.cloudinary.com/dhzbsq7fj/image/upload/v1643101647/avatardefault_92824_aifry9.png"
+				DEFAULT_USER_AVATARS[
+					Math.floor(Math.random() * DEFAULT_USER_AVATARS.length)
+				]
 		},
 		website: {
 			type: String,
