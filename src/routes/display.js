@@ -48,4 +48,7 @@ router.get("/users/length", DisplayController.getLengthOfUsersList);
 /* Others */
 router.get("/tags", DisplayController.getTags);
 
+/* Indicators */
+router.get("/indicators", DisplayController.getIndicators);
+
 export default router;
