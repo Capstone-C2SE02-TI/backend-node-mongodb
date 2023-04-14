@@ -16,7 +16,8 @@ import {
 	getTradeTransactionHistoryOfShark,
 	getLengthOfSharksList,
 	getLengthOfUsersList,
-	getLengthOfTransactionsList
+	getLengthOfTransactionsList,
+	getIndicatorsData
 } from "../services/crudDatabase/user.js";
 import { getListOfUsers } from "../services/crudDatabase/admin.js";
 
@@ -555,6 +556,15 @@ function DisplayController() {
 					datas: []
 				})
 			);
+	};
+
+	this.getIndicators = async (req, res, next) => {
+		const data = await getIndicatorsData();
+		return res.status(200).json({
+			message: "successfully",
+			error: null,
+			data: data
+		});
 	};
 }
 

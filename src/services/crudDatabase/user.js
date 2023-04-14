@@ -9,6 +9,8 @@ import {
 	QUERY_LIMIT_ITEM,
 	TRENDING_REDUCING_LIMIT_ITEM
 } from "../../constants/index.js";
+import got from "got";
+import tulind from 'tulind';
 
 export const getUserByEmail = async (email) => {
 	return await UserModel.findOne({ email: email }).lean();
@@ -586,4 +588,50 @@ export const getLengthOfTransactionsList = async () => {
 	} catch (err) {
 		return { message: "failed-get-length", error: err };
 	}
+};
+
+export const getIndicatorsData = async () => {
+	const resp = await got(
+		`https://api.binance.com/api/v3/klines?symbol=BTCUSDT&interval=1d`
+	);
+	const data = JSON.parse(resp.body);
+    let klinedata = data.map((d) => ({
+      time: d[0] / 1000,
+      open: d[1] * 1,
+      high: d[2] * 1,
+      low: d[3] * 1,
+      close: d[4] * 1,
+    }));
+	const closeData = klinedata.map(d => d.close)
+	tulind.indicators.sma.indicator([closeData], [1], function(err, results) {
+		
+		const amas = results[0]
+		klinedata = klinedata.map((d, index) => ({
+			...d,
+			sma: amas[index]
+		}))
+	  });
+	
+	tulind.indicators.ema.indicator([closeData], [21], function(err, results) {
+		
+		const emas = results[0]
+		klinedata = klinedata.map((d, index) => ({
+			...d,
+			ema: emas[index]
+		}))
+	  }); 
+	  
+	  klinedata = klinedata.map((d, i, arr) => {
+		const long =
+		  arr[i]?.ema > arr[i]?.sma && arr[i - 1]?.ema < arr[i - 1]?.sma
+			? true
+			: false;
+		const short =
+		  arr[i]?.ema < arr[i]?.sma && arr[i - 1]?.ema > arr[i - 1]?.sma
+			? true
+			: false;
+		return { ...d, long, short };
+	  });
+	  
+	return klinedata;
 };
