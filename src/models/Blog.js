@@ -1,6 +1,4 @@
 import mongoose from "mongoose";
-// import AutoIncrementInc from "mongoose-sequence";
-// const AutoIncrement = AutoIncrementInc(mongoose);
 
 const BlogSchema = new mongoose.Schema(
 	{
@@ -38,8 +36,6 @@ const BlogSchema = new mongoose.Schema(
 	},
 	{ versionKey: false }
 );
-
-// BlogSchema.plugin(AutoIncrement, { inc_field: "blogId" });
 
 const BlogModel = mongoose.model("Blog", BlogSchema);
 export default BlogModel;
