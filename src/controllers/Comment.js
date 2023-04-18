@@ -1,6 +1,7 @@
 import {
 	getCommentList,
-	createComment
+	createComment,
+	replyComment
 } from "../services/crudDatabase/comment.js";
 
 function CommentController() {
@@ -22,6 +23,21 @@ function CommentController() {
 
 	this.createComment = async (req, res, next) => {
 		const comment = await createComment(req.body);
+		comment
+			? res.status(200).json({
+					message: "Successfully",
+					data: comment,
+					error: null
+			  })
+			: res.status(400).json({
+					message: "Failed",
+					data: null,
+					error: error
+			  });
+	};
+
+	this.replyComment = async (req, res, next) => {
+		const comment = await replyComment(req.body);
 		comment
 			? res.status(200).json({
 					message: "Successfully",
