@@ -29,6 +29,10 @@ const CommentSchema = new mongoose.Schema(
 			type: String,
 			trim: true,
 			required: true
+		},
+		children: {
+			type: Array,
+			default: []
 		}
 	},
 	{ timestamps: true, versionKey: false }

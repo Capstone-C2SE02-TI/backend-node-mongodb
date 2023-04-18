@@ -46,3 +46,37 @@
         description: Successfully
       400:
         description: Failed
+
+/comment/reply:
+  post:
+    summary: Reply comment
+    tags:
+      - Comments
+    requestBody:
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              blogId:
+                type: String
+                required: true
+              userId:
+                type: String
+                required: true
+              content:
+                type: string
+                required: true
+              parentCommentId:
+                type: string
+                required: false
+            example:
+              blogId: "64325f973f4e558a06a58e26"
+              userId: "0x...."
+              content: "Bài viết quá hay !!"
+              parentCommentId: "64325f973f4e558a06a58e26"
+    responses:
+      200:
+        description: Successfully
+      400:
+        description: Failed
