@@ -10,12 +10,12 @@ function CommentController() {
 		const commentList = await getCommentList(blogId);
 		commentList
 			? res.status(200).json({
-					message: "Successfully",
+					message: "successfully",
 					data: commentList,
 					error: null
 			  })
 			: res.status(400).json({
-					message: "Failed",
+					message: "failed",
 					data: null,
 					error: error
 			  });
@@ -25,12 +25,12 @@ function CommentController() {
 		const comment = await createComment(req.body);
 		comment
 			? res.status(200).json({
-					message: "Successfully",
+					message: "successfully",
 					data: comment,
 					error: null
 			  })
 			: res.status(400).json({
-					message: "Failed",
+					message: "failed",
 					data: null,
 					error: error
 			  });
@@ -40,12 +40,12 @@ function CommentController() {
 		const comment = await replyComment(req.body);
 		comment
 			? res.status(200).json({
-					message: "Successfully",
+					message: "successfully",
 					data: comment,
 					error: null
 			  })
 			: res.status(400).json({
-					message: "Failed",
+					message: "failed",
 					data: null,
 					error: error
 			  });

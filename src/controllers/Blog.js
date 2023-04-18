@@ -12,12 +12,12 @@ function BlogController() {
 
 		createdBlogs
 			? res.status(200).json({
-					message: "Successfully",
+					message: "successfully",
 					data: createdBlogs,
 					error: null
 			  })
 			: res.status(400).json({
-					message: "Failed",
+					message: "failed",
 					data: null,
 					error: null
 			  });
@@ -29,12 +29,12 @@ function BlogController() {
 
 		createdBlog
 			? res.status(200).json({
-					message: "Successfully",
+					message: "successfully",
 					data: createdBlog,
 					error: null
 			  })
 			: res.status(400).json({
-					message: "Failed",
+					message: "failed",
 					data: null,
 					error: null
 			  });
@@ -49,12 +49,12 @@ function BlogController() {
 
 		blogs
 			? res.status(200).json({
-					message: "Successfully",
+					message: "successfully",
 					data: blogs,
 					error: null
 			  })
 			: res.status(400).json({
-					message: "Failed",
+					message: "failed",
 					data: null,
 					error: null
 			  });
@@ -66,12 +66,12 @@ function BlogController() {
 
 		blog
 			? res.status(200).json({
-					message: "Successfully",
+					message: "successfully",
 					data: blog,
 					error: null
 			  })
 			: res.status(400).json({
-					message: "Failed",
+					message: "failed",
 					data: null,
 					error: null
 			  });
