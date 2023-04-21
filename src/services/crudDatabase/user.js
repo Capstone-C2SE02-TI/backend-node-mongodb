@@ -590,7 +590,7 @@ export const getLengthOfTransactionsList = async () => {
 	}
 };
 
-export const getIndicatorsData = async (urlApis) => {
+export const getIndicatorsData = async (urlApis, period) => {
 	const resp = await got(urlApis);
 	const data = JSON.parse(resp.body);
     let klinedata = data.map((d) => ({
@@ -610,7 +610,7 @@ export const getIndicatorsData = async (urlApis) => {
 		}))
 	  });
 	
-	tulind.indicators.ema.indicator([closeData], [21], function(err, results) {
+	tulind.indicators.ema.indicator([closeData], [period], function(err, results) {
 		
 		const emas = results[0]
 		klinedata = klinedata.map((d, index) => ({
@@ -630,6 +630,28 @@ export const getIndicatorsData = async (urlApis) => {
 			: false;
 		return { ...d, long, short };
 	  });
-	  
+	
+	  tulind.indicators.rsi.indicator([closeData], [period], function(err, results) {
+		
+		const rsis = results[0]
+		klinedata = klinedata.map((d, index) => ({
+			...d,
+			rsi: rsis[index]
+		}))
+	  });
+
+	  tulind.indicators.macd.indicator([closeData], [12, 26 , 9], function(err, results) {
+		
+		const madc1 = results[0]
+		const madc2 = results[1]
+		const madc3 = results[2]
+		klinedata = klinedata.map((d, index) => ({
+			...d,
+			macd_fast: madc1[index],
+			macd_slow: madc2[index],
+			macd_histogram: madc3[index],
+		}))
+	  });
+	
 	return klinedata;
 };
