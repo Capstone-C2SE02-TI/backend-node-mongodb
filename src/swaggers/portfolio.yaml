@@ -1,0 +1,17 @@
+# Online Swagger yaml file formatter: https://editor.swagger.io/
+
+/portfolio/{walletAddress}:
+  get:
+    summary: Get user portfolio
+    tags:
+      - Portfolio
+    parameters:
+      - in: path
+        name: walletAddress
+        schema:
+          type: string
+    responses:
+      200:
+        description: Successfully
+      400:
+        description: Failed
