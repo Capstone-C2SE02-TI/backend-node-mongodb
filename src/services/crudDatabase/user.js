@@ -10,7 +10,7 @@ import {
 	TRENDING_REDUCING_LIMIT_ITEM
 } from "../../constants/index.js";
 import got from "got";
-import tulind from 'tulind';
+import tulind from "tulind";
 
 export const getUserByEmail = async (email) => {
 	return await UserModel.findOne({ email: email }).lean();
@@ -374,6 +374,32 @@ export const getTransactionsOfAllSharks = async (page, valueFilter = 0) => {
 	return transactions || [];
 };
 
+export const getNewTransactions = async (sharkId) => {
+	// new transactions in 15 mins
+	const project = {
+		_id: 0,
+		transactionsHistory: {
+			$filter: {
+				input: "$transactionsHistory",
+				as: "transactionsHistory",
+				cond: {$gte: ['$$transactionsHistory.timeStamp', Math.floor(Date.now() / 1000) - 900]}
+			}
+		}
+	};
+	const transactions = await InvestorModel.findOne(
+		{ sharkId: sharkId },
+		project
+	)
+	// transactions.transactionsHistory.map((trans) =>{
+	// 	trans.timeStamp = Number(trans.timeStamp)
+	// 	return trans;
+	// })
+
+	// transactions.save()
+
+	return transactions;
+};
+
 export const getListTransactionsOfShark = async (sharkId) => {
 	const shark = await InvestorModel.findOne({ sharkId: sharkId })
 		.select("transactionsHistory -_id")
@@ -593,65 +619,73 @@ export const getLengthOfTransactionsList = async () => {
 export const getIndicatorsData = async (urlApis, period) => {
 	const resp = await got(urlApis);
 	const data = JSON.parse(resp.body);
-    let klinedata = data.map((d) => ({
-      time: d[0] / 1000,
-      open: d[1] * 1,
-      high: d[2] * 1,
-      low: d[3] * 1,
-      close: d[4] * 1,
-    }));
-	const closeData = klinedata.map(d => d.close)
-	tulind.indicators.sma.indicator([closeData], [1], function(err, results) {
-		
-		const amas = results[0]
+	let klinedata = data.map((d) => ({
+		time: d[0] / 1000,
+		open: d[1] * 1,
+		high: d[2] * 1,
+		low: d[3] * 1,
+		close: d[4] * 1
+	}));
+	const closeData = klinedata.map((d) => d.close);
+	tulind.indicators.sma.indicator([closeData], [1], function (err, results) {
+		const amas = results[0];
 		klinedata = klinedata.map((d, index) => ({
 			...d,
 			sma: amas[index]
-		}))
-	  });
-	
-	tulind.indicators.ema.indicator([closeData], [period], function(err, results) {
-		
-		const emas = results[0]
-		klinedata = klinedata.map((d, index) => ({
-			...d,
-			ema: emas[index]
-		}))
-	  }); 
-	  
-	  klinedata = klinedata.map((d, i, arr) => {
-		const long =
-		  arr[i]?.ema > arr[i]?.sma && arr[i - 1]?.ema < arr[i - 1]?.sma
-			? true
-			: false;
-		const short =
-		  arr[i]?.ema < arr[i]?.sma && arr[i - 1]?.ema > arr[i - 1]?.sma
-			? true
-			: false;
-		return { ...d, long, short };
-	  });
-	
-	  tulind.indicators.rsi.indicator([closeData], [period], function(err, results) {
-		
-		const rsis = results[0]
-		klinedata = klinedata.map((d, index) => ({
-			...d,
-			rsi: rsis[index]
-		}))
-	  });
+		}));
+	});
 
-	  tulind.indicators.macd.indicator([closeData], [12, 26 , 9], function(err, results) {
-		
-		const madc1 = results[0]
-		const madc2 = results[1]
-		const madc3 = results[2]
-		klinedata = klinedata.map((d, index) => ({
-			...d,
-			macd_fast: madc1[index],
-			macd_slow: madc2[index],
-			macd_histogram: madc3[index],
-		}))
-	  });
-	
+	tulind.indicators.ema.indicator(
+		[closeData],
+		[period],
+		function (err, results) {
+			const emas = results[0];
+			klinedata = klinedata.map((d, index) => ({
+				...d,
+				ema: emas[index]
+			}));
+		}
+	);
+
+	klinedata = klinedata.map((d, i, arr) => {
+		const long =
+			arr[i]?.ema > arr[i]?.sma && arr[i - 1]?.ema < arr[i - 1]?.sma
+				? true
+				: false;
+		const short =
+			arr[i]?.ema < arr[i]?.sma && arr[i - 1]?.ema > arr[i - 1]?.sma
+				? true
+				: false;
+		return { ...d, long, short };
+	});
+
+	tulind.indicators.rsi.indicator(
+		[closeData],
+		[period],
+		function (err, results) {
+			const rsis = results[0];
+			klinedata = klinedata.map((d, index) => ({
+				...d,
+				rsi: rsis[index]
+			}));
+		}
+	);
+
+	tulind.indicators.macd.indicator(
+		[closeData],
+		[12, 26, 9],
+		function (err, results) {
+			const madc1 = results[0];
+			const madc2 = results[1];
+			const madc3 = results[2];
+			klinedata = klinedata.map((d, index) => ({
+				...d,
+				macd_fast: madc1[index],
+				macd_slow: madc2[index],
+				macd_histogram: madc3[index]
+			}));
+		}
+	);
+
 	return klinedata;
 };

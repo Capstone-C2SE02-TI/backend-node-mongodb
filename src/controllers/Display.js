@@ -17,7 +17,8 @@ import {
 	getLengthOfSharksList,
 	getLengthOfUsersList,
 	getLengthOfTransactionsList,
-	getIndicatorsData
+	getIndicatorsData,
+	getNewTransactions
 } from "../services/crudDatabase/user.js";
 import { getListOfUsers } from "../services/crudDatabase/admin.js";
 
@@ -261,6 +262,31 @@ function DisplayController() {
 				})
 			);
 	};
+
+	this.getNewTransactions = async (req, res, next) =>{
+		let sharkId = req.query.id;
+
+		if (!sharkId) sharkId = null;
+		else {
+			const idCheck = _.toNumber(sharkId);
+			if (_.isNaN(idCheck)) sharkId = undefined;
+			else sharkId = idCheck;
+		}
+
+		await getNewTransactions(sharkId).then((data) => {
+			res.status(200).json({
+				message: "success",
+				error: null,
+				data: data
+			})
+		}).catch((error) =>{
+			res.status(400).json({
+				message: "failed",
+				error: error,
+				data: null
+			})
+		})
+	}
 
 	this.getTransactionsLengthForPage = async (req, res, next) => {
 		let { valueFilter } = req.body;
@@ -568,6 +594,8 @@ function DisplayController() {
 			data: data
 		});
 	};
+
+
 }
 
 export default new DisplayController();
