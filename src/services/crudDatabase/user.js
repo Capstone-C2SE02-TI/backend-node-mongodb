@@ -11,6 +11,7 @@ import {
 } from "../../constants/index.js";
 import got from "got";
 import tulind from "tulind";
+import { getAutoId } from "../../helpers/index.js";
 
 export const getUserByEmail = async (email) => {
 	return await UserModel.findOne({ email: email }).lean();
@@ -36,6 +37,7 @@ export const createNewUser = async (walletAddress) => {
 				message: "wallet-address-existed",
 				error: null
 			};
+
 		const newUserInfo = {
 			walletAddress: walletAddress
 		};
@@ -382,14 +384,19 @@ export const getNewTransactions = async (sharkId) => {
 			$filter: {
 				input: "$transactionsHistory",
 				as: "transactionsHistory",
-				cond: {$gte: ['$$transactionsHistory.timeStamp', Math.floor(Date.now() / 1000) - 900]}
+				cond: {
+					$gte: [
+						"$$transactionsHistory.timeStamp",
+						Math.floor(Date.now() / 1000) - 900
+					]
+				}
 			}
 		}
 	};
 	const transactions = await InvestorModel.findOne(
 		{ sharkId: sharkId },
 		project
-	)
+	);
 	// transactions.transactionsHistory.map((trans) =>{
 	// 	trans.timeStamp = Number(trans.timeStamp)
 	// 	return trans;
@@ -522,26 +529,32 @@ export const getGainLossOfCoins = async (isLoss) => {
 
 export const addNewShark = async (walletAddress, sharkWalletAddress) => {
 	try {
-		if (!(await checkExistedUserId(walletAddress)))
+		if (!(await checkExistedWalletAddress(walletAddress)))
 			return { message: "user-notfound", isAdded: false };
 
-		const sharkExisted = await InvestorModel.findOne({
-			walletAddress: walletAddress
-		}).lean();
+		const sharkExisted = await InvestorModel.findOne(
+			{
+				walletAddress: sharkWalletAddress
+			},
+			{ new: true }
+		);
 
 		if (sharkExisted !== null)
 			return { message: "wallet-address-exists", isAdded: false };
 
+		const autoId = await getAutoId("sharkId");
+
 		const addedData = await InvestorModel.create({
-			walletAddress: walletAddress,
+			sharkId: autoId.seq,
+			walletAddress: sharkWalletAddress,
 			isShark: true
 		});
 
-		// const user = await UserModel.findOneAndUpdate(
-		// 	{ userId: userId },
-		// 	{ $push: { addedSharks: walletAddress } },
-		// 	{ new: true }
-		// ).lean();
+		const user = await UserModel.findOneAndUpdate(
+			{ walletAddress: walletAddress },
+			{ $push: { addedSharks: sharkWalletAddress } },
+			{ new: true }
+		);
 
 		let addedSharks = user.addedSharks;
 

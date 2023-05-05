@@ -1,6 +1,7 @@
 import _ from "lodash";
 import bcrypt from "bcrypt";
 import crypto from "crypto";
+import { CounterModel } from "../models/index.js";
 
 const algorithm = "aes-256-cbc";
 
@@ -95,3 +96,11 @@ export const convertUnixTimestampToNumber = (unixTimestamp) => {
 
 	return formattedTimeNumber;
 };
+
+export const getAutoId = async (idName) =>{
+	const autoID = await CounterModel.findOneAndUpdate(
+		{ id: idName },
+		{ $inc: { seq: 1 } })
+
+	return autoID;
+}
