@@ -5,6 +5,7 @@ import TagModel from "./Tag.js";
 import TransactionModel from "./Transaction.js";
 import BlogModel from "./Blog.js";
 import CommentModel from "./Comment.js";
+import CounterModel from "./Counter.js";
 
 export {
 	UserModel,
@@ -13,5 +14,6 @@ export {
 	TagModel,
 	TransactionModel,
 	BlogModel,
-	CommentModel
+	CommentModel,
+	CounterModel
 };

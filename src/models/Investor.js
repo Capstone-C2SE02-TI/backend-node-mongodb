@@ -1,7 +1,11 @@
 import mongoose from "mongoose";
 
-const InvestorSchema = new mongoose.Schema(
+let InvestorSchema = new mongoose.Schema(
 	{
+		sharkId: {
+			type: Number,
+			require: true
+		},
 		isShark: {
 			type: Boolean,
 			default: false

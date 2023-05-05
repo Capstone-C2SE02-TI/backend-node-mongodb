@@ -14,7 +14,7 @@ function AuthController() {
 		detailCreated.created
 			? res.status(200).json({
 					message: detailCreated.message,
-					error: null
+					error: detailCreated.error
 			  })
 			: res.status(400).json({
 					message: detailCreated.message,

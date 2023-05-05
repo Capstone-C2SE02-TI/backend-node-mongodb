@@ -27,6 +27,10 @@ router.get(
 	"/shark/transaction-history",
 	DisplayController.getTransactionsOfShark
 );
+router.post(
+	"/shark/new-transactions",
+	DisplayController.getNewTransactions
+);
 router.get(
 	"/shark/trade-transaction-history",
 	DisplayController.getTradeTransactionHistory

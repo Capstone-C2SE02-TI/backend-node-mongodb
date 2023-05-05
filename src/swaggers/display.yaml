@@ -126,6 +126,22 @@
             400:
                 description: Failed
 
+/display/shark/new-transactions:
+    post:
+        summary: Get new transactions in 15 minutes
+        tags:
+            - Shark
+        parameters:
+            - in: query
+              name: id
+              schema:
+                  type: string
+        responses:
+            200:
+                description: Successfully
+            400:
+                description: Failed
+
 /display/shark/crypto:
     get:
         summary: Get list of coin and token of shark
