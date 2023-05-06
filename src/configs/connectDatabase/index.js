@@ -17,6 +17,8 @@ const connectDatabase = () => {
 		mongoose.connection.on("open", () => {
 			console.log("Connect to database successfully");
 		});
+
+		
 	} catch (error) {
 		console.log("Connect to database failed with error:", error);
 		throw new Error(error);

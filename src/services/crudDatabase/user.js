@@ -273,6 +273,7 @@ export const followWalletOfShark = async (walletAddress, sharkId) => {
 
 export const unfollowWalletOfShark = async (walletAddress, sharkId) => {
 	try {
+		console.log(walletAddress);
 		if (walletAddress === null) return { message: "wallet-address-required" };
 		if (walletAddress === undefined)
 			return { message: "wallet-address-invalid" };
@@ -385,7 +386,7 @@ export const getTransactionsOfAllSharks = async (page, valueFilter = 0) => {
 };
 
 export const getNewTransactions = async (sharkId) => {
-	// new transactions in 15 mins
+	// new transactions in 60 secs
 	const project = {
 		_id: 0,
 		transactionsHistory: {
@@ -395,7 +396,7 @@ export const getNewTransactions = async (sharkId) => {
 				cond: {
 					$gte: [
 						"$$transactionsHistory.timeStamp",
-						Math.floor(Date.now() / 1000) - 900
+						Math.floor(Date.now() / 1000) - 60
 					]
 				}
 			}
