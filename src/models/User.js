@@ -43,6 +43,10 @@ const UserSchema = new mongoose.Schema(
     addedSharks: {
       type: Array,
       default: []
+    },
+    autoTrading: {
+      type: Array,
+      default: []
     }
   },
   { timestamps: true, versionKey: false }

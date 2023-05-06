@@ -12,6 +12,7 @@ import {
 import got from "got";
 import tulind from "tulind";
 import { getAutoId } from "../../helpers/index.js";
+import _ from "lodash";
 
 export const getUserByEmail = async (email) => {
 	return await UserModel.findOne({ email: email }).lean();
@@ -132,6 +133,13 @@ export const checkExistedEmail = async (email) => {
 
 export const checkExistedSharkId = async (sharkId) => {
 	const isExisted = await InvestorModel.exists({ sharkId: sharkId }).lean();
+	return Boolean(isExisted);
+};
+
+export const checkExistedSharkAddress = async (sharkAddress) => {
+	const isExisted = await InvestorModel.exists({
+		walletAddress: sharkAddress
+	}).lean();
 	return Boolean(isExisted);
 };
 
@@ -701,4 +709,56 @@ export const getIndicatorsData = async (urlApis, period) => {
 	);
 
 	return klinedata;
+};
+
+export const saveAutoTrading = async (
+	userAddress,
+	sharkAddress,
+	fromToken,
+	toToken,
+	usdAmount
+) => {
+	try {
+		let isExistedWallet = await checkExistedWalletAddress(userAddress);
+		if (!isExistedWallet)
+			return {
+				isSaved: false,
+				message: "save-failed",
+				error: "user-not-found"
+			};
+
+		isExistedWallet = await checkExistedSharkAddress(sharkAddress);
+		if (!isExistedWallet)
+			return {
+				isSaved: false,
+				message: "save-failed",
+				error: "shark-not-found"
+			};
+		if (_.isNull(usdAmount))
+			return {
+				isSaved: false,
+				message: "save-failed",
+				error: "usd-must-a-number"
+			};
+		const trading = {
+			sharkAddress: sharkAddress,
+			fromToken: fromToken,
+			toToken: toToken,
+			usdAmount: usdAmount
+		};
+
+		const user = await UserModel.findOneAndUpdate({walletAddress: userAddress}, {$push : {autoTrading: trading}})
+		return {
+			isSaved: true,
+			message: "save-successful",
+			error: null,
+			trading : user.autoTrading 
+		};
+	} catch (error) {
+		return {
+			isSaved: false,
+			message: "save-failed",
+			error: error
+		};
+	}
 };

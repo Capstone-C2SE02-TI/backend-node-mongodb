@@ -8,6 +8,7 @@ import routing from "./routes/index.js";
 import connectDatabase from "./configs/connectDatabase/index.js";
 import { swaggerSpecs } from "./configs/swagger/index.js";
 import { PORT, HOST_URL, SWAGGER_URL } from "./constants/index.js";
+import { Server, Socket } from "socket.io";
 
 const app = express();
 dotenv.config();
