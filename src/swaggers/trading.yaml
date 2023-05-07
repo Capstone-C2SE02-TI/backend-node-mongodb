@@ -1,0 +1,40 @@
+# Online Swagger yaml file formatter: https://editor.swagger.io/
+
+/trading/auto:
+    post:
+        summary: Push auto trading
+        tags:
+            - Trading
+        requestBody:
+            content:
+                application/json:
+                    schema:
+                        type: object
+                        required:
+                            - fromToken
+                            - toToken
+                            - sharkAddress
+                            - userAddress
+                            - usdAmount
+                        properties:
+                            fromToken:
+                                type: string
+                            toToken:
+                                type: string
+                            sharkAddress:
+                                type: string
+                            userAddress:
+                                type: string
+                            usdAmount:
+                                type: string
+                        example:
+                            fromToken: "0x..."
+                            toToken: "0x..."
+                            sharkAddress: "0x..."
+                            userAddress: "0x..."
+                            usdAmount: "1000"
+        responses:
+            200:
+                description: Successfully
+            400:
+                description: Failed

@@ -3,8 +3,6 @@ dotenv.config();
 
 import { createNewUser} from "../services/crudDatabase/user.js";
 
-const TI_AUTH_COOKIE = process.env.TI_AUTH_COOKIE;
-
 function AuthController() {
 	this.signup = async (req, res, next) => {
 		const { walletAddress } = req.body;
