@@ -543,7 +543,7 @@ export const addNewShark = async (walletAddress, sharkWalletAddress) => {
 
 		const sharkExisted = await InvestorModel.findOne(
 			{
-				walletAddress: sharkWalletAddress
+				walletAddress: sharkWalletAddress.toLowerCase()
 			},
 			{ new: true }
 		);
@@ -553,15 +553,17 @@ export const addNewShark = async (walletAddress, sharkWalletAddress) => {
 
 		const autoId = await getAutoId("sharkId");
 
+		console.log(sharkWalletAddress.toLowerCase());
+
 		const addedData = await InvestorModel.create({
 			sharkId: autoId.seq,
-			walletAddress: sharkWalletAddress,
+			walletAddress: sharkWalletAddress.toLowerCase(),
 			isShark: true
 		});
 
 		const user = await UserModel.findOneAndUpdate(
 			{ walletAddress: walletAddress },
-			{ $push: { addedSharks: sharkWalletAddress } },
+			{ $push: { addedSharks: sharkWalletAddress.toLowerCase() } },
 			{ new: true }
 		);
 
