@@ -263,30 +263,38 @@ function DisplayController() {
 			);
 	};
 
-	this.getNewTransactions = async (req, res, next) =>{
+	this.getNewTransactions = async (req, res, next) => {
 		let sharkId = req.query.id;
 
 		if (!sharkId) sharkId = null;
 		else {
 			const idCheck = _.toNumber(sharkId);
-			if (_.isNaN(idCheck)) sharkId = undefined;
+			if (_.isNaN(idCheck)) sharkId = null;
 			else sharkId = idCheck;
 		}
 
-		await getNewTransactions(sharkId).then((data) => {
-			res.status(200).json({
-				message: "success",
-				error: null,
-				data: data
+		await getNewTransactions(sharkId)
+			.then((data) => {
+				data.error === null
+					? res.status(200).json({
+							message: data.message,
+							error: data.error,
+							data: data.data
+					  })
+					: res.status(400).json({
+							message: data.message,
+							error: data.error,
+							data: null
+					  });
 			})
-		}).catch((error) =>{
-			res.status(400).json({
-				message: "failed",
-				error: error,
-				data: null
-			})
-		})
-	}
+			.catch((error) => {
+				res.status(400).json({
+					message: "failed",
+					error: error,
+					data: null
+				});
+			});
+	};
 
 	this.getTransactionsLengthForPage = async (req, res, next) => {
 		let { valueFilter } = req.body;
@@ -585,17 +593,18 @@ function DisplayController() {
 	};
 
 	this.getIndicators = async (req, res, next) => {
-		const {symbol, interval, period} = req.query
+		const { symbol, interval, period } = req.query;
 		console.log(symbol, interval);
-		const data = await getIndicatorsData(`https://api3.binance.com/api/v3/klines?symbol=${symbol}&interval=${interval}`, period);
+		const data = await getIndicatorsData(
+			`https://api3.binance.com/api/v3/klines?symbol=${symbol}&interval=${interval}`,
+			period
+		);
 		return res.status(200).json({
 			message: "successfully",
 			error: null,
 			data: data
 		});
 	};
-
-
 }
 
 export default new DisplayController();

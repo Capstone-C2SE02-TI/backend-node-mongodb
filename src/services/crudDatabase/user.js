@@ -387,6 +387,12 @@ export const getTransactionsOfAllSharks = async (page, valueFilter = 0) => {
 
 export const getNewTransactions = async (sharkId) => {
 	// new transactions in 60 secs
+	if(sharkId === null)
+		return {
+			message: "failed",
+			error: "shardId-is-not-number",
+			data: null
+		}
 	const project = {
 		_id: 0,
 		transactionsHistory: {
@@ -413,7 +419,11 @@ export const getNewTransactions = async (sharkId) => {
 
 	// transactions.save()
 
-	return transactions;
+	return {
+		message: "successful",
+		error: null,
+		data: transactions
+	};
 };
 
 export const getListTransactionsOfShark = async (sharkId) => {
