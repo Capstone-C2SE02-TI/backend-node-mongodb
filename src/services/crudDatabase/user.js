@@ -390,28 +390,46 @@ export const getNewTransactions = async (sharkId) => {
 	const project = {
 		_id: 0,
 		transactionsHistory: {
-			$filter: {
+			$map: {
 				input: "$transactionsHistory",
 				as: "transactionsHistory",
-				cond: {
-					$gte: [
-						"$$transactionsHistory.timeStamp",
-						Math.floor(Date.now() / 1000) - 60
-					]
+				in: {
+					timeStamp: { $toInt: "$$transactionsHistory.timeStamp" },
+					blockNumber: "$$transactionsHistory.blockNumber",
+					hash: "$$transactionsHistory.hash",
+					nonce: "$$transactionsHistory.nonce",
+					blockHash: "$$transactionsHistory.blockHash",
+					from: "$$transactionsHistory.from",
+					contractAddress: "$$transactionsHistory.contractAddress",
+					to: "$$transactionsHistory.to",
+					value: "$$transactionsHistory.value",
+					tokenName: "$$transactionsHistory.tokenName",
+					tokenSymbol: "$$transactionsHistory.tokenSymbol",
+					tokenDecimal: "$$transactionsHistory.tokenDecimal",
+					transactionIndex: "$$transactionsHistory.transactionIndex",
+					gas: "$$transactionsHistory.gas",
+					gasPrice: "$$transactionsHistory.gasPrice",
+					gasUsed: "$$transactionsHistory.gasUsed",
+					cumulativeGasUsed: "$$transactionsHistory.cumulativeGasUsed",
+					input: "$$transactionsHistory.input",
+					confirmations: "$$transactionsHistory.confirmations",
+					
 				}
 			}
 		}
+		
 	};
-	const transactions = await InvestorModel.findOne(
+
+	let transactions = await InvestorModel.findOne(
 		{ sharkId: sharkId },
 		project
 	);
-	// transactions.transactionsHistory.map((trans) =>{
-	// 	trans.timeStamp = Number(trans.timeStamp)
-	// 	return trans;
-	// })
 
-	// transactions.save()
+	transactions.transactionsHistory = transactions.transactionsHistory.filter(element => {
+		// data in 60 secs
+		const time = Math.floor(Date.now() / 1000) - 60;
+		return element.timeStamp >= time;
+	})
 
 	return transactions;
 };
@@ -750,12 +768,15 @@ export const saveAutoTrading = async (
 			usdAmount: usdAmount
 		};
 
-		const user = await UserModel.findOneAndUpdate({walletAddress: userAddress}, {$push : {autoTrading: trading}})
+		const user = await UserModel.findOneAndUpdate(
+			{ walletAddress: userAddress },
+			{ $push: { autoTrading: trading } }
+		);
 		return {
 			isSaved: true,
 			message: "save-successful",
 			error: null,
-			trading : user.autoTrading 
+			trading: user.autoTrading
 		};
 	} catch (error) {
 		return {
