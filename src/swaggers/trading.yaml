@@ -15,7 +15,7 @@
                             - toToken
                             - sharkAddress
                             - userAddress
-                            - usdAmount
+                            - ethAmount
                         properties:
                             fromToken:
                                 type: string
@@ -25,14 +25,14 @@
                                 type: string
                             userAddress:
                                 type: string
-                            usdAmount:
+                            ethAmount:
                                 type: string
                         example:
                             fromToken: "0x..."
                             toToken: "0x..."
                             sharkAddress: "0x..."
                             userAddress: "0x..."
-                            usdAmount: "1000"
+                            ethAmount: "0.001"
         responses:
             200:
                 description: Successfully

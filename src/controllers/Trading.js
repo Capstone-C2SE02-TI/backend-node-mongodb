@@ -6,20 +6,20 @@ function TradingController() {
 		const { userAddress, sharkAddress, fromToken, toToken } =
 			req.body;
 
-        let {usdAmount} = req.body;
+        let {ethAmount} = req.body;
         
-        if (!usdAmount) usdAmount = null;
+        if (!ethAmount) ethAmount = null;
         else {
-            usdAmount = _.toNumber(usdAmount);
+            ethAmount = _.toNumber(ethAmount);
 
-            if (_.isNaN(usdAmount)) usdAmount = null;
+            if (_.isNaN(ethAmount)) ethAmount = null;
         }
 		const tradingDetail = await saveAutoTrading(
 			userAddress,
 			sharkAddress,
 			fromToken,
 			toToken,
-			usdAmount
+			ethAmount
 		);
 
 		tradingDetail.isSaved

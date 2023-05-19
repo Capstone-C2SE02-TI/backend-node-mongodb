@@ -737,7 +737,7 @@ export const saveAutoTrading = async (
 	sharkAddress,
 	fromToken,
 	toToken,
-	usdAmount
+	ethAmount
 ) => {
 	try {
 		let isExistedWallet = await checkExistedWalletAddress(userAddress);
@@ -755,7 +755,7 @@ export const saveAutoTrading = async (
 				message: "save-failed",
 				error: "shark-not-found"
 			};
-		if (_.isNull(usdAmount))
+		if (_.isNull(ethAmount))
 			return {
 				isSaved: false,
 				message: "save-failed",
@@ -765,7 +765,7 @@ export const saveAutoTrading = async (
 			sharkAddress: sharkAddress,
 			fromToken: fromToken,
 			toToken: toToken,
-			usdAmount: usdAmount
+			ethAmount: ethAmount
 		};
 
 		const user = await UserModel.findOneAndUpdate(
