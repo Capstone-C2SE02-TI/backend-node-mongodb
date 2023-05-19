@@ -65,5 +65,20 @@ export const getBlogsByType = async (type) => {
 };
 
 export const getDetailBlog = async (blogId) => {
-	return await BlogModel.findOne({ _id: new ObjectId(blogId) });
+	try{
+		const blog = await BlogModel.findById(new ObjectId(blogId));
+
+		return {
+			message: "success",
+			data: blog,
+			error: null
+		}
+	}
+	catch(err){
+			return {
+				message: "failed",
+				data: null,
+				error: "blog-not-existed"
+			}
+		}
 };

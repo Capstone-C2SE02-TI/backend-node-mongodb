@@ -64,16 +64,16 @@ function BlogController() {
 		const blogId = req.params.blogId;
 		const blog = await getDetailBlog(blogId);
 
-		blog
+		blog.message === "success"
 			? res.status(200).json({
-					message: "successfully",
-					data: blog,
-					error: null
+					message: blog.message,
+					data: blog.data,
+					error: blog.error
 			  })
 			: res.status(400).json({
-					message: "failed",
-					data: null,
-					error: null
+					message: blog.message,
+					data: blog.data,
+					error: blog.error
 			  });
 	};
 }
