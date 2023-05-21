@@ -53,18 +53,18 @@ server.listen(4001, () => {
 let walletAddress = null;
 let listSharkFollowed = [];
 
-io.on("connection", async function (socket) {
-	// console.log("Someone connected");
+// io.on("connection", async function (socket) {
+// 	console.log("Someone connected");
 
-	socket.on("get-wallet-address", async (address) => {
-		if (address !== null) {
-			walletAddress = address;
-			console.log("global", walletAddress);
+// 	socket.on("get-wallet-address", async (address) => {
+// 		if (address !== null) {
+// 			walletAddress = address;
+// 			console.log("global", walletAddress);
 
-			listSharkFollowed = await getListOfSharkFollowed(walletAddress);
-		}
-	});
-});
+// 			listSharkFollowed = await getListOfSharkFollowed(walletAddress);
+// 		}
+// 	});
+// });
 
 // listSharkFollowed = await getListOfSharkFollowed(walletAddress);
 
@@ -74,14 +74,14 @@ InvestorModel.watch([
 	if (walletAddress !== null) {
 		for (var shark of listSharkFollowed.datas) {
 			const newTransactions = await getNewTransactions(shark.sharkId);
-			
-			if (newTransactions.transactionsHistory.length > 0){
+
+			if (newTransactions.transactionsHistory.length > 0) {
 				io.emit("new-transactions", {
 					newTransactions: newTransactions,
 					sharkId: shark.sharkId
 				});
 			}
-				
+
 		}
 	}
 });
