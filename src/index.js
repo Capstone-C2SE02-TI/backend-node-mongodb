@@ -12,9 +12,12 @@ import { Server, Socket } from "socket.io";
 import http from "http";
 import {
 	getListOfSharkFollowed,
-	getNewTransactions
+	getNewTransactions,
+	getTradingList
 } from "./services/crudDatabase/user.js";
 import InvestorModel from "./models/Investor.js";
+import UserModel from "./models/User.js";
+import _ from "lodash";
 
 const app = express();
 dotenv.config();
@@ -52,6 +55,7 @@ server.listen(4001, () => {
 
 let walletAddress = null;
 let listSharkFollowed = [];
+let pairAutoPosition = -1;
 
 io.on("connection", async function (socket) {
 	// console.log("Someone connected");
@@ -64,9 +68,13 @@ io.on("connection", async function (socket) {
 			listSharkFollowed = await getListOfSharkFollowed(walletAddress);
 		}
 	});
-});
 
-// listSharkFollowed = await getListOfSharkFollowed(walletAddress);
+	socket.on("get-auto-pair-position", (position) => {
+		if (_.isFinite(position)) {
+			pairAutoPosition = _.toNumber(position);
+		}
+	});
+});
 
 InvestorModel.watch([
 	{ $match: { operationType: { $in: ["insert", "update"] } } }
@@ -74,14 +82,30 @@ InvestorModel.watch([
 	if (walletAddress !== null) {
 		for (var shark of listSharkFollowed.datas) {
 			const newTransactions = await getNewTransactions(shark.sharkId);
-			
-			if (newTransactions.transactionsHistory.length > 0){
+
+			if (newTransactions.transactionsHistory.length > 0) {
 				io.emit("new-transactions", {
 					newTransactions: newTransactions,
 					sharkId: shark.sharkId
 				});
 			}
-				
 		}
 	}
 });
+
+UserModel.watch([{ $match: { operationType: { $in: ["update"] } } }]).on(
+	"change",
+	async (data) => {
+		if (walletAddress !== null) {
+			if (_.isFinite(pairAutoPosition) && pairAutoPosition >= 0) {
+				const listTransactions = await getTradingList(walletAddress);
+				if (listTransactions.data !== null) {
+					io.emit(
+						"pair-transactions",
+						listTransactions.data[pairAutoPosition].txhash
+					);
+				}
+			}
+		}
+	}
+);
