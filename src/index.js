@@ -55,7 +55,6 @@ server.listen(4001, () => {
 
 let walletAddress = null;
 let listSharkFollowed = [];
-let pairAutoPosition = -1;
 
 io.on("connection", async function (socket) {
 	// console.log("Someone connected");
@@ -69,11 +68,6 @@ io.on("connection", async function (socket) {
 		}
 	});
 
-	socket.on("get-auto-pair-position", (position) => {
-		if (_.isFinite(position)) {
-			pairAutoPosition = _.toNumber(position);
-		}
-	});
 });
 
 InvestorModel.watch([
@@ -97,14 +91,13 @@ UserModel.watch([{ $match: { operationType: { $in: ["update"] } } }]).on(
 	"change",
 	async (data) => {
 		if (walletAddress !== null) {
-			if (_.isFinite(pairAutoPosition) && pairAutoPosition >= 0) {
-				const listTransactions = await getTradingList(walletAddress);
-				if (listTransactions.data !== null) {
-					io.emit(
-						"pair-transactions",
-						listTransactions.data[pairAutoPosition].txhash
-					);
-				}
+			const listTransactions = await getTradingList(walletAddress);
+			if (listTransactions.data !== null) {
+				console.log("pair");
+				io.emit(
+					"pair-transactions",
+					listTransactions.data
+				);
 			}
 		}
 	}

@@ -762,7 +762,10 @@ export const saveAutoTrading = async (
 			sharkAddress: sharkAddress,
 			fromToken: fromToken,
 			toToken: toToken,
-			ethAmount: ethAmount
+			ethAmount: ethAmount,
+			message: "",
+			status: true,
+			txhash: []
 		};
 
 		const user = await UserModel.findOneAndUpdate(
