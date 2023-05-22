@@ -412,24 +412,21 @@ export const getNewTransactions = async (sharkId) => {
 					gasUsed: "$$transactionsHistory.gasUsed",
 					cumulativeGasUsed: "$$transactionsHistory.cumulativeGasUsed",
 					input: "$$transactionsHistory.input",
-					confirmations: "$$transactionsHistory.confirmations",
-					
+					confirmations: "$$transactionsHistory.confirmations"
 				}
 			}
 		}
-		
 	};
 
-	let transactions = await InvestorModel.findOne(
-		{ sharkId: sharkId },
-		project
-	);
+	let transactions = await InvestorModel.findOne({ sharkId: sharkId }, project);
 
-	transactions.transactionsHistory = transactions.transactionsHistory.filter(element => {
-		// data in 60 secs
-		const time = Math.floor(Date.now() / 1000) - 60;
-		return element.timeStamp >= time;
-	})
+	transactions.transactionsHistory = transactions.transactionsHistory.filter(
+		(element) => {
+			// data in 60 secs
+			const time = Math.floor(Date.now() / 1000) - 60;
+			return element.timeStamp >= time;
+		}
+	);
 
 	return transactions;
 };
@@ -765,7 +762,10 @@ export const saveAutoTrading = async (
 			sharkAddress: sharkAddress,
 			fromToken: fromToken,
 			toToken: toToken,
-			ethAmount: ethAmount
+			ethAmount: ethAmount,
+			message: "",
+			status: true,
+			txhash: []
 		};
 
 		const user = await UserModel.findOneAndUpdate(
@@ -783,6 +783,103 @@ export const saveAutoTrading = async (
 			isSaved: false,
 			message: "save-failed",
 			error: error
+		};
+	}
+};
+
+export const getTradingList = async (userAddress) => {
+	try {
+		let isExistedWallet = await checkExistedWalletAddress(userAddress);
+		if (!isExistedWallet)
+			return {
+				data: null,
+				message: "get-failed",
+				error: "user-not-found"
+			};
+
+		const project = {
+			_id: 0,
+			autoTrading: 1
+		};
+
+		const transactions = await UserModel.findOne(
+			{ walletAddress: userAddress },
+			project
+		);
+		return {
+			data: transactions.autoTrading,
+			message: "success",
+			error: null
+		};
+	} catch (error) {
+		return {
+			data: null,
+			message: "get-failed",
+			error: error
+		};
+	}
+};
+
+export const deleteTradeData = async (
+	userAddress,
+	sharkAddress,
+	fromToken,
+	toToken,
+	ethAmount
+) => {
+	try {
+		let isExistedWallet = await checkExistedWalletAddress(userAddress);
+		if (!isExistedWallet)
+			return {
+				data: null,
+				message: "delete-failed",
+				error: "user-not-found"
+			};
+
+		isExistedWallet = await checkExistedSharkAddress(sharkAddress);
+		if (!isExistedWallet)
+			return {
+				data: null,
+				message: "delete-failed",
+				error: "shark-not-found"
+			};
+
+		const project = {
+			autoTrading: {
+				$elemMatch: {
+					sharkAddress: sharkAddress,
+					fromToken: fromToken,
+					toToken: toToken,
+					ethAmount: ethAmount
+				}
+			} 
+		};
+
+		let transactions = await UserModel.updateOne(project, {
+			$pull: {
+				autoTrading: {
+					sharkAddress: sharkAddress,
+					fromToken: fromToken,
+					toToken: toToken,
+					ethAmount: ethAmount
+				}
+			}
+		},{
+			maxTimeMS: 30000
+		});
+
+		const deletedAutoTradeData = transactions;
+
+		return {
+			data: deletedAutoTradeData,
+			message: "success",
+			error: null
+		};
+	} catch (error) {
+		return {
+			data: null,
+			message: "delete-failed",
+			error: error.message
 		};
 	}
 };
