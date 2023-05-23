@@ -28,9 +28,9 @@
                             ethAmount:
                                 type: string
                         example:
-                            fromToken: "0x..."
-                            toToken: "0x..."
-                            sharkAddress: "0x..."
+                            fromToken: "0xae13d989daC2f0dEbFf460aC112a837C89BAa7cd"
+                            toToken: "0xeD24FC36d5Ee211Ea25A80239Fb8C4Cfd80f12Ee"
+                            sharkAddress: "0x72598E10eF4c7C0E651f1eA3CEEe74FCf0A76CF2"
                             userAddress: "0x..."
                             ethAmount: "0.001"
         responses:
@@ -38,3 +38,68 @@
                 description: Successfully
             400:
                 description: Failed
+
+/trading/list:
+    post:
+        summary: Get list of trading
+        tags:
+            - Trading
+        requestBody:
+            content:
+                application/json:
+                    schema:
+                        type: object
+                        required:
+                            - userAddress
+                        properties:
+                            userAddress:
+                                type: string
+                        example:
+                            userAddress: "0x72598E10eF4c7C0E651f1eA3CEEe74FCf0A76CF2"
+        responses:
+            200:
+                description: Successfully
+            400:
+                description: Failed
+
+/trading/delete-trade:
+    delete:
+        summary: Get list of trading
+        tags:
+            - Trading
+        requestBody:
+            content:
+                application/json:
+                    schema:
+                        type: object
+                        required:
+                            - fromToken
+                            - toToken
+                            - sharkAddress
+                            - userAddress
+                            - ethAmount
+                        properties:
+                            fromToken:
+                                type: string
+                            toToken:
+                                type: string
+                            sharkAddress:
+                                type: string
+                            userAddress:
+                                type: string
+                            ethAmount:
+                                type: string
+                        example:
+                            fromToken: "0xae13d989daC2f0dEbFf460aC112a837C89BAa7cd"
+                            toToken: "0xeD24FC36d5Ee211Ea25A80239Fb8C4Cfd80f12Ee"
+                            sharkAddress: "0x72598E10eF4c7C0E651f1eA3CEEe74FCf0A76CF2"
+                            userAddress: "0x..."
+                            ethAmount: "0.001"
+        responses:
+            200:
+                description: Successfully
+            400:
+                description: Failed
+
+
+

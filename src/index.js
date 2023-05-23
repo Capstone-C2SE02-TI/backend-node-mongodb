@@ -12,9 +12,12 @@ import { Server, Socket } from "socket.io";
 import http from "http";
 import {
 	getListOfSharkFollowed,
-	getNewTransactions
+	getNewTransactions,
+	getTradingList
 } from "./services/crudDatabase/user.js";
 import InvestorModel from "./models/Investor.js";
+import UserModel from "./models/User.js";
+import _ from "lodash";
 
 const app = express();
 dotenv.config();
@@ -74,9 +77,8 @@ io.on("connection", async function (socket) {
 			listSharkFollowed = await getListOfSharkFollowed(walletAddress);
 		}
 	});
-});
 
-// listSharkFollowed = await getListOfSharkFollowed(walletAddress);
+});
 
 InvestorModel.watch([
 	{ $match: { operationType: { $in: ["insert", "update"] } } }
@@ -95,3 +97,19 @@ InvestorModel.watch([
 		}
 	}
 });
+
+UserModel.watch([{ $match: { operationType: { $in: ["update"] } } }]).on(
+	"change",
+	async (data) => {
+		if (walletAddress !== null) {
+			const listTransactions = await getTradingList(walletAddress);
+			if (listTransactions.data !== null) {
+				console.log("pair");
+				io.emit(
+					"pair-transactions",
+					listTransactions.data
+				);
+			}
+		}
+	}
+);
