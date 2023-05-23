@@ -40,8 +40,8 @@ app.listen(PORT, () => {
 	console.log(`API Documentation: ${SWAGGER_URL}`);
 });
 
+// Socket.io
 const server = http.createServer(app);
-
 const io = new Server(server, {
 	cors: {
 		origin: "http://localhost:3000",
@@ -50,20 +50,18 @@ const io = new Server(server, {
 });
 
 server.listen(4001, () => {
-	console.log(`Server is listening at 4001`);
+	console.log(`Socket server is listening at port 4001`);
 });
 
 let walletAddress = null;
 let listSharkFollowed = [];
 
 io.on("connection", async function (socket) {
-	// console.log("Someone connected");
-
+	console.log("Someone connected");
 	socket.on("get-wallet-address", async (address) => {
 		if (address !== null) {
 			walletAddress = address;
 			console.log("global", walletAddress);
-
 			listSharkFollowed = await getListOfSharkFollowed(walletAddress);
 		}
 	});
