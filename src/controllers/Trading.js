@@ -6,14 +6,14 @@ function TradingController() {
 		const { userAddress, sharkAddress, fromToken, toToken } =
 			req.body;
 
-        let {ethAmount} = req.body;
-        
-        if (!ethAmount) ethAmount = null;
-        else {
-            ethAmount = _.toNumber(ethAmount);
+		let { ethAmount } = req.body;
 
-            if (_.isNaN(ethAmount)) ethAmount = null;
-        }
+		if (!ethAmount) ethAmount = null;
+		else {
+			ethAmount = _.toNumber(ethAmount);
+
+			if (_.isNaN(ethAmount)) ethAmount = null;
+		}
 		const tradingDetail = await saveAutoTrading(
 			userAddress,
 			sharkAddress,
@@ -24,13 +24,13 @@ function TradingController() {
 
 		tradingDetail.isSaved
 			? res.status(200).json({
-					message: tradingDetail.message,
-					error: tradingDetail.error
-			  })
+				message: tradingDetail.message,
+				error: tradingDetail.error
+			})
 			: res.status(400).json({
-					message: tradingDetail.message,
-					error: tradingDetail.error
-			  });
+				message: tradingDetail.message,
+				error: tradingDetail.error
+			});
 	};
 }
 
