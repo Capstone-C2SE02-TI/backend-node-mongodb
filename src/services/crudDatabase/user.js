@@ -734,6 +734,8 @@ export const saveAutoTrading = async (
 	sharkAddress,
 	fromToken,
 	toToken,
+	fromSymbol,
+	toSymbol,
 	ethAmount
 ) => {
 	try {
@@ -758,10 +760,44 @@ export const saveAutoTrading = async (
 				message: "save-failed",
 				error: "usd-must-a-number"
 			};
+
+		const filter = {
+			walletAddress: userAddress,
+			autoTrading: {
+				$elemMatch: {
+					sharkAddress: sharkAddress,
+					fromToken: fromToken,
+					toToken: toToken
+				}
+			}
+		};
+
+		const autoTradeInfo = await UserModel.findOne(filter);
+
+		if (autoTradeInfo !== null) {
+			return {
+				isSaved: false,
+				message: "save-failed",
+				error: "pair-already-existed"
+			};
+		}
+		const projection = {
+			_id: 0,
+			walletAddress: 1,
+			sharkId: 1
+		};
+		const shark = await InvestorModel.findOne(
+			{ walletAddress: sharkAddress },
+			projection
+		);
+		console.log(shark);
 		const trading = {
 			sharkAddress: sharkAddress,
+			sharkId: shark.sharkId,
 			fromToken: fromToken,
 			toToken: toToken,
+			fromSymbol: fromSymbol,
+			toSymbol: toSymbol,
 			ethAmount: ethAmount,
 			message: "",
 			status: true,
@@ -776,13 +812,13 @@ export const saveAutoTrading = async (
 			isSaved: true,
 			message: "save-successful",
 			error: null,
-			trading: user.autoTrading
+			data: trading
 		};
 	} catch (error) {
 		return {
 			isSaved: false,
 			message: "save-failed",
-			error: error
+			error: error.message
 		};
 	}
 };
@@ -852,21 +888,25 @@ export const deleteTradeData = async (
 					toToken: toToken,
 					ethAmount: ethAmount
 				}
-			} 
+			}
 		};
 
-		let transactions = await UserModel.updateOne(project, {
-			$pull: {
-				autoTrading: {
-					sharkAddress: sharkAddress,
-					fromToken: fromToken,
-					toToken: toToken,
-					ethAmount: ethAmount
+		let transactions = await UserModel.updateOne(
+			project,
+			{
+				$pull: {
+					autoTrading: {
+						sharkAddress: sharkAddress,
+						fromToken: fromToken,
+						toToken: toToken,
+						ethAmount: ethAmount
+					}
 				}
+			},
+			{
+				maxTimeMS: 30000
 			}
-		},{
-			maxTimeMS: 30000
-		});
+		);
 
 		const deletedAutoTradeData = transactions;
 
