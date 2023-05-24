@@ -98,7 +98,7 @@ InvestorModel.watch([
 	}
 });
 
-UserModel.watch([{ $match: { operationType: { $in: ["update"] } } }]).on(
+UserModel.watch([{ $match: { operationType: "update" } }]).on(
 	"change",
 	async (data) => {
 		if (walletAddress !== null) {
@@ -110,6 +110,9 @@ UserModel.watch([{ $match: { operationType: { $in: ["update"] } } }]).on(
 					listTransactions.data
 				);
 			}
+		}
+		else{
+			console.log("get failed");
 		}
 	}
 );

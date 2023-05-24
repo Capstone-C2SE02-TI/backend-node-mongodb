@@ -7,7 +7,14 @@ import {
 
 function TradingController() {
 	this.saveAutoTrading = async (req, res, next) => {
-		const { userAddress, sharkAddress, fromToken, toToken } = req.body;
+		const {
+			userAddress,
+			sharkAddress,
+			fromToken,
+			toToken,
+			fromSymbol,
+			toSymbol
+		} = req.body;
 
 		let { ethAmount } = req.body;
 
@@ -22,14 +29,17 @@ function TradingController() {
 			sharkAddress,
 			fromToken,
 			toToken,
+			fromSymbol,
+			toSymbol,
 			ethAmount
 		);
 
 		tradingDetail.isSaved
 			? res.status(200).json({
-				message: tradingDetail.message,
-				error: tradingDetail.error
-			})
+					message: tradingDetail.message,
+					error: tradingDetail.error,
+					data: tradingDetail.data
+			  })
 			: res.status(400).json({
 				message: tradingDetail.message,
 				error: tradingDetail.error
@@ -44,6 +54,7 @@ function TradingController() {
 			? res.status(200).json({
 					message: tradingList.message,
 					error: tradingList.error,
+					dataLength: tradingList.data.length,
 					data: tradingList.data
 			  })
 			: res.status(400).json({
@@ -77,10 +88,10 @@ function TradingController() {
 					data: deletedData.data
 			  })
 			: res.status(400).json({
-						message: deletedData.message,
-						error: deletedData.error,
-						data: deletedData.data
-					});
+					message: deletedData.message,
+					error: deletedData.error,
+					data: deletedData.data
+			  });
 	};
 }
 
