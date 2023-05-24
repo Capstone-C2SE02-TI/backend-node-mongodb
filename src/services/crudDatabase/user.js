@@ -790,7 +790,6 @@ export const saveAutoTrading = async (
 			{ walletAddress: sharkAddress },
 			projection
 		);
-		console.log(shark);
 		const trading = {
 			sharkAddress: sharkAddress,
 			sharkId: shark.sharkId,
@@ -910,11 +909,18 @@ export const deleteTradeData = async (
 
 		const deletedAutoTradeData = transactions;
 
-		return {
-			data: deletedAutoTradeData,
-			message: "success",
-			error: null
-		};
+		if (deletedAutoTradeData.modifiedCount > 0)
+			return {
+				data: deletedAutoTradeData,
+				message: "success",
+				error: null
+			};
+		else
+			return {
+				data: null,
+				message: "delete-failed",
+				error: "pair-not-existed"
+			};
 	} catch (error) {
 		return {
 			data: null,
