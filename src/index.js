@@ -56,6 +56,18 @@ server.listen(4001, () => {
 let walletAddress = null;
 let listSharkFollowed = [];
 
+// io.on("connection", async function (socket) {
+// 	console.log("Someone connected");
+
+// 	socket.on("get-wallet-address", async (address) => {
+// 		if (address !== null) {
+// 			walletAddress = address;
+// 			console.log("global", walletAddress);
+
+// 			listSharkFollowed = await getListOfSharkFollowed(walletAddress);
+// 		}
+// 	});
+// });
 io.on("connection", async function (socket) {
 	console.log("Someone connected");
 	socket.on("get-wallet-address", async (address) => {
@@ -81,6 +93,7 @@ InvestorModel.watch([
 					sharkId: shark.sharkId
 				});
 			}
+
 		}
 	}
 });

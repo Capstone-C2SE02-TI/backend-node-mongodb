@@ -412,10 +412,12 @@ export const getNewTransactions = async (sharkId) => {
 					gasUsed: "$$transactionsHistory.gasUsed",
 					cumulativeGasUsed: "$$transactionsHistory.cumulativeGasUsed",
 					input: "$$transactionsHistory.input",
-					confirmations: "$$transactionsHistory.confirmations"
+					confirmations: "$$transactionsHistory.confirmations",
+
 				}
 			}
 		}
+
 	};
 
 	let transactions = await InvestorModel.findOne({ sharkId: sharkId }, project);
@@ -512,19 +514,19 @@ export const getGainLossOfSharks = async (isLoss) => {
 
 	const sharkGainLoss = isLoss
 		? await InvestorModel.find({})
-				.select("sharkId totalAssets percent24h -_id")
-				.where("percent24h")
-				.lt(0)
-				.sort({ percent24h: sortType })
-				.limit(20)
-				.lean()
+			.select("sharkId totalAssets percent24h -_id")
+			.where("percent24h")
+			.lt(0)
+			.sort({ percent24h: sortType })
+			.limit(20)
+			.lean()
 		: await InvestorModel.find({})
-				.select("sharkId totalAssets percent24h -_id")
-				.where("percent24h")
-				.gte(0)
-				.sort({ percent24h: sortType })
-				.limit(20)
-				.lean();
+			.select("sharkId totalAssets percent24h -_id")
+			.where("percent24h")
+			.gte(0)
+			.sort({ percent24h: sortType })
+			.limit(20)
+			.lean();
 
 	return sharkGainLoss;
 };
@@ -534,19 +536,19 @@ export const getGainLossOfCoins = async (isLoss) => {
 
 	const sharkGainLoss = isLoss
 		? await CoinModel.find({})
-				.select("symbol usd.price usd.percentChange24h -_id")
-				.where("usd.percentChange24h")
-				.lt(0)
-				.sort({ "usd.percentChange24h": sortType })
-				.limit(20)
-				.lean()
+			.select("symbol usd.price usd.percentChange24h -_id")
+			.where("usd.percentChange24h")
+			.lt(0)
+			.sort({ "usd.percentChange24h": sortType })
+			.limit(20)
+			.lean()
 		: await CoinModel.find({})
-				.select("symbol usd.price usd.percentChange24h -_id")
-				.where("usd.percentChange24h")
-				.gte(0)
-				.sort({ "usd.percentChange24h": sortType })
-				.limit(20)
-				.lean();
+			.select("symbol usd.price usd.percentChange24h -_id")
+			.where("usd.percentChange24h")
+			.gte(0)
+			.sort({ "usd.percentChange24h": sortType })
+			.limit(20)
+			.lean();
 
 	return sharkGainLoss;
 };
@@ -739,6 +741,11 @@ export const saveAutoTrading = async (
 	ethAmount
 ) => {
 	try {
+		console.log(userAddress,
+			sharkAddress,
+			fromToken,
+			toToken,
+			ethAmount);
 		let isExistedWallet = await checkExistedWalletAddress(userAddress);
 		if (!isExistedWallet)
 			return {

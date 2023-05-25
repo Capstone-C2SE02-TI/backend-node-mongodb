@@ -41,9 +41,9 @@ function TradingController() {
 					data: tradingDetail.data
 			  })
 			: res.status(400).json({
-					message: tradingDetail.message,
-					error: tradingDetail.error
-			  });
+				message: tradingDetail.message,
+				error: tradingDetail.error
+			});
 	};
 
 	this.getListTradingUser = async (req, res, next) => {
